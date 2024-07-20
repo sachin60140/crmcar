@@ -99,7 +99,7 @@
                     "pageLength": 50,
 
                     "aaSorting": [
-                        [3, 'desc']
+                        [2, 'asc']
                     ],
                 });
             });
