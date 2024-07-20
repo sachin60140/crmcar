@@ -33,12 +33,12 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="#">
+            <a href="{{route('addstock')}}">
               <i class="bi bi-circle"></i><span>Add Stock</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="{{route('viewstock')}}">
               <i class="bi bi-circle"></i><span>View Stock</span>
             </a>
           </li>

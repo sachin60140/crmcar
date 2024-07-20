@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View Branch | Car 4 Sales')
+@section('title', 'View Stock | Car 4 Sales')
 
 
 @section('style')
@@ -17,7 +17,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Branch</li>
+                <li class="breadcrumb-item">View Stock</li>
                 
             </ol>
         </nav>
@@ -28,27 +28,39 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">View Branch </h5>
-                        {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
+                        <h5 class="card-title">View Stock </h5>
+                    
 
                         <!-- Table with stripped rows -->
                         <table class="table display" id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Branch Name</th>
-                                    <th scope="col">Mobile</th>
-                                    <th scope="col">Address</th>
+                                    <th scope="col">Branch</th>
+                                    <th scope="col">Model Name</th>
+                                    <th scope="col">Registration Number</th>
+                                    <th scope="col">Model</th>
+                                    <th scope="col">Fuel</th>
+                                    <th scope="col">Color</th>
+                                    <th scope="col">Owner Sl No</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Last Price</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $items)
+                                @foreach ($getRecord as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->branch_name }}</td>
-                                        <td>{{ $items->branch_mobile }}</td>
-                                        <td>{{ $items->address }}</td>
+                                        <td>{{ $items->branch }}</td>
+                                        <td>{{ $items->car_model }}</td>
+                                        <td>{{ $items->reg_number }}</td>
+                                        <td>{{ $items->car_model_year }}</td>
+                                        <td>{{ $items->fuel_type }}</td>
+                                        <td>{{ $items->color }}</td>
+                                        <td>{{ $items->owner_sl_no }}</td>
+                                        <td>{{ $items->price }}</td>
+                                        <td>{{ $items->lastprice }}</td>
                                         
                                     </tr>
                                 @endforeach

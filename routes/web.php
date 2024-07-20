@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StockController;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -22,5 +23,8 @@ Route::group(['middleware'=>'admin'],function()
     Route::post('admin/add-branch',[AuthController::class, 'addbranch'])->name('addbranch');
     Route::get('admin/view-branch',[AuthController::class, 'viewbranch'])->name('viewbranch');;
 
+    Route::get('admin/add-stock',[StockController::class, 'addstock'])->name('addstock');
+    Route::post('admin/add-stock',[StockController::class, 'insertstock'])->name('insertstock');
+    Route::get('admin/view-stock',[StockController::class, 'viewstock'])->name('viewstock');
  
 });
