@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\BranchModel;
 
 class AuthController extends Controller
 {
@@ -47,8 +48,34 @@ class AuthController extends Controller
         return view('admin.dashboard');
     }
 
-    public function lead()
+    public function branch()
     {
-        return view('admin.client');
+        return view('admin.add-branch');
+    }
+
+    public function addbranch(Request $req)
+    {
+        $req->validate([
+                
+            'branchname' => 'required',
+            'mobile_number' => 'required|numeric',
+            'address' => 'required',
+        ]);
+            $BranchModel = new BranchModel;
+
+            $BranchModel->branch_name = $req->branchname;
+            $BranchModel->branch_mobile = $req->mobile_number;
+            $BranchModel->address = $req->address;
+            
+            $BranchModel->save();
+            $lastid = $BranchModel->id;
+  
+        return back()->with('success', ' Branch Created Successfully: ' .$lastid);
+    }
+    public function viewbranch()
+    {
+        $data = DB::table('branch')->get();
+       
+        return view('admin.view-branch',compact('data'));
     }
 }

@@ -18,8 +18,9 @@ Route::get('admin/logout',[AuthController::class, 'logout']);
 Route::group(['middleware'=>'admin'],function()
 {
     Route::get('admin/dashboard',[AuthController::class, 'dashboard']);
-    Route::get('admin/add-clients',[AuthController::class, 'lead'])->name('leads');
-    Route::post('admin/add-clients',[AuthController::class, 'client'])->name('addlead');
+    Route::get('admin/add-branch',[AuthController::class, 'branch'])->name('branch');
+    Route::post('admin/add-branch',[AuthController::class, 'addbranch'])->name('addbranch');
+    Route::get('admin/view-branch',[AuthController::class, 'viewbranch'])->name('viewbranch');;
 
  
 });

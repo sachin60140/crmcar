@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View Clients | Awani Enterprises')
+@section('title', 'Add Branch | Car 4 Sale')
 
 
 @section('style')
@@ -60,24 +60,18 @@
                 <h5 class="card-title">Add Leads</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3" action="#" method="POST">
+                <form class="row g-3" action="{{route('addbranch')}}" method="POST">
                     @csrf
                     <div class="col-md-6">
-                        <label for="fee" class="form-label">Name <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="cab_fee" value="{{ old('name') }}"
-                            name="name">
+                        <label for="fee" class="form-label">Branch Name <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="cab_fee" value="{{ old('branchname') }}"
+                            name="branchname">
                     </div>
 
                     <div class="col-md-6">
-                        <label for="mobile_number" class="form-label">Mobile Number <span
+                        <label for="mobile_number" class="form-label">Branch Mobile <span
                                 style="color: red;">*</span></label>
                         <input type="number" class="form-control" id="inputName5" value="{{ old('mobile_number') }}"
-                            name="mobile_number" maxlength="10" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="mobile_number" class="form-label">Leads Source <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="inputName5" value="{{ old('mobile_number') }}"
                             name="mobile_number" maxlength="10" required>
                     </div>
                     <div class="col-12">
@@ -87,7 +81,7 @@
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="reset" class="btn btn-secondary">Reset</button>
+                        
                     </div>
                 </form>
 
