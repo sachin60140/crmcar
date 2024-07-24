@@ -45,7 +45,10 @@ class AuthController extends Controller
     }
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $data['totalstock'] = DB::table('car_stock')->count();
+        $data['totalbranch'] = DB::table('branch')->count();
+
+        return view('admin.dashboard',$data);
     }
 
     public function branch()

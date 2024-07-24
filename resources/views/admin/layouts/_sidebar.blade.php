@@ -42,8 +42,20 @@
               <i class="bi bi-circle"></i><span>View Stock</span>
             </a>
           </li>
+          <li>
+            <a href="{{route('booking')}}">
+              <i class="bi bi-circle"></i><span>Add Booking</span>
+            </a>
+          </li>
         </ul>
       </li><!-- End Forms Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('trafficchallan')}}">
+          <i class="bi bi-stoplights-fill"></i>
+          <span>Traffic Challan</span>
+        </a>
+      </li>
+
       
       
     </ul>

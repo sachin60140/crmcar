@@ -57,4 +57,19 @@ class StockController extends Controller
 
        return view('admin.view-stock',$data);
     }
+
+    public function booking()
+    {
+        $data['car_stock'] = DB::table('car_stock')
+                ->orderBy('reg_number','asc')
+                ->get();
+
+        return view('admin.add-booking', $data); 
+    }
+
+
+    public function trafficchallan()
+    {
+        return view('admin.traffic-challan');
+    }
 }
