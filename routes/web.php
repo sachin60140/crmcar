@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\CustomerLeadController;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -30,6 +31,9 @@ Route::group(['middleware'=>'admin'],function()
     Route::get('admin/tarffic-challan',[StockController::class, 'trafficchallan'])->name('trafficchallan');
     
     Route::get('admin/add-booking',[StockController::class, 'booking'])->name('booking');
-    
+
+    Route::get('admin/data/add-lead',[CustomerLeadController::class, 'addlead'])->name('addlead');
+    Route::post('admin/data/add-lead',[CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata');
+    Route::get('admin/data/view-lead',[CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata');
  
 });
