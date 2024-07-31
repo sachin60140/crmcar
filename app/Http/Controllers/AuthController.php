@@ -47,6 +47,7 @@ class AuthController extends Controller
     {
         $data['totalstock'] = DB::table('car_stock')->count();
         $data['totalbranch'] = DB::table('branch')->count();
+        $data['contacts'] = DB::table('customer_lead')->count();
 
         return view('admin.dashboard',$data);
     }
