@@ -29,7 +29,7 @@ class CustomerLeadController extends Controller
         $auth = '3HqJI';
         $amount = $req->amount;
         $entid = '1701171869640632437';
-        $temid = '1707172245288323666';
+        $temid = '1707172248683322204';
         $mob2 = [$mob];
         $mob3 = implode(',', $mob2);
         $msg = urlencode('Dear '. $name . ",\nWelcome to Car4Sales ! We're excited to help you Buy & sell your old car with ease and get the best value for it. If you have any questions or need assistance, please contact us at. 7779995656 . \nThank you for choosing us! \nBest regards,\nCar4Sales, \nMuzaffarpur, Motihari, Bakhri \nPh. 7779995656");
