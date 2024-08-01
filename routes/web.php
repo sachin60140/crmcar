@@ -15,7 +15,7 @@ Route::get('pass',[AuthController::class, 'pass']);
 
 Route::post('admin-login',[AuthController::class, 'authlogin']);
 
-Route::get('admin/logout',[AuthController::class, 'logout']);
+Route::get('admin/logout',[AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware'=>'admin'],function()
 {
