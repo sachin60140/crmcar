@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CustomerLeadController;
+use App\Http\Controllers\CustomerLegderController;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -31,9 +32,14 @@ Route::group(['middleware'=>'admin'],function()
     Route::get('admin/tarffic-challan',[StockController::class, 'trafficchallan'])->name('trafficchallan');
     
     Route::get('admin/add-booking',[StockController::class, 'booking'])->name('booking');
+    Route::post('admin/add-booking',[StockController::class, 'storebooking'])->name('storebooking');
 
     Route::get('admin/data/add-lead',[CustomerLeadController::class, 'addlead'])->name('addlead');
     Route::post('admin/data/add-lead',[CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata');
     Route::get('admin/data/view-lead',[CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata');
  
+    Route::get('admin/customer/add-ledger',[CustomerLegderController::class, 'addledger'])->name('addledger');
+    Route::post('admin/customer/add-ledger',[CustomerLegderController::class, 'storeledger'])->name('storeledger');
+    Route::get('admin/customer/view-ledger',[CustomerLegderController::class, 'viewledger'])->name('viewledger');
+    Route::get('admin/customer/view-ledger-statement/{id}',[CustomerLegderController::class, 'viewledgerstatement'])->name('viewledgerstatement');
 });

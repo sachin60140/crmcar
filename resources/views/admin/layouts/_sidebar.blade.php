@@ -9,7 +9,23 @@
           <span>Dashboard </span>
         </a>
       </li><!-- End Dashboard Nav -->
-
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#ledger-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-menu-button-wide"></i><span>A/c Ledger</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="ledger-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{route('addledger')}}">
+              <i class="bi bi-circle"></i><span>Create Ledger</span>
+            </a>
+          </li>
+          <li> 
+            <a href="{{route('viewledger')}}">
+              <i class="bi bi-circle"></i><span>View Ledger</span>
+            </a>
+          </li>
+        </ul>
+      </li>
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Master</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -42,6 +58,14 @@
               <i class="bi bi-circle"></i><span>View Stock</span>
             </a>
           </li>
+          
+        </ul>
+      </li><!-- End Forms Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#booking-lead" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Booking</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="booking-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{{route('booking')}}">
               <i class="bi bi-circle"></i><span>Add Booking</span>

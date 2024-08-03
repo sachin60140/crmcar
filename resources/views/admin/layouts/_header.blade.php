@@ -9,8 +9,6 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-   
-
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
@@ -19,10 +17,6 @@
             <i class="bi bi-search"></i>
           </a>
         </li><!-- End Search Icon-->
-
-        
-
-       
 
         <li class="nav-item dropdown pe-3">
 
@@ -40,7 +34,6 @@
               <hr class="dropdown-divider">
             </li>
 
-            
             <li>
               <hr class="dropdown-divider">
             </li>
