@@ -140,9 +140,19 @@ class StockController extends Controller
         return back()->with('success', ' Booking  Added Successfully: ' .$lastid);
     }
 
+    public function viewbooking()
+        {
+            
+            $data['carbooking'] = BookingModel::getRecord();
+            
+            return view('admin.booking.view-booking',$data);
+        }
+
+
 
     public function trafficchallan()
     {
+        
         return view('admin.traffic-challan');
     }
 

@@ -109,7 +109,7 @@
                                     value="{{ old('adv_amount') }}" name="adv_amount" required>
                             </div>
                             <div class="col-md-12">
-                                <label for="due_amount" class="form-label">Due Amount <span
+                                <label for="due_amount" class="form-label">Finance Amount <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="due_amount"
                                     value="{{ old('due_amount') }}" name="due_amount" required>
