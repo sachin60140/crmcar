@@ -37,23 +37,17 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">Mobile</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Added By</th>
-                                    <th scope="col">Date</th>
+                                    <th scope="col">Email</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $items)
+                                @foreach ($emplist as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->Name }}</td>
-                                        <td>{{ $items->lead_type }}</td>
-                                        <td>{{ $items->mobile_number }}</td>
-                                        <td>{{ $items->address }}</td>
-                                        <td>{{ $items->created_by }}</td>
-                                        <td>{{ $items->created_at }}</td>
+                                        <td>{{ $items->name }}</td>
+                                        <td>{{ $items->email }}</td>
+                                        
                                     </tr>
                                 @endforeach
 

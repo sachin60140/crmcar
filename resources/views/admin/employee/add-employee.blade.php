@@ -30,12 +30,41 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-md-6 mx-auto">
+                <div>
+                    @if ($errors->any())
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (Session::has('success'))
+                        <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show"
+                            role="alert">
+                            {{ Session::get('success') }}
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show"
+                            role="alert">
+                            {{ Session::get('error') }}
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+                </div>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Add Employee</h5>
 
                         <!-- Multi Columns Form -->
-                        <form class="row g-3" action="{{ route('storebooking') }}" method="POST">
+                        <form class="row g-3" action="{{ route('inserempdata') }}" method="POST">
                             @csrf
                             
                             <div class="col-md-12">
@@ -49,6 +78,12 @@
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="emp_mobile"
                                     value="{{ old('emp_mobile') }}" name="emp_mobile" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="adv_amount" class="form-label">Email Id <span
+                                        style="color: red;">*</span></label>
+                                <input type="email" class="form-control" id="email"
+                                    value="{{ old('email') }}" name="email" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">Password <span

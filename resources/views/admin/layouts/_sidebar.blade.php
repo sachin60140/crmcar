@@ -15,12 +15,12 @@
             </a>
             <ul id="Employee-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="{{ route('employee') }}">
+                    <a href="{{ route('addemployee') }}">
                         <i class="bi bi-circle"></i><span>Add Employee</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('viewledger') }}">
+                    <a href="{{ route('viewempdata') }}">
                         <i class="bi bi-circle"></i><span>View Employee</span>
                     </a>
                 </li>
@@ -101,12 +101,12 @@
              </a>
              <ul id="old-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                  <li>
-                     <a href="{{ route('addlead') }}">
+                     <a href="{{ route('addlead1') }}">
                          <i class="bi bi-circle"></i><span>Add Contact</span>
                      </a>
                  </li>
                  <li>
-                     <a href="{{ route('viewleaddata') }}">
+                     <a href="{{ route('viewleaddata1') }}">
                          <i class="bi bi-circle"></i><span>View Contact</span>
                      </a>
                  </li>

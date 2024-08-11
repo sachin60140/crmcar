@@ -36,17 +36,18 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/add-booking', [StockController::class, 'storebooking'])->name('storebooking');
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
 
-    Route::get('admin/data/add-lead', [CustomerLeadController::class, 'addlead'])->name('addlead');
-    Route::post('admin/data/add-lead', [CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata');
-    Route::get('admin/data/view-lead', [CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata');
+    Route::get('admin/data/add-lead', [CustomerLeadController::class, 'addlead'])->name('addlead1');
+    Route::post('admin/data/add-lead', [CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata1');
+    Route::get('admin/data/view-lead', [CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata1');
 
     Route::get('admin/customer/add-ledger', [CustomerLegderController::class, 'addledger'])->name('addledger');
     Route::post('admin/customer/add-ledger', [CustomerLegderController::class, 'storeledger'])->name('storeledger');
     Route::get('admin/customer/view-ledger', [CustomerLegderController::class, 'viewledger'])->name('viewledger');
     Route::get('admin/customer/view-ledger-statement/{id}', [CustomerLegderController::class, 'viewledgerstatement'])->name('viewledgerstatement');
 
-    Route::get('admin/add-employee', [EmpController::class, 'employee'])->name('employee');
-    Route::post('admin/add-employee', [EmpController::class, 'addemployee'])->name('addemployee');
+    Route::get('admin/add-employee', [AuthController::class, 'addemployee'])->name('addemployee');
+    Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
+    Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
 });
 
 Route::get('/employee', [EmpController::class, 'emplogin']);

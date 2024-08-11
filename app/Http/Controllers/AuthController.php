@@ -82,4 +82,39 @@ class AuthController extends Controller
        
         return view('admin.view-branch',compact('data'));
     }
+
+    public function addemployee()
+    {
+        return view('admin.employee.add-employee');
+    }
+
+    public function inserempdata(Request $req)
+    {
+        $req->validate([
+                
+            'emp_name' => 'required',
+            'emp_mobile' => 'required|numeric',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
+
+        $pass = (Hash::make($req->input('password')));
+
+        $query = DB::table('users')->insert([
+            'name' => $req->input('emp_name'),
+            'email' => $req->input('email'),
+            'password' => $pass
+        ]);
+
+        if($query)
+        {
+            return back()->with('success', ' User Added Successfully: ');
+        }
+    }
+
+    public function viewempdata()
+    {
+        $data['emplist'] = DB::table('users')->get();
+        return view('admin.employee.view-employee',$data);   
+    }
 }

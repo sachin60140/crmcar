@@ -61,7 +61,7 @@
                 <h5 class="card-title">Add Data</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3" action="{{route('storeleaddata')}}" method="POST">
+                <form class="row g-3" action="{{route('storeleaddata1')}}" method="POST">
                     @csrf
                     <div class="col-md-6">
                         <label for="fee" class="form-label">Name <span style="color: red;">*</span></label>
