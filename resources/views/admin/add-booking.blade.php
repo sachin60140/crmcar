@@ -125,7 +125,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Booking Remark's </label>
-                                <textarea class="form-control" id="remarks" rows="3" value="{{ old('remarks') }}" name="remarks"></textarea>
+                                <textarea class="form-control" id="remarks" rows="2" value="{{ old('remarks') }}" name="remarks"></textarea>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Submit</button>

@@ -32,17 +32,19 @@
                         {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
 
                         <!-- Table with stripped rows -->
-                        <table class="table display" id="example">
+                        <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Reg</th>
                                     <th scope="col">Model</th>
                                     <th scope="col">Delivary Date</th>
                                     <th scope="col">Sell Amount</th>
                                     <th scope="col">Booking Amount</th>
                                     <th scope="col">Finance Amount</th>
                                     <th scope="col">Remarks</th>
+                                    <th scope="col">Print</th>
                                     
                                 </tr>
                             </thead>
@@ -51,12 +53,16 @@
                                     <tr>
                                         <td>{{ $items->id }}</td>
                                         <td>{{ $items->name }}</td>
+                                        <td>{{ $items->regnumber }}</td>
                                         <td>{{ $items->carmodel }}</td>
                                         <td>{{ $items->delivary_date }}</td>
                                         <td>{{ $items->total_amount }}</td>
                                         <td>{{ $items->adv_amount }}</td>
                                         <td>{{ $items->due_amount }}</td>
                                         <td>{{ $items->remarks }}</td>
+                                        <td>
+                                            <a href="{{url('/admin/print-booking-pdf')}}/{{ $items->id }}" class="badge bg-primary">Print </a>
+                                          </td>
                                        
                                     </tr>
                                 @endforeach

@@ -32,7 +32,7 @@
                     
 
                         <!-- Table with stripped rows -->
-                        <table class="table display" id="example">
+                        <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>

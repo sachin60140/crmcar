@@ -35,6 +35,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-booking', [StockController::class, 'booking'])->name('booking');
     Route::post('admin/add-booking', [StockController::class, 'storebooking'])->name('storebooking');
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
+    Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
+    
 
     Route::get('admin/data/add-lead', [CustomerLeadController::class, 'addlead'])->name('addlead1');
     Route::post('admin/data/add-lead', [CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata1');
@@ -49,6 +51,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
 });
+
+
 
 Route::get('/employee', [EmpController::class, 'emplogin']);
 Route::post('/employee-login', [EmpController::class, 'empauthlogin']);

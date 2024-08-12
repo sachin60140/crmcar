@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\StockModel;
 use App\Models\BookingModel;
 use App\Models\CustomerStatementModel;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StockController extends Controller
 {
@@ -156,4 +157,11 @@ class StockController extends Controller
         return view('admin.traffic-challan');
     }
 
+    public function bookinpdf($id)
+    {
+        $data['carbooking'] = BookingModel::getRecordpdf($id);
+
+        $pdf = Pdf::loadView('admin.booking.bookinPdf',$data);
+        return $pdf->download('booking'.'.pdf');
+    }
 }

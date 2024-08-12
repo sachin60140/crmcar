@@ -32,7 +32,7 @@
                         {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
 
                         <!-- Table with stripped rows -->
-                        <table class="table display" id="example">
+                        <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -61,7 +61,7 @@
                                                 echo $total;
                                             @endphp
                                         </td>
-                                        <td><a href="{{ url('admin/customer/view-ledger-statement/' . $items->id) }}" class="btn btn-primary" target="_blank">Statement</a></td>
+                                        <td><a href="{{ url('admin/customer/view-ledger-statement/' . $items->id) }}" class="badge bg-primary" target="_blank">Statement</a></td>
                            
                                         <td>{{ $items->created_by }}</td>
                                     </tr>
