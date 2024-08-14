@@ -127,7 +127,7 @@
                         <td class="tddata"><strong>{{$data->adv_amount}}/-</strong></td>
                     </tr>
                     <tr>
-                        <td class="tddata">Finance Amount</td>
+                        <td class="tddata">Estimated Finance Amount</td>
                         <td class="tddata"><strong>{{$data->due_amount}}/-</strong></td>
                         <td class="tddata">Delivary Date</td>
                         <td class="tddata"><strong>{{date('d-M-Y', strtotime($data->delivary_date))}}</strong></td>

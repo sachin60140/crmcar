@@ -6,6 +6,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\CustomerLeadController;
 use App\Http\Controllers\CustomerLegderController;
 use App\Http\Controllers\EmpController;
+use App\Http\Controllers\FinanceController;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -50,6 +51,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-employee', [AuthController::class, 'addemployee'])->name('addemployee');
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
+
+    Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
 });
 
 

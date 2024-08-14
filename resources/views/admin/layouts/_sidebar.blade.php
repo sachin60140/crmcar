@@ -113,17 +113,34 @@
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#finance-lead" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-journal-text"></i><span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="finance-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{route('addfinancefile')}}">
+                        <i class="bi bi-circle"></i><span>Create File</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>View Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Forms Nav -->
+         <li class="nav-item">
           <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
               <i class="bi bi-journal-text"></i><span>WorkShop</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="workshop-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
-                  <a href="{{ route('addlead') }}">
+                  <a href="#">
                       <i class="bi bi-circle"></i><span>New Job Card</span>
                   </a>
               </li>
               <li>
-                  <a href="{{ route('viewleaddata') }}">
+                  <a href="#">
                       <i class="bi bi-circle"></i><span>View Contact</span>
                   </a>
               </li>
