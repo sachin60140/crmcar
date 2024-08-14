@@ -2,7 +2,6 @@
 
 @section('title', 'Add Data | Car 4 Sale')
 
-
 @section('style')
 
     <style>

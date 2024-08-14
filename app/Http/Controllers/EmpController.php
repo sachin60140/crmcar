@@ -73,7 +73,7 @@ class EmpController extends Controller
                             ->orderBy('lead_type','asc')
                             ->get();
         
-        return view('employee.Data.add-data',$data);
+        return view('employee.data.add-data',$data);
     }
 
     public function storeleaddata(Request $req)
@@ -134,6 +134,6 @@ class EmpController extends Controller
                     ->where('created_by', Auth::user()->name)
                     ->get();
        
-        return view('employee.Data.view-data',compact('data'));
+        return view('employee.data.view-data',compact('data'));
     }
 }
