@@ -73,7 +73,12 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
+                                        <p>Total Contact</p>
                                         <h6>{{ $contacts }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Today Contact</p>
+                                        <h6>{{ $todaycontacts }}</h6>
                                     </div>
                                 </div>
 
