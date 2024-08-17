@@ -27,6 +27,23 @@
                  </li>
              </ul>
          </li><!-- End Forms Nav -->
+         <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#visitor-lead" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-journal-text"></i><span>Visitor</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="visitor-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('visitor') }}">
+                        <i class="bi bi-circle"></i><span>Add Visitor</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('viewleaddata') }}">
+                        <i class="bi bi-circle"></i><span>View Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Forms Nav -->
      </ul>
 
  </aside><!-- End Sidebar-->

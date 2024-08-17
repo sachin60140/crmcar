@@ -7,6 +7,7 @@ use App\Models\EmpModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerLeadModel;
+use App\Models\VisitorModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
@@ -135,5 +136,39 @@ class EmpController extends Controller
                     ->get();
        
         return view('employee.data.view-data',compact('data'));
+    }
+
+
+    public function visitor()
+    {
+
+        return view('employee.visitor.add-visitor');
+    }
+
+    public function addvisitor(Request $req)
+    {
+        $req->validate([
+                
+            'name' => 'required',
+            'mobile_number' => 'required|numeric|unique:visitor',
+            'car_require' => 'required',
+            'refrence' => 'required',
+            'address' => 'required',
+        ]);
+
+        $VisitorModel = new VisitorModel;
+
+            $VisitorModel->name = $req->name;
+            $VisitorModel->mobile_number = $req->mobile_number;
+            $VisitorModel->address = $req->address;
+            $VisitorModel->car_require = $req->car_require;
+            $VisitorModel->refrence = $req->refrence;
+            $VisitorModel->added_by = Auth::user()->name;
+
+            $VisitorModel->save();
+            $lastid = $VisitorModel->id;
+  
+        return back()->with('success', ' Visitor Added Successfully: ' .$lastid);
+
     }
 }

@@ -102,6 +102,7 @@
                             <option value="CNG">CNG</option>
                             <option value="Diesel">Diesel</option>
                             <option value="Petrol">Petrol</option>
+                            <option value="Petrol">Petrol+CNG</option>
                         </select>
                     </div>
                     <div class="col-md-4">
