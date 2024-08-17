@@ -167,6 +167,8 @@ class EmpController extends Controller
 
             $VisitorModel->save();
             $lastid = $VisitorModel->id;
+
+            
   
         return back()->with('success', ' Visitor Added Successfully: ' .$lastid);
 

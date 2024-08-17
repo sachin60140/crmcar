@@ -110,6 +110,11 @@
                          <i class="bi bi-circle"></i><span>View Contact</span>
                      </a>
                  </li>
+                 <li>
+                    <a href="{{ route('vistordata') }}">
+                        <i class="bi bi-circle"></i><span>View Visitor</span>
+                    </a>
+                </li>
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">
@@ -127,6 +132,7 @@
                         <i class="bi bi-circle"></i><span>View Contact</span>
                     </a>
                 </li>
+                
             </ul>
         </li><!-- End Forms Nav -->
          <li class="nav-item">
