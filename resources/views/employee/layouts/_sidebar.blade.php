@@ -20,11 +20,7 @@
                          <i class="bi bi-circle"></i><span>Add Contact</span>
                      </a>
                  </li>
-                 <li>
-                     <a href="{{ route('viewleaddata') }}">
-                         <i class="bi bi-circle"></i><span>View Contact</span>
-                     </a>
-                 </li>
+                 
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">
