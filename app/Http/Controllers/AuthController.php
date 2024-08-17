@@ -49,6 +49,7 @@ class AuthController extends Controller
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
         $data['totalvisitor'] = DB::table('visitor')->count();
+        $data['totalbooking'] = DB::table('car_booking')->count();
 
         $data['todayvisitor'] = DB::table('visitor')
                                 ->whereDate('created_at', Carbon::today())

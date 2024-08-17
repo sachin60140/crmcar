@@ -52,7 +52,7 @@
                                         <i class="bi bi-car-front-fill"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>10</h6>
+                                        <h6>{{$totalbooking}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p>Today Visitor</p>
+                                        <p>Total Visitor</p>
                                         <h6>{{ $totalvisitor }}</h6>
                                     </div>
                                     <div class="ps-3">
