@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View Stock | Car 4 Sales')
+@section('title', 'View Visitor | Car 4 Sales')
 
 
 @section('style')
@@ -17,7 +17,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Stock</li>
+                <li class="breadcrumb-item">View Visitor</li>
                 
             </ol>
         </nav>
@@ -28,7 +28,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">View Stock </h5>
+                        <h5 class="card-title">View Visitor </h5>
                     
 
                         <!-- Table with stripped rows -->
@@ -94,7 +94,7 @@
                     "pageLength": 50,
 
                     "aaSorting": [
-                        [2, 'asc']
+                        [0, 'desc']
                     ],
                 });
             });

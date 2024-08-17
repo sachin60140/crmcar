@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Hash;
-
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +48,11 @@ class AuthController extends Controller
         $data['totalstock'] = DB::table('car_stock')->count();
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
-        $data['visitor'] = DB::table('visitor')->count();
+        $data['totalvisitor'] = DB::table('visitor')->count();
+
+        $data['todayvisitor'] = DB::table('visitor')
+                                ->whereDate('created_at', Carbon::today())
+                                ->count();
 
         return view('admin.dashboard',$data);
     }

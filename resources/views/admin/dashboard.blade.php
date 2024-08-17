@@ -94,7 +94,12 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $visitor }}</h6>
+                                        <p>Today Visitor</p>
+                                        <h6>{{ $totalvisitor }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Today Visitor</p>
+                                        <h6>{{ $todayvisitor }}</h6>
                                     </div>
                                 </div>
 
