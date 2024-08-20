@@ -82,7 +82,7 @@ class EmpController extends Controller
         $req->validate([
                 
             'name' => 'required',
-            'mobile_number' => 'required|numeric|unique:customer_lead',
+            'mobile_number' => 'required|numeric|min_digits:10|max_digits:10|unique:customer_lead',
             'address' => 'required',
         ]);
 
@@ -132,6 +132,7 @@ class EmpController extends Controller
     public function viewleaddata()
     {
         $data = DB::table('customer_lead')
+                    ->where('lead_type', '=', 'Hot Lead')
                     ->where('created_by', Auth::user()->name)
                     ->get();
        
@@ -141,7 +142,6 @@ class EmpController extends Controller
 
     public function visitor()
     {
-
         return view('employee.visitor.add-visitor');
     }
 
@@ -172,5 +172,13 @@ class EmpController extends Controller
   
         return back()->with('success', ' Visitor Added Successfully: ' .$lastid);
 
+    }
+
+    public function viewvisitor()
+    {
+        $data = DB::table('visitor')
+                    ->where('added_by', Auth::user()->name)
+                    ->get();
+        return view('employee.visitor.view-visitor',compact('data'));
     }
 }

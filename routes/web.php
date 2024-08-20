@@ -73,5 +73,6 @@ Route::group(['middleware' => 'empauth'], function () {
 
     Route::get('employee/data/add-visitor', [EmpController::class, 'visitor'])->name('visitor');
     Route::post('employee/data/add-visitor', [EmpController::class, 'addvisitor'])->name('addvisitor');
+    Route::get('employee/data/show-visitor', [EmpController::class, 'viewvisitor'])->name('viewvisitor');
 
 });
