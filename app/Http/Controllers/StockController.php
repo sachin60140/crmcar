@@ -57,15 +57,64 @@ class StockController extends Controller
 
     public function viewstock()
     {
-       $data['getRecord'] = StockModel::getRecord();
+       $data['getRecord'] = StockModel::getrecord();
 
-       return view('admin.view-stock',$data);
+      return view('admin.view-stock',$data);
+    }
+
+    public function stocktransfer($id)
+    {
+        $data['getRecord'] = StockModel::getstock($id);
+
+        $data['branch'] = DB::table('branch')->get();
+
+        return view('admin.stock.stock-transfer',$data);   
+    }
+
+    public function updatestock(Request $req, $id)
+    {
+        $req->validate([
+                
+            'branch' => 'required',
+            'car_model' => 'required',
+            'reg_number' => 'required',
+            'car_model_year' => 'required|numeric',
+            'color' => 'required',
+            'fuel_type' => 'required',
+            'owner_sl_no' => 'required|numeric',
+            'price' => 'required',
+            'lastprice' => 'required',
+        ]);
+
+        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+        
+        $StockModel =StockModel::find($id);
+
+        $StockModel->branch = $req->branch;
+        $StockModel->car_model = $req->car_model;
+        $StockModel->reg_number = $req->reg_number;
+        $StockModel->car_model_year = $req->car_model_year;
+        $StockModel->color = $req->color;
+        $StockModel->fuel_type = $req->fuel_type;
+        $StockModel->owner_sl_no = $req->owner_sl_no;
+        $StockModel->price = $req->price;
+        $StockModel->lastprice = $req->lastprice;
+        $StockModel->added_by = Auth::user()->name;
+        
+                
+        $StockModel->updated_at = $mytime;
+
+        $StockModel->update();
+
+        return back()->with('success', 'Stock Updated Succesfully');
+
     }
 
     public function booking()
     {
         $data['car_stock'] = DB::table('car_stock')
                 ->orderBy('reg_number','asc')
+                ->where('stock_status','=','2')
                 ->get();
 
                 $data['ledger'] = DB::table('ledger')
@@ -135,8 +184,13 @@ class StockController extends Controller
                 $CustomerStatementModel->created_by = Auth::user()->name;
                 $CustomerStatementModel->save();
                 $lastid_1 = $BookingModel->id;
+
             }
         }
+
+                $Stockstatus = StockModel::find($req->reg_number);
+                $Stockstatus->stock_status = 1 ;
+                $Stockstatus->update();
 
         return back()->with('success', ' Booking  Added Successfully: ' .$lastid);
     }
@@ -164,4 +218,6 @@ class StockController extends Controller
         $pdf = Pdf::loadView('admin.booking.bookinPdf',$data);
         return $pdf->download('booking'.'.pdf');
     }
+
+    
 }

@@ -37,6 +37,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Branch</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Model Name</th>
                                     <th scope="col">Registration Number</th>
                                     <th scope="col">Model</th>
@@ -45,6 +46,7 @@
                                     <th scope="col">Owner Sl No</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Last Price</th>
+                                    <th scope="col">Action</th>
                                     
                                 </tr>
                             </thead>
@@ -53,6 +55,7 @@
                                     <tr>
                                         <td>{{ $items->id }}</td>
                                         <td>{{ $items->branch }}</td>
+                                        <td>{{ $items->stock_status }}</td>
                                         <td>{{ $items->car_model }}</td>
                                         <td>{{ $items->reg_number }}</td>
                                         <td>{{ $items->car_model_year }}</td>
@@ -61,6 +64,10 @@
                                         <td>{{ $items->owner_sl_no }}</td>
                                         <td>{{ $items->price }}</td>
                                         <td>{{ $items->lastprice }}</td>
+                                        <td>
+                                            <a href="{{ url('admin/stock-transfer/' . $items->id) }}"
+                                                class="link-primary " >Edit</a>
+                                        </td>
                                         
                                     </tr>
                                 @endforeach

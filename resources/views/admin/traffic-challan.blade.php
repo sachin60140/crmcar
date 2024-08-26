@@ -50,7 +50,7 @@
                 <h5 class="card-title">Check Traffic Challan</h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3" action="#" method="POST">
+                <form class="row g-3" action="" method="POST">
                     @csrf
                     <div class="col-12">
                         <label for="car_number" class="form-label">Car Registration Number</label>
@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
 
                     </div>
                 </form><!-- End Multi Columns Form -->

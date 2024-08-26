@@ -31,6 +31,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-stock', [StockController::class, 'addstock'])->name('addstock');
     Route::post('admin/add-stock', [StockController::class, 'insertstock'])->name('insertstock');
     Route::get('admin/view-stock', [StockController::class, 'viewstock'])->name('viewstock');
+    Route::get('admin/stock-transfer/{id}', [StockController::class, 'stocktransfer'])->name('stocktransfer');
+    Route::put('admin/stock-transfer/{id}', [StockController::class, 'updatestock'])->name('updatestock');
 
     Route::get('admin/tarffic-challan', [StockController::class, 'trafficchallan'])->name('trafficchallan');
 

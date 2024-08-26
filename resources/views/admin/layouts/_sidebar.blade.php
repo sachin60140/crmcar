@@ -75,6 +75,7 @@
                          <i class="bi bi-circle"></i><span>View Stock</span>
                      </a>
                  </li>
+                 
 
              </ul>
          </li><!-- End Forms Nav -->
@@ -95,6 +96,23 @@
                 </li>
              </ul>
          </li><!-- End Forms Nav -->
+         <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#delivary-lead" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-journal-text"></i><span>Delivary</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="delivary-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('booking') }}">
+                        <i class="bi bi-circle"></i><span>Add Delivary</span>
+                    </a>
+                </li>
+                <li>
+                   <a href="{{ route('viewbooking') }}">
+                       <i class="bi bi-circle"></i><span>View Delivary</span>
+                   </a>
+               </li>
+            </ul>
+        </li><!-- End Forms Nav -->
          <li class="nav-item">
              <a class="nav-link collapsed" data-bs-target="#old-lead" data-bs-toggle="collapse" href="#">
                  <i class="bi bi-journal-text"></i><span>Contact Data</span><i class="bi bi-chevron-down ms-auto"></i>
