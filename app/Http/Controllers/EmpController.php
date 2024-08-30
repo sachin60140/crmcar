@@ -156,6 +156,37 @@ class EmpController extends Controller
             'address' => 'required',
         ]);
 
+
+        $sender = 'CAR4SL';
+        $mob = $req->mobile_number;
+        $name =$req->name;
+        $branch = 'Muzaffarpur';
+        $auth = '3HqJI';
+        $entid = '1701171869640632437';
+        $temid = '1707172494968515032';
+        $mob2 = [$mob];
+        $mob3 = implode(',', $mob2);
+        $msg = urlencode('प्रिय '. $name . ",\n Car4Sales, " . $branch . " में आज आने के लिए धन्यवाद। हमें खुशी है कि आप हमारे वाहनों में रुचि रखते हैं और हमें उम्मीद है कि हमने आपकी सहायता करने में सफल रहे। यदि आपके पास और कोई प्रश्न हैं या और मदद की ज़रूरत हो, तो कृपया बेझिझक हमसे संपर्क करें। आपकी सेवा में पुनः उपस्थित होने की प्रतीक्षा में! \nसादर,\nCar4Sales, \nMuzaffarpur, Motihari, Bakhri \nPh. 7779995656");
+
+        $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg;
+
+        //sms from here
+
+        function SendSMS1($hostUrl)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $hostUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            $result = curl_exec($ch);
+            return $result;
+        }
+
+        SendSMS1($url);
+
         $VisitorModel = new VisitorModel;
 
             $VisitorModel->name = $req->name;
@@ -168,8 +199,6 @@ class EmpController extends Controller
             $VisitorModel->save();
             $lastid = $VisitorModel->id;
 
-            
-  
         return back()->with('success', ' Visitor Added Successfully: ' .$lastid);
 
     }

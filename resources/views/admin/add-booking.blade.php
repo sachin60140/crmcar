@@ -14,6 +14,7 @@
         }
     </style>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -66,9 +67,9 @@
                         <!-- Multi Columns Form -->
                         <form class="row g-3" action="{{ route('storebooking') }}" method="POST">
                             @csrf
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-12 mb-3" >
                                 <label for="category" class="form-label">Reg Number</label>
-                                <select id="category" class="form-select" name="reg_number">
+                                <select id="reg_number" class="form-select" name="reg_number">
                                     <option selected>Choose...</option>
                                     @foreach ($car_stock as $item)
                                         <option value="{{ $item->id }}" @selected(old('reg_number') == $item->id)>
@@ -105,18 +106,18 @@
                             <div class="col-md-12">
                                 <label for="adv_amount" class="form-label">Advance Amount <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="adv_amount"
-                                    value="{{ old('adv_amount') }}" name="adv_amount" required>
+                                <input type="Text" class="form-control" id="adv_amount" value="{{ old('adv_amount') }}"
+                                    name="adv_amount" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">Finance Amount <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="due_amount"
-                                    value="{{ old('due_amount') }}" name="due_amount" required>
+                                <input type="Text" class="form-control" id="due_amount" value="{{ old('due_amount') }}"
+                                    name="due_amount" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">Payment Mode</label>
-                                <select class="form-select" name="paymentMode" >
+                                <select class="form-select" name="paymentMode">
                                     <option>Select Payment Mode...</option>
                                     <option value="Cash">Cash</option>
                                     <option value="UPI">UPI</option>
@@ -141,6 +142,7 @@
     @endsection
 
     @section('script')
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
         <script>
@@ -151,6 +153,13 @@
                     var value2 = parseFloat($('#adv_amount').val()) || 0;
                     $('#due_amount').val(value1 - value2);
                 });
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            // In your Javascript (external .js resource or <script> tag)
+            $(document).ready(function() {
+                $('#reg_number').select2();
             });
         </script>
 

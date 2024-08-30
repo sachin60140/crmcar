@@ -67,7 +67,7 @@
                         <label for="category" class="form-label">Branch</label>
                         <select id="category" class="form-select" name="branch">
                             @foreach ($branch as $items)
-                                <option {{old('branch',$getRecord['0']['branch'])==$items->id ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->branch_name }}</option>
+                                <option {{old('branch', $getRecord['0']['branch'])==$items->branch_name ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->branch_name }}</option>
                             @endforeach
 
                         </select>

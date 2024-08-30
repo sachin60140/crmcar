@@ -11,9 +11,6 @@ class VisitorController extends Controller
     public function vistordata()
     {
        $data['visitordata'] = DB::table('visitor')->get();
-
-       
-
         return view('admin.visitor.view-visitor-data',$data); 
     }
 }
