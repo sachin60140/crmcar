@@ -19,7 +19,7 @@ class CustomerLeadController extends Controller
         $req->validate([
                 
             'name' => 'required',
-            'mobile_number' => 'required|numeric|unique:customer_lead',
+            'mobile_number' => 'required|numeric|min_digits:10|max_digits:10|unique:customer_lead',
             'address' => 'required',
         ]);
 

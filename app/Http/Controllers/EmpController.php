@@ -149,13 +149,11 @@ class EmpController extends Controller
         $req->validate([
                 
             'name' => 'required',
-            'mobile_number' => 'required|numeric|unique:visitor',
+            'mobile_number' => 'required|numeric|min_digits:10|max_digits:10|unique:visitor',
             'car_require' => 'required',
             'refrence' => 'required',
             'address' => 'required',
         ]);
-
-
         $sender = 'CAR4SL';
         $mob = $req->mobile_number;
         $name =$req->name;
