@@ -206,18 +206,13 @@ class StockController extends Controller
     }
 
     public function viewbooking()
-        {
-            
+        {   
             $data['carbooking'] = BookingModel::getRecord();
             
             return view('admin.booking.view-booking',$data);
         }
-
-
-
     public function trafficchallan()
-    {
-        
+    {   
         return view('admin.traffic-challan');
     }
 
@@ -225,8 +220,10 @@ class StockController extends Controller
     {
         $data['carbooking'] = BookingModel::getRecordpdf($id);
 
+        $regnumber= $data['carbooking'][0]['regnumber'];
+
         $pdf = Pdf::loadView('admin.booking.bookinPdf',$data);
-        return $pdf->download('booking'.'.pdf');
+        return $pdf->download($regnumber.'.pdf');
     }
 
     
