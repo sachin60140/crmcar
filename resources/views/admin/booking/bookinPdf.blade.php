@@ -66,9 +66,9 @@
                         </td>
                         <td style="text-align: center;">
                             <div style="margin: auto; width: 50%; padding: 10px;">
-                                <p>Bookin No.</p>
-                                <p> {!! DNS1D::getBarcodeHTML('123456789', 'C128', 1 , 30); !!}  </p></br>
-                                <strong>123456789</strong>
+                                <p><strong>Bookin Slip</strong></p>
+                                <p> {!! DNS1D::getBarcodeHTML($data->booking_no, 'C128', 1 , 30); !!}  </p></br>
+                                <strong>{{$data->booking_no}}</strong>
                             </div>
                         </td>
                         <td >
@@ -81,60 +81,58 @@
 
                 </table>
             </div>
-
             <div style="margin-top: 10px">
                 <table>
                     <tr>
                         <td class="tddata">Bookin No.</td>
                         <td class="tddata"><strong>{{ $data->id }}</strong></td>
                         <td class="tddata">Booking Date</td>
-                        
                         <td class="tddata"><strong>{{date('d-M-Y', strtotime($data->created_at))}}</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Customer Name</td>
-                        <td class="tddata"><strong>{{$data->name}}</strong></td>
                         <td class="tddata">Mobile No.</td>
                         <td class="tddata"><strong>{{$data->mobile}}</strong></td>
                     </tr>
                     <tr>
+                        <td class="tddata">Customer Name</td>
+                        <td class="tddata"><strong>{{strtoupper($data->name)}}</strong></td>
                         <td class="tddata">Father's Name</td>
-                        <td class="tddata"><strong>{{$data->father}}</strong></td>
+                        <td class="tddata"><strong>{{strtoupper($data->father)}}</strong></td>
                         <td class="tddata">Aadhar No.</td>
                         <td class="tddata"><strong>{{$data->aadhar}}</strong></td>
                     </tr>
                     <tr>
                         <td class="tddata">Pan No.</td>
-                        <td class="tddata"><strong>{{$data->pan}}</strong></td>
+                        <td class="tddata"><strong>{{strtoupper($data->pan)}}</strong></td>
                         <td class="tddata">City</td>
-                        <td class="tddata"><strong>{{$data->city}}</strong></td>
+                        <td class="tddata"><strong>{{strtoupper($data->city)}}</strong></td>
                     </tr>
                     <tr>
                         <td class="tddata">Address</td>
-                        <td class="tddata" colspan="3"><strong>{{$data->address	}}</strong></td>
+                        <td class="tddata" colspan="6"><strong>{{$data->address	}}</strong></td>
 
                     </tr>
                     <tr>
                         <td class="tddata">Registration No.</td>
-                        <td class="tddata"><strong>{{$data->regnumber}}</strong></td>
-                        <td class="tddata">Model No.</td>
-                        <td class="tddata"><strong>{{$data->carmodel}}</strong></td>
+                        <td class="tddata"><strong>{{strtoupper($data->regnumber)}}</strong></td>
+                        <td class="tddata">Model Name</td>
+                        <td class="tddata"><strong>{{strtoupper($data->carmodel)}}</strong></td>
+                        <td class="tddata">Model Year</td>
+                        <td class="tddata"><strong>{{$data->model_year}}</strong></td>
                     </tr>
                     <tr>
                         <td class="tddata">Sell Amount</td>
                         <td class="tddata"><strong>{{$data->total_amount}}/-</strong></td>
                         <td class="tddata">Advance</td>
                         <td class="tddata"><strong>{{$data->adv_amount}}/-</strong></td>
+                        <td class="tddata">Estimated Finance Amount</td>
+                        <td class="tddata"><strong>{{$data->finance_amount}}/-</strong></td>
                     </tr>
                     <tr>
-                        <td class="tddata">Estimated Finance Amount</td>
+                        <td class="tddata">Estimated Down Payment</td>
                         <td class="tddata"><strong>{{$data->due_amount}}/-</strong></td>
-                        <td class="tddata">Delivary Date</td>
-                        <td class="tddata"><strong>{{date('d-M-Y', strtotime($data->delivary_date))}}</strong></td>
                     </tr>
                     <tr>
                         <td class="tddata">Remarks</td>
-                        <td class="tddata" colspan="3"><strong>{{ $data->remarks }}</strong></td>
+                        <td class="tddata" colspan="5"><strong>{{ strtoupper($data->remarks) }}</strong></td>
                     </tr>
                 </table>
             </div>
@@ -170,14 +168,18 @@
                 <hr>
             </div>
             <div>
-                <ol type="*">
-                    <li>Pan Card (Apllicant & Co-Applicant)</li>
-                    <li>Bank Statement (6 Month) </li>
-                    <li>Propoerty Tax Reciept</li>
-                    <li>Income tax Reciept</li>
-                    <li>4 Month Salary Slip</li>
-                    <li>Cheque 6 Qty</li>
-                </ol>
+                <table>
+                    <tr>
+                        <td>Aadhar Card (Apllicant & Co-Applicant)</td>
+                        <td>Pan Card (Apllicant & Co-Applicant)</td>
+                        <td>Bank Statement (6 Month)</td>
+                        <td>Propoerty Tax Reciept</td>
+                        <td>Income tax Reciept</td>
+                        <td>4 Month Salary Slip</td>
+                        <td>Cheque 6 Qty</td>
+                    </tr>
+                </table>
+                
             </div>
 
             <div style="margin: 100px 50px 50px 50px;">

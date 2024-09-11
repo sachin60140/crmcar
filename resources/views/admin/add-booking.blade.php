@@ -98,7 +98,7 @@
                             </div>
                             <hr>
                             <div class="col-md-12">
-                                <label for="total_amount" class="form-label">Total Amount <span
+                                <label for="total_amount" class="form-label">Sell Amount <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="total_amount"
                                     value="{{ old('total_amount') }}" name="total_amount" required>
@@ -110,11 +110,18 @@
                                     name="adv_amount" required>
                             </div>
                             <div class="col-md-12">
-                                <label for="due_amount" class="form-label">Finance Amount <span
+                                <label for="finance_amount" class="form-label">Finance Amount <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="due_amount" value="{{ old('due_amount') }}"
-                                    name="due_amount" required>
+                                <input type="Text" class="form-control" id="finance_amount" value="{{ old('finance_amount') }}"
+                                    name="finance_amount" required>
                             </div>
+                            <div class="col-md-12">
+                                <label for="dp" class="form-label">Down Payment Amount <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="dp" value="{{ old('dp') }}"
+                                    name="dp" required>
+                            </div>
+                            
                             <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">Payment Mode</label>
                                 <select class="form-select" name="paymentMode">
@@ -147,11 +154,16 @@
 
         <script>
             $(function() {
-                $('#total_amount, #adv_amount').keyup(function() {
+                $('#total_amount, #adv_amount, #finance_amount').keyup(function() {
                     var value1 = parseFloat($('#total_amount').val()) || 0;
 
                     var value2 = parseFloat($('#adv_amount').val()) || 0;
-                    $('#due_amount').val(value1 - value2);
+
+                    var value3 = parseFloat($('#finance_amount').val()) || 0;
+
+                    var tot = value1 - value2;
+
+                    $('#dp').val(tot - value3 );
                 });
             });
         </script>

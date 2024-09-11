@@ -9,6 +9,7 @@ use App\Models\BookingModel;
 use App\Models\CustomerStatementModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class StockController extends Controller
@@ -133,9 +134,16 @@ class StockController extends Controller
             'delivary_date' => 'required',
             'total_amount' => 'required',
             'adv_amount' => 'required',
-            'due_amount' => 'required',
+            'dp' => 'required',
+            'finance_amount' => 'required',
             'remarks' => 'required',
         ]);
+        $today = date('dmY');
+        $serviceJobNumber = BookingModel::where('booking_no','like',$today.'%')->pluck('booking_no');
+        do {
+            $book_no = $today.rand(111111,999999);
+        } while ($serviceJobNumber->contains($book_no));
+
 
         $car_no =  DB::table('car_stock')->where('id', $req->reg_number)
                     ->select('reg_number')            
@@ -153,11 +161,13 @@ class StockController extends Controller
         $BookingModel = new BookingModel;
 
         $BookingModel->car_stock_id = $req->reg_number;
+        $BookingModel->booking_no = $book_no;
         $BookingModel->customer_ledger_id = $req->customer;
         $BookingModel->delivary_date = $req->delivary_date;
         $BookingModel->total_amount = $req->total_amount;
         $BookingModel->adv_amount = $req->adv_amount;
-        $BookingModel->due_amount = $req->due_amount;
+        $BookingModel->due_amount = $req->dp;
+        $BookingModel->finance_amount = $req->finance_amount;
         $BookingModel->remarks = $req->remarks;
         $BookingModel->created_by = Auth::user()->name;
         $BookingModel->save();

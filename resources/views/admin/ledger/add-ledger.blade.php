@@ -70,17 +70,17 @@
                     </div>
                     <div class="col-md-4">
                         <label for="fee" class="form-label">Father's Name <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="cab_fee" value="{{ old('f_name') }}"
+                        <input type="text" class="form-control" id="f_name" value="{{ old('f_name') }}"
                             name="f_name">
                     </div>
                     <div class="col-md-4">
                         <label for="fee" class="form-label">Aadhar <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="cab_fee" value="{{ old('aadhar') }}"
+                        <input type="text" class="form-control" id="aadhar" maxlength="12" value="{{ old('aadhar') }}"
                             name="aadhar">
                     </div>
                     <div class="col-md-4">
                         <label for="fee" class="form-label">Pan Card <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="pan_card" value="{{ old('pan_card') }}"
+                        <input type="text" class="form-control" id="pan_card" maxlength="10" value="{{ old('pan_card') }}"
                             name="pan_card">
                     </div>
 
