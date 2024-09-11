@@ -38,12 +38,12 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Branch</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Model Name</th>
-                                    <th scope="col">Registration Number</th>
                                     <th scope="col">Model</th>
+                                    <th scope="col">Reg Number</th>
+                                    <th scope="col">Make</th>
                                     <th scope="col">Fuel</th>
                                     <th scope="col">Color</th>
-                                    <th scope="col">Owner Sl No</th>
+                                    <th scope="col">Owner</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Last Price</th>
                                     <th scope="col">Action</th>

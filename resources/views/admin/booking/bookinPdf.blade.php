@@ -66,7 +66,7 @@
                         </td>
                         <td style="text-align: center;">
                             <div style="margin: auto; width: 50%; padding: 10px;">
-                                <p><strong>Bookin Slip</strong></p>
+                                <p><strong>Booking Slip</strong></p>
                                 <p> {!! DNS1D::getBarcodeHTML($data->booking_no, 'C128', 1 , 30); !!}  </p></br>
                                 <strong>{{$data->booking_no}}</strong>
                             </div>
@@ -84,7 +84,7 @@
             <div style="margin-top: 10px">
                 <table>
                     <tr>
-                        <td class="tddata">Bookin No.</td>
+                        <td class="tddata">Booking No.</td>
                         <td class="tddata"><strong>{{ $data->id }}</strong></td>
                         <td class="tddata">Booking Date</td>
                         <td class="tddata"><strong>{{date('d-M-Y', strtotime($data->created_at))}}</strong></td>

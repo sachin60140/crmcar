@@ -40,9 +40,10 @@
                                     <th scope="col">Reg</th>
                                     <th scope="col">Model</th>
                                     <th scope="col">Delivary Date</th>
-                                    <th scope="col">Sell Amount</th>
-                                    <th scope="col">Booking Amount</th>
-                                    <th scope="col">Finance Amount</th>
+                                    <th scope="col">Sell Amt</th>
+                                    <th scope="col">Booking Amt</th>
+                                    <th scope="col">Finance Amt</th>
+                                    <th scope="col">DP</th>
                                     <th scope="col">Remarks</th>
                                     <th scope="col">Print</th>
                                     
@@ -58,6 +59,7 @@
                                         <td>{{ $items->delivary_date }}</td>
                                         <td>{{ $items->total_amount }}</td>
                                         <td>{{ $items->adv_amount }}</td>
+                                        <td>{{ $items->finance_amount }}</td>
                                         <td>{{ $items->due_amount }}</td>
                                         <td>{{ $items->remarks }}</td>
                                         <td>
