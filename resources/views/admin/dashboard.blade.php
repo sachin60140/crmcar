@@ -52,7 +52,7 @@
                                         <i class="bi bi-car-front-fill"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{$totalbooking}}</h6>
+                                        <h6>{{ $totalbooking }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -107,13 +107,33 @@
                                         <h6>{{ $todayvisitor }}</h6>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
+                    </div><!-- End Customers Card -->
+                    <div class="col-xxl-4 col-md-4">
+
+                        <div class="card info-card customers-card">
+
+                            <div class="card-body">
+                                <h5 class="card-title">SMS <span>| Balance</span></h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>SMS Balance</p>
+                                        <h6>{{ $balance }}</h6>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div><!-- End Customers Card -->
 
                 </div>
+
     </section>
 @endsection
 

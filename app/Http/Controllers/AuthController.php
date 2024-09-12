@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\BranchModel;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -58,6 +59,20 @@ class AuthController extends Controller
         $data['todayvisitor'] = DB::table('visitor')
                                 ->whereDate('created_at', Carbon::today())
                                 ->count();
+
+        $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'username' => 'Y2FyNHNhbGVz',
+            'password' => 'M0hxSkk=',
+        ];
+
+        $response = Http::withHeaders($headers)->get($apiURL );
+        
+        $data1 = $response;
+
+       $data['balance'] = $data1['balance']['sms_wallet'];
+
 
         return view('admin.dashboard',$data);
     }
@@ -126,5 +141,24 @@ class AuthController extends Controller
     {
         $data['emplist'] = DB::table('users')->get();
         return view('admin.employee.view-employee',$data);   
+    }
+
+    public function smsbalance()
+    {
+        $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'username' => 'Y2FyNHNhbGVz',
+            'password' => 'M0hxSkk=',
+        ];
+
+        $response = Http::withHeaders($headers)->get($apiURL );
+        $data = $response->json();
+        
+        $data1 = $response;
+        
+        //return $data->balance->sms_wallet;
+        
+        return $balance = $data1['balance']['sms_wallet'];
     }
 }

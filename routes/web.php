@@ -15,6 +15,8 @@ Route::get('/', function () {
 
 Route::get('/admin', [AuthController::class, 'login']);
 
+Route::get('/smsbalance', [AuthController::class, 'smsbalance']);
+
 
 Route::get('pass', [AuthController::class, 'pass']);
 
