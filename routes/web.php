@@ -8,6 +8,8 @@ use App\Http\Controllers\CustomerLegderController;
 use App\Http\Controllers\EmpController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\admin\VisitorController;
+use App\Http\Controllers\delivary\DelivaryController;
+use PHPUnit\Event\Code\Test;
 
 Route::get('/', function () {
     return redirect('/admin');
@@ -42,6 +44,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/add-booking', [StockController::class, 'storebooking'])->name('storebooking');
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
     Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
+
+    Route::get('admin/delivary/add-delivary/{id}', [StockController::class, 'adddelivary'])->name('adddelivary');
+    Route::post('admin/delivary/insert-delivary', [StockController::class, 'insertdelivary'])->name('insertdelivary');
+    Route::get('admin/delivary/view-delivary', [DelivaryController::class, 'viewdelivary'])->name('viewdelivary');
+    Route::get('admin/delivary/delivary_pdf/{id}', [DelivaryController::class, 'delivarypdf'])->name('delivarypdf');
     
 
     Route::get('admin/data/add-lead', [CustomerLeadController::class, 'addlead'])->name('addlead1');
@@ -60,6 +67,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
 
     Route::get('admin/visitor/view-visitor', [VisitorController::class, 'vistordata'])->name('vistordata');
+
+    Route::get('admin/delivary/test', [DelivaryController::class, 'test'])->name('test');
+    
 });
 
 

@@ -23,6 +23,33 @@
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
+        <div>
+            @if ($errors->any())
+                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (Session::has('success'))
+                <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (Session::has('error'))
+                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                    {{ Session::get('error') }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
         <div class="row">
             <div class="col-lg-12">
 
@@ -39,13 +66,15 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Reg</th>
                                     <th scope="col">Model</th>
-                                    <th scope="col">Delivary Date</th>
-                                    <th scope="col">Sell Amt</th>
-                                    <th scope="col">Booking Amt</th>
-                                    <th scope="col">Finance Amt</th>
+                                    <th scope="col">Booking by</th>
+                                    <th scope="col">Sell </th>
+                                    <th scope="col">Booking</th>
+                                    <th scope="col">Finance</th>
                                     <th scope="col">DP</th>
                                     <th scope="col">Remarks</th>
+                                    <th scope="col">Date</th>
                                     <th scope="col">Print</th>
+                                    <th scope="col">Delivary</th>
                                     
                                 </tr>
                             </thead>
@@ -56,14 +85,18 @@
                                         <td>{{ $items->name }}</td>
                                         <td>{{ $items->regnumber }}</td>
                                         <td>{{ $items->carmodel }}</td>
-                                        <td>{{ $items->delivary_date }}</td>
+                                        <td>{{ $items->booking_person }}</td>
                                         <td>{{ $items->total_amount }}</td>
                                         <td>{{ $items->adv_amount }}</td>
                                         <td>{{ $items->finance_amount }}</td>
                                         <td>{{ $items->due_amount }}</td>
                                         <td>{{ $items->remarks }}</td>
+                                        <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
                                         <td>
                                             <a href="{{url('/admin/print-booking-pdf')}}/{{ $items->id }}" class="badge bg-primary">Print </a>
+                                          </td>
+                                          <td>
+                                            <a href="{{url('/admin/delivary/add-delivary')}}/{{ $items->id }}" class="badge bg-success">Delivary </a>
                                           </td>
                                        
                                     </tr>

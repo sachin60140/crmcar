@@ -101,13 +101,9 @@
                 <i class="bi bi-journal-text"></i><span>Delivary</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="delivary-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                
                 <li>
-                    <a href="{{ route('booking') }}">
-                        <i class="bi bi-circle"></i><span>Add Delivary</span>
-                    </a>
-                </li>
-                <li>
-                   <a href="{{ route('viewbooking') }}">
+                   <a href="{{ route('viewdelivary') }}">
                        <i class="bi bi-circle"></i><span>View Delivary</span>
                    </a>
                </li>

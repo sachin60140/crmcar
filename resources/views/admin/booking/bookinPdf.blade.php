@@ -84,22 +84,25 @@
             <div style="margin-top: 10px">
                 <table>
                     <tr>
-                        <td class="tddata">Booking No.</td>
-                        <td class="tddata"><strong>{{ $data->id }}</strong></td>
+                       
                         <td class="tddata">Booking Date</td>
                         <td class="tddata"><strong>{{date('d-M-Y', strtotime($data->created_at))}}</strong></td>
-                        <td class="tddata">Mobile No.</td>
-                        <td class="tddata"><strong>{{$data->mobile}}</strong></td>
+                        <td class="tddata">Booking Person</td>
+                        <td class="tddata" colspan="4"><strong>{{$data->booking_person}}</strong></td>
+                        
                     </tr>
                     <tr>
                         <td class="tddata">Customer Name</td>
                         <td class="tddata"><strong>{{strtoupper($data->name)}}</strong></td>
                         <td class="tddata">Father's Name</td>
                         <td class="tddata"><strong>{{strtoupper($data->father)}}</strong></td>
-                        <td class="tddata">Aadhar No.</td>
-                        <td class="tddata"><strong>{{$data->aadhar}}</strong></td>
+                        <td class="tddata">Mobile No.</td>
+                        <td class="tddata"><strong>{{$data->mobile}}</strong></td>
+                        
                     </tr>
                     <tr>
+                        <td class="tddata">Aadhar No.</td>
+                        <td class="tddata"><strong>{{$data->aadhar}}</strong></td>
                         <td class="tddata">Pan No.</td>
                         <td class="tddata"><strong>{{strtoupper($data->pan)}}</strong></td>
                         <td class="tddata">City</td>
@@ -107,8 +110,7 @@
                     </tr>
                     <tr>
                         <td class="tddata">Address</td>
-                        <td class="tddata" colspan="6"><strong>{{$data->address	}}</strong></td>
-
+                        <td class="tddata" colspan="5"><strong>{{$data->address	}}</strong></td>
                     </tr>
                     <tr>
                         <td class="tddata">Registration No.</td>

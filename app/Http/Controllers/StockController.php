@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\StockModel;
 use App\Models\BookingModel;
+use App\Models\CarDelivaryModel;
 use App\Models\CustomerStatementModel;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -28,6 +29,8 @@ class StockController extends Controller
                 
             'branch' => 'required',
             'car_model' => 'required',
+            'eng_number' => 'required|min_digits:5|max_digits:10',
+            'chassis_number' => 'required|min_digits:5|max_digits:10',
             'reg_number' => 'required',
             'car_model_year' => 'required|numeric',
             'color' => 'required',
@@ -42,6 +45,8 @@ class StockController extends Controller
         $StockModel->branch = $req->branch;
         $StockModel->car_model = $req->car_model;
         $StockModel->reg_number = $req->reg_number;
+        $StockModel->eng_number = $req->eng_number;
+        $StockModel->chassis_number = $req->chassis_number;
         $StockModel->car_model_year = $req->car_model_year;
         $StockModel->color = $req->color;
         $StockModel->fuel_type = $req->fuel_type;
@@ -79,6 +84,8 @@ class StockController extends Controller
             'branch' => 'required',
             'car_model' => 'required',
             'reg_number' => 'required',
+            'eng_number' => 'required|min_digits:5|max_digits:10',
+            'chassis_number' => 'required|min_digits:5|max_digits:10',
             'car_model_year' => 'required|numeric',
             'color' => 'required',
             'fuel_type' => 'required',
@@ -94,6 +101,8 @@ class StockController extends Controller
         $StockModel->branch = $req->branch;
         $StockModel->car_model = $req->car_model;
         $StockModel->reg_number = $req->reg_number;
+        $StockModel->eng_number = $req->eng_number;
+        $StockModel->chassis_number = $req->chassis_number;
         $StockModel->car_model_year = $req->car_model_year;
         $StockModel->color = $req->color;
         $StockModel->fuel_type = $req->fuel_type;
@@ -107,13 +116,14 @@ class StockController extends Controller
 
         $StockModel->update();
 
-        return back()->with('success', 'Stock Updated Succesfully');
+        return redirect('admin/view-stock')->with('success', 'Stock Updated Succesfully');
+        //return back()->with('success', 'Stock Updated Succesfully');
 
     }
 
     public function booking()
     {
-        $data['car_stock'] = DB::table('car_stock')
+         $data['car_stock'] = DB::table('car_stock')
                 ->orderBy('reg_number','asc')
                 ->where('stock_status','=','2')
                 ->get();
@@ -130,8 +140,8 @@ class StockController extends Controller
         $req->validate([
                 
             'reg_number' => 'required',
+            'booking_person' => 'required',
             'customer' => 'required',
-            'delivary_date' => 'required',
             'total_amount' => 'required',
             'adv_amount' => 'required',
             'dp' => 'required',
@@ -163,7 +173,7 @@ class StockController extends Controller
         $BookingModel->car_stock_id = $req->reg_number;
         $BookingModel->booking_no = $book_no;
         $BookingModel->customer_ledger_id = $req->customer;
-        $BookingModel->delivary_date = $req->delivary_date;
+        $BookingModel->booking_person = $req->booking_person;
         $BookingModel->total_amount = $req->total_amount;
         $BookingModel->adv_amount = $req->adv_amount;
         $BookingModel->due_amount = $req->dp;
@@ -224,6 +234,105 @@ class StockController extends Controller
 
         $pdf = Pdf::loadView('admin.booking.bookinPdf',$data);
         return $pdf->download($regnumber.'.pdf');
+    }
+
+    public function adddelivary(Request $req, $id)
+    {
+         $data['carbooking'] = BookingModel::getRecordpdf($id);
+
+        $regnumber= $data['carbooking'][0]['regnumber'];
+
+        return view('admin.delivary.add-delivary',$data); 
+    }
+
+    public function insertdelivary(Request $req)
+    {
+        $req->validate([
+                
+            'booking_id' => 'required|numeric',
+            'booking_date' => 'required|date',
+            'booking_person' => 'required',
+            'name' => 'required',
+            'father_name' => 'required',
+            'mobile' => 'required|min_digits:10|max_digits:10',
+            'aadhar' => 'required|min_digits:10|max_digits:12',
+            'pan_card' => 'required|size:10',
+            'city' => 'required',
+            'address' => 'required',
+            'reg_number' => 'required',
+            'model_name' => 'required',
+            'model_year' => 'required',
+            'car_color' => 'required',
+            'eng_number' => 'required',
+            'chassis_number' => 'required',
+            'sell_amount' => 'required',
+            'booking_amount' => 'required',
+            'finance_amount' => 'required',
+            'dp' => 'required',
+        ]);
+
+
+        $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
+
+        $user = DB::table('car_booking')->where('booking_no', $req->booking_id)->first();
+        $customer_id = $user->customer_ledger_id;
+        
+        $CarDelivaryModel = new CarDelivaryModel;
+
+        $CarDelivaryModel->booking_id = $req->booking_id;
+        $CarDelivaryModel->booking_date = $req->booking_date;
+        $CarDelivaryModel->booking_person = $req->booking_person;
+        $CarDelivaryModel->name = $req->name;
+        $CarDelivaryModel->father_name = $req->father_name;
+        $CarDelivaryModel->mobile = $req->mobile;
+        $CarDelivaryModel->aadhar = $req->aadhar;
+        $CarDelivaryModel->pan_card = $req->pan_card;
+        $CarDelivaryModel->city = $req->city;
+        $CarDelivaryModel->address = $req->address;
+        $CarDelivaryModel->reg_number = $req->reg_number;
+        $CarDelivaryModel->model_name = $req->model_name;
+        $CarDelivaryModel->model_year = $req->model_year;
+        $CarDelivaryModel->car_color = $req->car_color;
+        $CarDelivaryModel->eng_number = $req->eng_number;
+        $CarDelivaryModel->chassis_number = $req->chassis_number;
+        $CarDelivaryModel->sell_amount = $req->sell_amount;
+        $CarDelivaryModel->booking_amount = $req->booking_amount;
+        $CarDelivaryModel->finance_amount = $req->finance_amount;
+        $CarDelivaryModel->dp = $req->dp;
+        $CarDelivaryModel->paymentMode = $req->paymentMode;
+        $CarDelivaryModel->remarks = $req->remarks;
+        $CarDelivaryModel->added_by = Auth::user()->name;
+        $CarDelivaryModel->save();
+        $lastid = $CarDelivaryModel->id;
+
+        if($lastid)
+            {
+                $CustomerStatementModel = new CustomerStatementModel;
+                $CustomerStatementModel->customer_id = $customer_id;
+                $CustomerStatementModel->payment_type = 1;
+                $CustomerStatementModel->amount = $req->dp;
+                $CustomerStatementModel->particular = 'Amount Credited for Down Payment for' . '-' . $req->reg_number . '-' . $req->model_name .'-' . $req->paymentMode .'-' . $mytime;
+                $CustomerStatementModel->created_by = Auth::user()->name;
+                $CustomerStatementModel->save();
+                $lastid_1 = $CustomerStatementModel->id;
+
+            }
+
+            if ($lastid_1)
+            {
+                DB::table('car_booking')
+                ->where('booking_no', $req->booking_id)
+                    ->update(['stock_status' => 3 ]);
+                
+                    DB::table('car_stock')
+                    ->where('reg_number',$req->reg_number)
+                        ->update(['stock_status' => 3 ]);
+            }
+
+
+        return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully '  .$lastid);
+
+
     }
 
     

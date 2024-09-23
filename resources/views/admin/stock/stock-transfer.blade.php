@@ -85,6 +85,18 @@
                             name="reg_number" required>
                     </div>
                     <div class="col-md-4">
+                        <label for="mobile_number" class="form-label">Engine Number <span
+                                style="color: red;">*</span></label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{$getRecord['0']['eng_number']}}"
+                            name="eng_number" placeholder="Enter Last 5 Digit" maxlength="5" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="mobile_number" class="form-label">Chassis  Number <span
+                                style="color: red;">*</span></label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{$getRecord['0']['chassis_number']}}"
+                            name="chassis_number" placeholder="Enter Last 5 Digit" maxlength="5" required>
+                    </div>
+                    <div class="col-md-4">
                         <label for="mobile_number" class="form-label">Model Year <span style="color: red;">*</span></label>
                         <input type="Text" class="form-control" id="inputName5" value="{{$getRecord['0']['car_model_year']}}"
                             name="car_model_year" required>

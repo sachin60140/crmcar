@@ -73,11 +73,17 @@
                                     <option selected>Choose...</option>
                                     @foreach ($car_stock as $item)
                                         <option value="{{ $item->id }}" @selected(old('reg_number') == $item->id)>
-                                            {{ $item->reg_number }}
+                                            {{ $item->reg_number }}- {{ $item->car_model }}
                                         </option>
                                     @endforeach
 
                                 </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Booking Person<span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="booking_person"
+                                    value="{{ old('booking_person') }}" name="booking_person" required>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="category" class="form-label">Customer</label>
@@ -90,12 +96,7 @@
 
                                 </select>
                             </div>
-                            <div class="col-md-12">
-                                <label for="total_amount" class="form-label">Delivary Date <span
-                                        style="color: red;">*</span></label>
-                                <input type="date" class="form-control" id="delivary_date"
-                                    value="{{ old('delivary_date') }}" name="delivary_date" required>
-                            </div>
+                            
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Sell Amount <span

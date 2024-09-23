@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View Stock | Car 4 Sales')
+@section('title', 'View Delivary | Car 4 Sales')
 
 
 @section('style')
@@ -17,7 +17,8 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Stock</li>
+                <li class="breadcrumb-item">Delivary</li>
+                <li class="breadcrumb-item">View Delivary</li>
                 
             </ol>
         </nav>
@@ -55,47 +56,53 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">View Stock </h5>
-                    
+                        <h5 class="card-title">View Delivary Details </h5>
+                        {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
 
                         <!-- Table with stripped rows -->
                         <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Branch</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Booking by</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Registration</th>
                                     <th scope="col">Model</th>
-                                    <th scope="col">Reg Number</th>
-                                    <th scope="col">Make</th>
-                                    <th scope="col">Fuel</th>
-                                    <th scope="col">Color</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Last Price</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Year</th>
+                                    <th scope="col">Sell Amount </th>
+                                    <th scope="col">Booking</th>
+                                    <th scope="col">Finance</th>
+                                    <th scope="col">DP</th>
+                                    
+                                    <th scope="col">Date</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($getRecord as $items)
+                                @foreach ($cardelivary as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->branch }}</td>
-                                        <td id="status">{{ $items->stock_status }}</td>
-                                        <td>{{ $items->car_model }}</td>
-                                        <td>{{ $items->reg_number }}</td>
-                                        <td>{{ $items->car_model_year }}</td>
-                                        <td>{{ $items->fuel_type }}</td>
-                                        <td>{{ $items->color }}</td>
-                                        <td>{{ $items->owner_sl_no }}</td>
-                                        <td>{{ $items->price }}</td>
-                                        <td>{{ $items->lastprice }}</td>
-                                        <td id="edit-b">
-                                            <a href="{{ url('admin/stock-transfer/' . $items->id) }}"
-                                                class="link-primary " >Edit</a>
+                                        <td>
+                                            <a href="{{url('/admin/delivary/delivary_pdf')}}/{{ $items->id }}"> {{ $items->booking_id }} </a>
                                         </td>
-                                        
+                                        <td>{{ $items->booking_date }}</td>
+                                        <td>{{ $items->booking_person }}</td>
+                                        <td>{{ $items->name }}</td>
+                                       
+                                        <td>{{ $items->mobile }}</td>
+                                        <td>{{ $items->reg_number }}</td>
+                                        <td>{{ $items->model_name }}</td>
+                                        <td>{{ $items->model_year }}</td>
+                                        <td>{{ $items->sell_amount }}</td>
+                                        <td>{{ $items->booking_amount }}</td>
+                                        <td>{{ $items->finance_amount	 }}</td>
+                                        <td>{{ $items->dp }}</td>
+                                       
+                                        <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
+                                       
                                     </tr>
                                 @endforeach
 
@@ -119,11 +126,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.js"></script>
 
         <script>
             $(document).ready(function() {
                 $('#example').DataTable({
                     dom: 'Bfrtip',
+                    "responsive" : true,
                     buttons: [
                         'copyHtml5',
                         'excelHtml5',
@@ -131,23 +140,10 @@
                         'pdfHtml5',
                     ],
                     "pageLength": 50,
-
                     "aaSorting": [
-                        [1, 'asc']
+                        [0, 'desc']
                     ],
                 });
             });
-        </script>
-        <script>
-            $('#example >tbody >tr').each(function () {
-            var status = $(this).find('td:eq(2)').text();
-            
-            if (status === "Booked") {
-                $(this).find('td:eq(11)').text("Booked");
-            }
-            if (status === "IN-Stock") {
-                $(this).find('td:eq(11)').show();
-            }
-        });
         </script>
     @endsection
