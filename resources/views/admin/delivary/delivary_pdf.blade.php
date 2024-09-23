@@ -433,7 +433,7 @@
             </div>
         </div> --}}
         <div>
-            <div style="margin-top: 550px; padding: 10px">
+            <div style="margin-top: 550px; padding-left: 10px">
                 <p>
                     I, <strong>Amit Kumar,</strong> S/o Shri Ramekbal Prasad, residing at Mahamaya Mandir, Damodarpur, Post:Damodarpur, Ps:Kanti, Muzaffarpur, Bihar. 843113. hereby declare that I am selling my vehicle with the following details:
                 </p>
@@ -443,7 +443,7 @@
                         Number:</strong>{{ $getRecords[0]['eng_number'] }}, <strong>Model:</strong>{{ $getRecords[0]['model_name'] }}, <strong>Model Year:</strong>{{ $getRecords[0]['model_year'] }}
                 </p>
                 <p>
-                    to<strong> {{ $getRecords[0]['name'] }}</strong>, S/o Shri <strong>{{ $getRecords[0]['father_name'] }}</strong>, Aadhar Number:
+                    to<strong> {{ $getRecords[0]['name'] }}</strong>, S/o Shri <strong>{{ $getRecords[0]['father_name'] }}</strong>, Address: <strong>{{ $getRecords[0]['address']}}</strong> , Aadhar Number:
                     <strong>{{ $getRecords[0]['aadhar'] }}</strong>, PAN: <strong>{{ $getRecords[0]['pan_card'] }}</strong>, on
                     <strong>{{ date('d/M/Y H:i:s', strtotime($getRecords[0]['created_at'] ))}}</strong>, for a total sum of
                     Rs.<strong>{{ $getRecords[0]['sell_amount'] }}/-</strong>.
@@ -482,7 +482,7 @@
                 </div>
                 <div style="float: right">
                     <p>____________________</p>
-                    <p>Authorized Sign (Car4Sales)</p>
+                    <p>Seller Sign</p>
                 </div>
             </div>
         </div>
