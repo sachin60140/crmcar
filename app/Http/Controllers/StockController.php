@@ -17,16 +17,13 @@ class StockController extends Controller
 {
     public function addstock()
     {
-        $data = DB::table('branch')
-                ->orderBy('branch_name','asc')
-                ->get();
+        $data = DB::table('branch')->orderBy('branch_name', 'asc')->get();
 
         return view('admin.add-stock', compact('data'));
     }
     public function insertstock(Request $req)
     {
         $req->validate([
-                
             'branch' => 'required',
             'car_model' => 'required',
             'eng_number' => 'required|min_digits:5|max_digits:10',
@@ -40,7 +37,7 @@ class StockController extends Controller
             'lastprice' => 'required',
         ]);
 
-        $StockModel = new StockModel;
+        $StockModel = new StockModel();
 
         $StockModel->branch = $req->branch;
         $StockModel->car_model = $req->car_model;
@@ -57,15 +54,14 @@ class StockController extends Controller
         $StockModel->save();
         $lastid = $StockModel->id;
 
-    return back()->with('success', ' Stock Added Successfully: ' .$lastid);
-        
+        return back()->with('success', ' Stock Added Successfully: ' . $lastid);
     }
 
     public function viewstock()
     {
-       $data['getRecord'] = StockModel::getrecord();
+        $data['getRecord'] = StockModel::getrecord();
 
-      return view('admin.view-stock',$data);
+        return view('admin.view-stock', $data);
     }
 
     public function stocktransfer($id)
@@ -74,13 +70,12 @@ class StockController extends Controller
 
         $data['branch'] = DB::table('branch')->get();
 
-        return view('admin.stock.stock-transfer',$data);   
+        return view('admin.stock.stock-transfer', $data);
     }
 
     public function updatestock(Request $req, $id)
     {
         $req->validate([
-                
             'branch' => 'required',
             'car_model' => 'required',
             'reg_number' => 'required',
@@ -95,8 +90,8 @@ class StockController extends Controller
         ]);
 
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
-        
-        $StockModel =StockModel::find($id);
+
+        $StockModel = StockModel::find($id);
 
         $StockModel->branch = $req->branch;
         $StockModel->car_model = $req->car_model;
@@ -110,35 +105,27 @@ class StockController extends Controller
         $StockModel->price = $req->price;
         $StockModel->lastprice = $req->lastprice;
         $StockModel->added_by = Auth::user()->name;
-        
-                
+
         $StockModel->updated_at = $mytime;
 
         $StockModel->update();
 
         return redirect('admin/view-stock')->with('success', 'Stock Updated Succesfully');
         //return back()->with('success', 'Stock Updated Succesfully');
-
     }
 
     public function booking()
     {
-         $data['car_stock'] = DB::table('car_stock')
-                ->orderBy('reg_number','asc')
-                ->where('stock_status','=','2')
-                ->get();
+        $data['car_stock'] = DB::table('car_stock')->orderBy('reg_number', 'asc')->where('stock_status', '=', '2')->get();
 
-                $data['ledger'] = DB::table('ledger')
-                ->orderBy('id','desc')
-                ->get();
+        $data['ledger'] = DB::table('ledger')->orderBy('id', 'desc')->get();
 
-        return view('admin.add-booking', $data); 
+        return view('admin.add-booking', $data);
     }
 
     public function storebooking(Request $req)
     {
         $req->validate([
-                
             'reg_number' => 'required',
             'booking_person' => 'required',
             'customer' => 'required',
@@ -149,26 +136,35 @@ class StockController extends Controller
             'remarks' => 'required',
         ]);
         $today = date('dmY');
-        $serviceJobNumber = BookingModel::where('booking_no','like',$today.'%')->pluck('booking_no');
+        $serviceJobNumber = BookingModel::where('booking_no', 'like', $today . '%')->pluck('booking_no');
         do {
-            $book_no = $today.rand(111111,999999);
+            $book_no = $today . rand(111111, 999999);
         } while ($serviceJobNumber->contains($book_no));
 
-
-        $car_no =  DB::table('car_stock')->where('id', $req->reg_number)
-                    ->select('reg_number')            
-                    ->first();
+        $car_no = DB::table('car_stock')
+            ->where('id', $req->reg_number)
+            ->select('reg_number')
+            ->first();
 
         $carreg = $car_no->reg_number;
-        
-        $car_model_name = DB::table('car_stock')->where('id', $req->reg_number)->select('car_model')->first();
-        $carmodel=$car_model_name->car_model;
+
+        $car_model_name = DB::table('car_stock')
+            ->where('id', $req->reg_number)
+            ->select('car_model')
+            ->first();
+        $carmodel = $car_model_name->car_model;
 
         $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
 
+        $customerdetails=DB::table('ledger')
+                        ->where('id', $req->customer)
+                        ->select('mobile_number','name')
+                        ->first(); 
+
+
         $paymentMode = $req->paymentMode;
 
-        $BookingModel = new BookingModel;
+        $BookingModel = new BookingModel();
 
         $BookingModel->car_stock_id = $req->reg_number;
         $BookingModel->booking_no = $book_no;
@@ -183,46 +179,72 @@ class StockController extends Controller
         $BookingModel->save();
         $lastid = $BookingModel->id;
 
-        if($lastid)
-        {
-            $CustomerStatementModel = new CustomerStatementModel;
+        if ($lastid) {
+            $CustomerStatementModel = new CustomerStatementModel();
             $CustomerStatementModel->customer_id = $req->customer;
             $CustomerStatementModel->payment_type = 0;
             $CustomerStatementModel->amount = -$req->total_amount;
-            $CustomerStatementModel->particular = 'Amount Debited for ' . '-' . $carreg . '-' . $carmodel .'-' . $mytime;
+            $CustomerStatementModel->particular = 'Amount Debited for ' . '-' . $carreg . '-' . $carmodel . '-' . $mytime;
             $CustomerStatementModel->created_by = Auth::user()->name;
             $CustomerStatementModel->save();
             $lastid_1 = $BookingModel->id;
 
-            if($lastid_1)
-            {
-                $CustomerStatementModel = new CustomerStatementModel;
+            if ($lastid_1) {
+                $CustomerStatementModel = new CustomerStatementModel();
                 $CustomerStatementModel->customer_id = $req->customer;
                 $CustomerStatementModel->payment_type = 1;
                 $CustomerStatementModel->amount = $req->adv_amount;
-                $CustomerStatementModel->particular = 'Amount Credited for Booking Amount for' . '-' . $carreg . '-' . $carmodel .'-' . $paymentMode .'-' . $mytime;
+                $CustomerStatementModel->particular = 'Amount Credited for Booking Amount for' . '-' . $carreg . '-' . $carmodel . '-' . $paymentMode . '-' . $mytime;
                 $CustomerStatementModel->created_by = Auth::user()->name;
                 $CustomerStatementModel->save();
                 $lastid_1 = $BookingModel->id;
-
             }
         }
 
-                $Stockstatus = StockModel::find($req->reg_number);
-                $Stockstatus->stock_status = 1 ;
-                $Stockstatus->update();
+        $Stockstatus = StockModel::find($req->reg_number);
+        $Stockstatus->stock_status = 1;
+        $Stockstatus->update();
 
-        return back()->with('success', ' Booking  Added Successfully: ' .$lastid);
+        $sender = 'CAR4SL';
+        $mob = $customerdetails->mobile_number;
+        $name = $customerdetails->name;
+        $auth = '3HqJI';
+        $entid = '1701171869640632437';
+        $temid = '1707172716926156370';
+        $mob2 = [$mob];
+        $mob3 = implode(',', $mob2);
+        $msg1 = urlencode('प्रिय '. $name . ",\nCar4Sales को चुनने के लिए धन्यवाद! हम आपकी बुक की गई गाड़ी को जल्द से जल्द डिलीवर करने का प्रयास कर रहे हैं।\nकृपया वित्तीय प्रक्रिया को पूरा करने के लिए अपने आवश्यक दस्तावेज़ शीघ्र उपलब्ध कराएं। \nधन्यवाद,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
+
+        $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
+
+        //sms from here
+
+        function SendSMS($hostUrl)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $hostUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            $result = curl_exec($ch);
+            return $result;
+        }
+
+        $raa = SendSMS($url); // call function that return response with code
+
+        return back()->with('success', ' Booking  Added Successfully: ' . $lastid);
     }
 
     public function viewbooking()
-        {   
-            $data['carbooking'] = BookingModel::getRecord();
-            
-            return view('admin.booking.view-booking',$data);
-        }
+    {
+        $data['carbooking'] = BookingModel::getRecord();
+
+        return view('admin.booking.view-booking', $data);
+    }
     public function trafficchallan()
-    {   
+    {
         return view('admin.traffic-challan');
     }
 
@@ -230,25 +252,24 @@ class StockController extends Controller
     {
         $data['carbooking'] = BookingModel::getRecordpdf($id);
 
-        $regnumber= $data['carbooking'][0]['regnumber'];
+        $regnumber = $data['carbooking'][0]['regnumber'];
 
-        $pdf = Pdf::loadView('admin.booking.bookinPdf',$data);
-        return $pdf->download($regnumber.'.pdf');
+        $pdf = Pdf::loadView('admin.booking.bookinPdf', $data);
+        return $pdf->download($regnumber . '.pdf');
     }
 
     public function adddelivary(Request $req, $id)
     {
-         $data['carbooking'] = BookingModel::getRecordpdf($id);
+        $data['carbooking'] = BookingModel::getRecordpdf($id);
 
-        $regnumber= $data['carbooking'][0]['regnumber'];
+        $regnumber = $data['carbooking'][0]['regnumber'];
 
-        return view('admin.delivary.add-delivary',$data); 
+        return view('admin.delivary.add-delivary', $data);
     }
 
     public function insertdelivary(Request $req)
     {
         $req->validate([
-                
             'booking_id' => 'required|numeric',
             'booking_date' => 'required|date',
             'booking_person' => 'required',
@@ -271,13 +292,14 @@ class StockController extends Controller
             'dp' => 'required',
         ]);
 
-
         $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
 
-        $user = DB::table('car_booking')->where('booking_no', $req->booking_id)->first();
+        $user = DB::table('car_booking')
+            ->where('booking_no', $req->booking_id)
+            ->first();
         $customer_id = $user->customer_ledger_id;
-        
-        $CarDelivaryModel = new CarDelivaryModel;
+
+        $CarDelivaryModel = new CarDelivaryModel();
 
         $CarDelivaryModel->booking_id = $req->booking_id;
         $CarDelivaryModel->booking_date = $req->booking_date;
@@ -305,35 +327,29 @@ class StockController extends Controller
         $CarDelivaryModel->save();
         $lastid = $CarDelivaryModel->id;
 
-        if($lastid)
-            {
-                $CustomerStatementModel = new CustomerStatementModel;
-                $CustomerStatementModel->customer_id = $customer_id;
-                $CustomerStatementModel->payment_type = 1;
-                $CustomerStatementModel->amount = $req->dp;
-                $CustomerStatementModel->particular = 'Amount Credited for Down Payment for' . '-' . $req->reg_number . '-' . $req->model_name .'-' . $req->paymentMode .'-' . $mytime;
-                $CustomerStatementModel->created_by = Auth::user()->name;
-                $CustomerStatementModel->save();
-                $lastid_1 = $CustomerStatementModel->id;
+        if ($lastid) {
+            $CustomerStatementModel = new CustomerStatementModel();
+            $CustomerStatementModel->customer_id = $customer_id;
+            $CustomerStatementModel->payment_type = 1;
+            $CustomerStatementModel->amount = $req->dp;
+            $CustomerStatementModel->particular = 'Amount Credited for Down Payment for' . '-' . $req->reg_number . '-' . $req->model_name . '-' . $req->paymentMode . '-' . $mytime;
+            $CustomerStatementModel->created_by = Auth::user()->name;
+            $CustomerStatementModel->save();
+            $lastid_1 = $CustomerStatementModel->id;
+        }
 
-            }
-
-            if ($lastid_1)
-            {
-                DB::table('car_booking')
+        if ($lastid_1) {
+            DB::table('car_booking')
                 ->where('booking_no', $req->booking_id)
-                    ->update(['stock_status' => 3 ]);
-                
-                    DB::table('car_stock')
-                    ->where('reg_number',$req->reg_number)
-                        ->update(['stock_status' => 3 ]);
-            }
+                ->update(['stock_status' => 3]);
 
+            DB::table('car_stock')
+                ->where('reg_number', $req->reg_number)
+                ->update(['stock_status' => 3]);
+        }
 
-        return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully '  .$lastid);
+        
 
-
+        return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully ' . $lastid);
     }
-
-    
 }

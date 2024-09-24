@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Http;
 class AuthController extends Controller
 {
     public function login()
-    {       
+    {
         if (!empty(Auth::check())) {
             return redirect('admin/dashboard');
         }
@@ -24,17 +24,17 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request): RedirectResponse
-        {
-            Session::flush();
-            
-            Auth::logout();
+    {
+        Session::flush();
 
-            $request->session()->invalidate();
-        
-            $request->session()->regenerateToken();
-        
-            return redirect('/admin');
-        }
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/admin');
+    }
 
     public function authlogin(Request $req)
     {
@@ -49,16 +49,12 @@ class AuthController extends Controller
         $data['totalstock'] = DB::table('car_stock')->count();
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
-        $data['todaycontacts'] = DB::table('customer_lead')
-                                ->whereDate('created_at', Carbon::today())
-                                ->count();
+        $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
 
         $data['totalvisitor'] = DB::table('visitor')->count();
         $data['totalbooking'] = DB::table('car_booking')->count();
 
-        $data['todayvisitor'] = DB::table('visitor')
-                                ->whereDate('created_at', Carbon::today())
-                                ->count();
+        $data['todayvisitor'] = DB::table('visitor')->whereDate('created_at', Carbon::today())->count();
 
         $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
         $headers = [
@@ -67,14 +63,13 @@ class AuthController extends Controller
             'password' => 'M0hxSkk=',
         ];
 
-        $response = Http::withHeaders($headers)->get($apiURL );
-        
+        $response = Http::withHeaders($headers)->get($apiURL);
+
         $data1 = $response;
 
-       $data['balance'] = $data1['balance']['sms_wallet'];
+        $data['balance'] = $data1['balance']['sms_wallet'];
 
-
-        return view('admin.dashboard',$data);
+        return view('admin.dashboard', $data);
     }
 
     public function branch()
@@ -85,27 +80,26 @@ class AuthController extends Controller
     public function addbranch(Request $req)
     {
         $req->validate([
-                
             'branchname' => 'required',
             'mobile_number' => 'required|numeric',
             'address' => 'required',
         ]);
-            $BranchModel = new BranchModel;
+        $BranchModel = new BranchModel();
 
-            $BranchModel->branch_name = $req->branchname;
-            $BranchModel->branch_mobile = $req->mobile_number;
-            $BranchModel->address = $req->address;
-            
-            $BranchModel->save();
-            $lastid = $BranchModel->id;
-  
-        return back()->with('success', ' Branch Created Successfully: ' .$lastid);
+        $BranchModel->branch_name = $req->branchname;
+        $BranchModel->branch_mobile = $req->mobile_number;
+        $BranchModel->address = $req->address;
+
+        $BranchModel->save();
+        $lastid = $BranchModel->id;
+
+        return back()->with('success', ' Branch Created Successfully: ' . $lastid);
     }
     public function viewbranch()
     {
         $data = DB::table('branch')->get();
-       
-        return view('admin.view-branch',compact('data'));
+
+        return view('admin.view-branch', compact('data'));
     }
 
     public function addemployee()
@@ -116,23 +110,21 @@ class AuthController extends Controller
     public function inserempdata(Request $req)
     {
         $req->validate([
-                
             'emp_name' => 'required',
             'emp_mobile' => 'required|numeric',
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
 
-        $pass = (Hash::make($req->input('password')));
+        $pass = Hash::make($req->input('password'));
 
         $query = DB::table('users')->insert([
             'name' => $req->input('emp_name'),
             'email' => $req->input('email'),
-            'password' => $pass
+            'password' => $pass,
         ]);
 
-        if($query)
-        {
+        if ($query) {
             return back()->with('success', ' User Added Successfully: ');
         }
     }
@@ -140,7 +132,7 @@ class AuthController extends Controller
     public function viewempdata()
     {
         $data['emplist'] = DB::table('users')->get();
-        return view('admin.employee.view-employee',$data);   
+        return view('admin.employee.view-employee', $data);
     }
 
     public function smsbalance()
@@ -152,13 +144,13 @@ class AuthController extends Controller
             'password' => 'M0hxSkk=',
         ];
 
-        $response = Http::withHeaders($headers)->get($apiURL );
+        $response = Http::withHeaders($headers)->get($apiURL);
         $data = $response->json();
-        
+
         $data1 = $response;
-        
+
         //return $data->balance->sms_wallet;
-        
+
         return $balance = $data1['balance']['sms_wallet'];
     }
 }

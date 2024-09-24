@@ -440,7 +440,8 @@
                 <p>
                     <strong>Vehicle Number:</strong>{{ $getRecords[0]['reg_number'] }}, <strong>Chasis
                         Number:</strong>{{ $getRecords[0]['chassis_number'] }}, <strong>Engine
-                        Number:</strong>{{ $getRecords[0]['eng_number'] }}, <strong>Model:</strong>{{ $getRecords[0]['model_name'] }}, <strong>Model Year:</strong>{{ $getRecords[0]['model_year'] }}
+                        Number:</strong>{{ $getRecords[0]['eng_number'] }}, <strong>Model:</strong>{{ $getRecords[0]['model_name'] }}, <strong>Model Year:</strong>{{ $getRecords[0]['model_year'] }},
+                        <strong>Colour:</strong>{{ $getRecords[0]['car_color'] }}
                 </p>
                 <p>
                     to<strong> {{ $getRecords[0]['name'] }}</strong>, S/o Shri <strong>{{ $getRecords[0]['father_name'] }}</strong>, Address: <strong>{{ $getRecords[0]['address']}}</strong> , Aadhar Number:
@@ -461,16 +462,17 @@
                         movement, legal obligations, and any liabilities, will be solely borne by Buyer (<strong>{{ $getRecords[0]['name'] }}</strong>)
                         .
                     </li>
-                    <li>
-                        This sale is final, and there is no provision for the return of the vehicle. The Buyer, <strong>{{ $getRecords[0]['name'] }}</strong>, acknowledges that the vehicle has been purchased after thorough
-                        consideration and inspection.
-                    </li>
+                    
                     <li>
                         Mr. <strong>{{ $getRecords[0]['name'] }}</strong> agrees to purchase the vehicle in its current condition, as inspected
                         and approved by him. The Seller (<strong>Amit Kumar</strong>), makes no warranties or guarantees, expressed or implied, regarding
                         the condition of the vehicle, except for any express warranties included in this Agreement. The
-                        Buyer (<strong>{{ $getRecords[0]['name'] }}</strong>) acknowledges that the vehicle is sold "as-is" without any warranties from the Seller.
+                        Buyer (<strong>{{ $getRecords[0]['name'] }}</strong>) acknowledges that the vehicle is sold "as-is" without any warranties from the Seller. This sale is final, and there is no provision for the return of the vehicle.
                     </li>
+                    <li>The responsibility of the RC (Registration Certificate) lies with the DTO office, not the showroom.
+                    </li>
+                    <li>Once the RC (Registration Certificate) is updated online, ensure that the insurance is transferred
+                        to your name. Otherwise, the showroom will not be responsible if a claim is denied.</li>
     
                 </ol>
             </div>
