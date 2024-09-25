@@ -125,6 +125,11 @@
                      </a>
                  </li>
                  <li>
+                    <a href="{{ route('hotleaddata') }}">
+                        <i class="bi bi-circle"></i><span>Hot Lead</span>
+                    </a>
+                </li>
+                 <li>
                     <a href="{{ route('vistordata') }}">
                         <i class="bi bi-circle"></i><span>View Visitor</span>
                     </a>

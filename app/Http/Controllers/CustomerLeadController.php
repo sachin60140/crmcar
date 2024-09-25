@@ -71,4 +71,14 @@ class CustomerLeadController extends Controller
        
         return view('admin.Data.view-data',compact('data'));
     }
+
+    public function hotleaddata()
+    {
+        $data = DB::table('customer_lead')
+                    ->where('lead_type', '=', 'Hot Lead')
+                    ->get();
+       
+        return view('admin.data.hot-lead',compact('data'));
+
+    }
 }

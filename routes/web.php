@@ -54,6 +54,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/data/add-lead', [CustomerLeadController::class, 'addlead'])->name('addlead1');
     Route::post('admin/data/add-lead', [CustomerLeadController::class, 'storeleaddata'])->name('storeleaddata1');
     Route::get('admin/data/view-lead', [CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata1');
+    Route::get('admin/data/hot-lead', [CustomerLeadController::class, 'hotleaddata'])->name('hotleaddata');
 
     Route::get('admin/customer/add-ledger', [CustomerLegderController::class, 'addledger'])->name('addledger');
     Route::post('admin/customer/add-ledger', [CustomerLegderController::class, 'storeledger'])->name('storeledger');
