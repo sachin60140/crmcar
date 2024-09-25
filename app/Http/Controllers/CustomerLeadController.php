@@ -78,7 +78,7 @@ class CustomerLeadController extends Controller
                     ->where('lead_type', '=', 'Hot Lead')
                     ->get();
        
-        return view('admin.data.hot-lead',compact('data'));
+        return view('admin.Data.hot-lead',compact('data'));
 
     }
 }
