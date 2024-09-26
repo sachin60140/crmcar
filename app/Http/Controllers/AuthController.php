@@ -46,7 +46,8 @@ class AuthController extends Controller
     }
     public function dashboard()
     {
-        $data['totalstock'] = DB::table('car_stock')->count();
+        $data['totalstock'] = DB::table('car_stock')
+        ->where('stock_status','!=' ,'3')->count();
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
         $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
@@ -55,6 +56,28 @@ class AuthController extends Controller
         $data['totalbooking'] = DB::table('car_booking')->count();
 
         $data['todayvisitor'] = DB::table('visitor')->whereDate('created_at', Carbon::today())->count();
+
+        $data['currentMonthName'] = Carbon::now()->format('F');
+
+        $data['todaybookedcar'] = DB::table('car_booking')
+                            ->whereDate('created_at', Carbon::today())
+                            ->count();
+
+        $data['currentmonthbooking'] =  DB::table('car_booking')
+                             ->whereYear('created_at', Carbon::now()->year)
+                            ->whereMonth('created_at', Carbon::now()->month)
+                            ->count();
+
+        $data['totaldelivary'] = DB::table('car_delivary')->count();
+        $data['todaydelivary'] = DB::table('car_delivary')
+                            ->whereDate('created_at', Carbon::today())
+                            ->count();
+
+        $data['currentmonthdelivary'] =  DB::table('car_delivary')
+                             ->whereYear('created_at', Carbon::now()->year)
+                            ->whereMonth('created_at', Carbon::now()->month)
+                            ->count();
+    
 
         $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
         $headers = [

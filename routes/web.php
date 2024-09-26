@@ -60,6 +60,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/customer/add-ledger', [CustomerLegderController::class, 'storeledger'])->name('storeledger');
     Route::get('admin/customer/view-ledger', [CustomerLegderController::class, 'viewledger'])->name('viewledger');
     Route::get('admin/customer/view-ledger-statement/{id}', [CustomerLegderController::class, 'viewledgerstatement'])->name('viewledgerstatement');
+    Route::get('admin/customer/reciept', [CustomerLegderController::class, 'reciept'])->name('reciept');
+    Route::post('admin/customer/reciept',[CustomerLegderController::class, 'storerecieptpayment'])->name('storerecieptpayment');
+    
+    Route::post('admin/customer/getcustomerbalance', [CustomerLegderController::class, 'getcustomerbalance'])->name('getcustomerbalance');
 
     Route::get('admin/add-employee', [AuthController::class, 'addemployee'])->name('addemployee');
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');

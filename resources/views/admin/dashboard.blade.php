@@ -46,19 +46,46 @@
                     <div class="col-xxl-4 col-md-4">
                         <div class="card info-card revenue-card">
                             <div class="card-body">
-                                <h5 class="card-title"> Total Booked Car <span>| Today</span></h5>
+                                <h5 class="card-title"> Total Booked Car <span>| {{$totalbooking}}</span></h5>
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-car-front-fill"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ $totalbooking }}</h6>
+                                        <p>Today</p>
+                                        <h6>{{ $todaybookedcar }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>{{$currentMonthName}}</p>
+                                        <h6>{{ $currentmonthbooking }}</h6>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div><!-- End Revenue Card -->
+                     <!-- Delivary Card -->
+                     <div class="col-xxl-4 col-md-4">
+                        <div class="card info-card revenue-card">
+                            <div class="card-body">
+                                <h5 class="card-title"> Total Delivered Car <span>| {{ $totaldelivary }}</span></h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-car-front-fill"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Today</p>
+                                        <h6>{{ $todaydelivary }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>{{$currentMonthName}}</p>
+                                        <h6>{{ $currentmonthdelivary }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- End Delivary Card -->
 
                     <!-- Customers Card -->
                     <div class="col-xxl-4 col-md-4">

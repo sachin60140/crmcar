@@ -40,6 +40,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Details</th>
                             <th scope="col">Txn Date</th>
+                            <th scope="col">Entry Date</th>
                             
                             <th scope="col">Amount</th>
                             <th scope="col">Balance</th>
@@ -57,6 +58,7 @@
                                 <td>{{ $items->id }}</td>
                                 <td>{{ $items->name }}</td>
                                 <td>{{ $items->particular }}</td>
+                                <td>{{ date('d-M-Y', strtotime($items->txn_date))  }}</td>
                                 <td>{{ date('d-M-Y', strtotime($items->created_at))  }}</td>
                                 
                                 <td>{{ $items->amount }}</td>

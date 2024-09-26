@@ -41,6 +41,12 @@
                          <i class="bi bi-circle"></i><span>View Ledger</span>
                      </a>
                  </li>
+                 <li>
+                    <a href="{{ route('reciept') }}">
+                        <i class="bi bi-circle"></i><span>Reciept</span>
+                    </a>
+                </li>
+                
              </ul>
          </li>
          <li class="nav-item">

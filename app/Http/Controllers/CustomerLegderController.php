@@ -56,4 +56,55 @@ class CustomerLegderController extends Controller
 
         return view('admin.ledger.ledger-statement', $data);
     }
+
+    public function reciept()
+    {
+        $data['clientlist'] = DB::table('ledger')
+        ->select('id', 'name','mobile_number')
+        ->orderBy('name', 'asc')
+        ->get();
+        return view('admin.ledger.reciept',$data);
+    }
+    public function storerecieptpayment(Request $req)
+    {
+
+        $req->validate([
+                
+            'client_name' => 'required',
+            'paymentMode' => 'required',
+            'txn_date' => 'required',
+            'amount' => 'required',
+            'remarks' => 'required',
+        ]);
+
+        $paymentmode= $req->paymentMode;
+
+       $remrks= $paymentmode.'-'.'Payment Recived,'.'-'.$req->remarks; 
+
+            $CustomerStatementModel = new CustomerStatementModel;
+
+            $CustomerStatementModel->customer_id = $req->client_name;
+            $CustomerStatementModel->payment_type = 1;
+            $CustomerStatementModel->txn_date = $req->txn_date;
+            $CustomerStatementModel->amount = $req->amount;
+            $CustomerStatementModel->created_by = Auth::user()->name;
+            $CustomerStatementModel->particular = $remrks;
+
+            $CustomerStatementModel->save();
+            $lastid = $CustomerStatementModel->id;
+    
+        return back()->with('success', ' Payment Reciept Successfully txn id is :  ' .$lastid);
+        
+
+    }
+
+
+    public function getcustomerbalance(Request $req)
+    {
+        $custid = $req->post('customerid');
+
+        $data = DB::table('customer_ledger')->where('customer_id', $custid)->sum('amount');
+
+        echo 'Current Balance amount is: ' . '<b>' . $data . '</b>';
+    }
 }
