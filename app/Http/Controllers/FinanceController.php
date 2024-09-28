@@ -24,10 +24,7 @@ class FinanceController extends Controller
             'mobile' => 'required|min_digits:10|max_digits:10',
             'cutomer_pan' => 'required|min:10|max:10',
             'aadhar' => 'required|min_digits:12|max_digits:12',
-            'co_apllicant_name' => 'required',
-            'co_apllicant_mobile' => 'required|min_digits:10|max_digits:10',
-            'co_apllicant_pan' => 'required|min:10|max:10',
-            'co_apllicant_aadhar' => 'required|min_digits:12|max_digits:12',
+            
             'reg_number' => 'required',
             'rto_name' => 'required',
             'financer_details_id' => 'required',
@@ -47,10 +44,6 @@ class FinanceController extends Controller
         $FinanceFileModel->mobile = $req->mobile;
         $FinanceFileModel->cutomer_pan = $req->cutomer_pan;
         $FinanceFileModel->aadhar = $req->aadhar;
-        $FinanceFileModel->co_apllicant_name = $req->co_apllicant_name;
-        $FinanceFileModel->co_apllicant_mobile = $req->co_apllicant_mobile;
-        $FinanceFileModel->co_apllicant_pan = $req->co_apllicant_pan;
-        $FinanceFileModel->co_apllicant_aadhar = $req->co_apllicant_aadhar;
         $FinanceFileModel->reg_number = $req->reg_number;
         $FinanceFileModel->rto_name = $req->rto_name;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
@@ -103,10 +96,7 @@ class FinanceController extends Controller
             'mobile' => 'required|min_digits:10|max_digits:10',
             'cutomer_pan' => 'required|min:10|max:10',
             'aadhar' => 'required|min_digits:12|max_digits:12',
-            'co_apllicant_name' => 'required',
-            'co_apllicant_mobile' => 'required|min_digits:10|max_digits:10',
-            'co_apllicant_pan' => 'required|min:10|max:10',
-            'co_apllicant_aadhar' => 'required|min_digits:12|max_digits:12',
+           
             'reg_number' => 'required',
             'rto_name' => 'required',
             'financer_details_id' => 'required',
@@ -127,10 +117,7 @@ class FinanceController extends Controller
         $FinanceFileModel->mobile = $req->mobile;
         $FinanceFileModel->cutomer_pan = $req->cutomer_pan;
         $FinanceFileModel->aadhar = $req->aadhar;
-        $FinanceFileModel->co_apllicant_name = $req->co_apllicant_name;
-        $FinanceFileModel->co_apllicant_mobile = $req->co_apllicant_mobile;
-        $FinanceFileModel->co_apllicant_pan = $req->co_apllicant_pan;
-        $FinanceFileModel->co_apllicant_aadhar = $req->co_apllicant_aadhar;
+       
         $FinanceFileModel->rto_name = $req->rto_name;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
         $FinanceFileModel->file_status = $req->file_status;

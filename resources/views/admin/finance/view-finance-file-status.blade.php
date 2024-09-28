@@ -56,10 +56,7 @@
                 $mobile = $item->mobile;
                 $cutomer_pan = $item->cutomer_pan;
                 $aadhar = $item->aadhar;
-                $co_apllicant_name = $item->co_apllicant_name;
-                $co_apllicant_mobile = $item->co_apllicant_mobile;
-                $co_apllicant_pan = $item->co_apllicant_pan;
-                $co_apllicant_aadhar = $item->co_apllicant_aadhar;
+                
                 $reg_number = $item->reg_number;
                 $rto_name = $item->rto_name;
                 $booking_amount = $item->booking_amount;
@@ -88,20 +85,9 @@
                                 <label for="fee" class="form-label">Pan: <span><strong>{{ $cutomer_pan}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
-                                <label for="fee" class="form-label">Name of Cusotmer: <span><strong>{{ $aadhar}}</strong></span></label>
+                                <label for="fee" class="form-label">Aadhar: <span><strong>{{ $aadhar}}</strong></span></label>
                             </div>
-                            <div class="col-md-4">
-                                <label for="fee" class="form-label">Co Applicant: <span><strong>{{ $co_apllicant_name}}</strong></span></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fee" class="form-label">Co Applicant Mobile: <span><strong>{{ $co_apllicant_mobile}}</strong></span></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fee" class="form-label">Co Applicant Pan: <span><strong>{{ $co_apllicant_pan}}</strong></span></label>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="fee" class="form-label">Co Applicant Aadhar: <span><strong>{{ $co_apllicant_aadhar}}</strong></span></label>
-                            </div>
+                           
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Registration: <span><strong>{{ $reg_number}}</strong></span></label>
                             </div>

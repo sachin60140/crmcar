@@ -93,31 +93,7 @@
                                 <input type="Text" class="form-control" id="aadhar"
                                     value="{{$updatefinancefiledetails['0']['aadhar']}}" name="aadhar" required>
                             </div>
-                            <hr>
-                            <div class="col-md-12">
-                                <label for="total_amount" class="form-label">CO-Applicant Name <span
-                                        style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="co_apllicant_name"
-                                    value="{{$updatefinancefiledetails['0']['co_apllicant_name']}}" name="co_apllicant_name" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="due_amount" class="form-label">CO-Applicant Mobile Number <span
-                                        style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="co_apllicant_mobile"
-                                    value="{{$updatefinancefiledetails['0']['co_apllicant_mobile']}}" name="co_apllicant_mobile" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="total_amount" class="form-label">CO-Applicant PAN <span
-                                        style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="co_apllicant_pan"
-                                    value="{{$updatefinancefiledetails['0']['co_apllicant_pan']}}" name="co_apllicant_pan" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="total_amount" class="form-label">CO-Applicant Aadhar <span
-                                        style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="co_apllicant_aadhar"
-                                    value="{{$updatefinancefiledetails['0']['co_apllicant_aadhar']}}" name="co_apllicant_aadhar" required>
-                            </div>
+                           
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Vehicle Registration Number <span
