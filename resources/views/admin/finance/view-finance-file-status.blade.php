@@ -56,7 +56,7 @@
                 $mobile = $item->mobile;
                 $cutomer_pan = $item->cutomer_pan;
                 $aadhar = $item->aadhar;
-                
+                $address = $item->address;
                 $reg_number = $item->reg_number;
                 $rto_name = $item->rto_name;
                 $booking_amount = $item->booking_amount;
@@ -86,6 +86,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Aadhar: <span><strong>{{ $aadhar}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">Address: <span><strong>{{ $address}}</strong></span></label>
                             </div>
                            
                             <div class="col-md-4">

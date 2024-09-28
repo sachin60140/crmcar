@@ -93,7 +93,12 @@
                                 <input type="Text" class="form-control" id="aadhar"
                                     value="{{$updatefinancefiledetails['0']['aadhar']}}" name="aadhar" required>
                             </div>
-                           
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Address <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="address"
+                                    value="{{$updatefinancefiledetails['0']['address']}}" name="address" required>
+                            </div>
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Vehicle Registration Number <span

@@ -24,7 +24,7 @@ class FinanceController extends Controller
             'mobile' => 'required|min_digits:10|max_digits:10',
             'cutomer_pan' => 'required|min:10|max:10',
             'aadhar' => 'required|min_digits:12|max_digits:12',
-            
+            'address' => 'required',
             'reg_number' => 'required',
             'rto_name' => 'required',
             'financer_details_id' => 'required',
@@ -44,6 +44,7 @@ class FinanceController extends Controller
         $FinanceFileModel->mobile = $req->mobile;
         $FinanceFileModel->cutomer_pan = $req->cutomer_pan;
         $FinanceFileModel->aadhar = $req->aadhar;
+        $FinanceFileModel->address = $req->address;
         $FinanceFileModel->reg_number = $req->reg_number;
         $FinanceFileModel->rto_name = $req->rto_name;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
@@ -96,7 +97,7 @@ class FinanceController extends Controller
             'mobile' => 'required|min_digits:10|max_digits:10',
             'cutomer_pan' => 'required|min:10|max:10',
             'aadhar' => 'required|min_digits:12|max_digits:12',
-           
+            'address' => 'required',
             'reg_number' => 'required',
             'rto_name' => 'required',
             'financer_details_id' => 'required',
@@ -117,7 +118,7 @@ class FinanceController extends Controller
         $FinanceFileModel->mobile = $req->mobile;
         $FinanceFileModel->cutomer_pan = $req->cutomer_pan;
         $FinanceFileModel->aadhar = $req->aadhar;
-       
+        $FinanceFileModel->address = $req->address;
         $FinanceFileModel->rto_name = $req->rto_name;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
         $FinanceFileModel->file_status = $req->file_status;
