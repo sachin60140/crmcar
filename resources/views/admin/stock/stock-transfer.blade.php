@@ -66,7 +66,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="category" class="form-label">Branch</label>
                         <select id="category" class="form-select" name="branch">
-                            @foreach ($branch as $items)
+                            @foreach ($financer_details as $items)
                                 <option {{old('branch', $getRecord['0']['branch'])==$items->branch_name ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->branch_name }}</option>
                             @endforeach
 
@@ -75,7 +75,7 @@
                     <div class="col-md-4">
                         <label for="fee" class="form-label">Vehicle Model Name <span style="color: red;">*</span></label>
                         <input type="text" class="form-control" id="cab_fee" value="{{$getRecord['0']['car_model']}}"
-                            name="car_model">
+                            name="car_model"> 
                     </div>
 
                     <div class="col-md-4">

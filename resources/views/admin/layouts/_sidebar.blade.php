@@ -153,8 +153,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="bi bi-circle"></i><span>View Contact</span>
+                    <a href="{{route('viewfinancefile')}}">
+                        <i class="bi bi-circle"></i><span>View details</span>
                     </a>
                 </li>
                 

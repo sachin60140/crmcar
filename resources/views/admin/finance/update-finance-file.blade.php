@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Create Finance File | Car 4 Sale')
+@section('title', 'Update Finance File | Car 4 Sale')
 
 
 @section('style')
@@ -23,7 +23,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item active">Admin</li>
-                <li class="breadcrumb-item active">Add Finance File</li>
+                <li class="breadcrumb-item active">Update Finance File</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -60,83 +60,85 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Add Finance File</h5>
+                        <h5 class="card-title">Update Finance File</h5>
 
                         <!-- Multi Columns Form -->
-                        <form class="row g-3" action="{{route('storefinancefiledetails')}}" method="POST">
+                        <form class="row g-3" action="{{route('updatefilestatus')}}" method="POST">
                             @csrf
-                            
+                            <div class="col-md-12" hidden>
+                                <input type="Text" class="form-control" id="cutomer_id"
+                                    value="{{$updatefinancefiledetails['0']['id']}}" name="cutomer_id" autofocus required>
+                            </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Name of Customer <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="cutomer_name"
-                                    value="{{ old('cutomer_name') }}" name="cutomer_name" autofocus required>
+                                    value="{{$updatefinancefiledetails['0']['cutomer_name']}}" name="cutomer_name" autofocus required>
                             </div>
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">Mobile Number <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="mobile"
-                                    value="{{ old('mobile') }}" name="mobile" required>
+                                    value="{{$updatefinancefiledetails['0']['mobile']}}" name="mobile" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Customer Pan Card <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="cutomer_pan"
-                                    value="{{ old('cutomer_pan') }}" name="cutomer_pan" required>
+                                    value="{{$updatefinancefiledetails['0']['cutomer_pan']}}" name="cutomer_pan" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Aadhar Number <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="aadhar"
-                                    value="{{ old('aadhar') }}" name="aadhar" required>
+                                    value="{{$updatefinancefiledetails['0']['aadhar']}}" name="aadhar" required>
                             </div>
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">CO-Applicant Name <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="co_apllicant_name"
-                                    value="{{ old('co_apllicant_name') }}" name="co_apllicant_name" required>
+                                    value="{{$updatefinancefiledetails['0']['co_apllicant_name']}}" name="co_apllicant_name" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">CO-Applicant Mobile Number <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="co_apllicant_mobile"
-                                    value="{{ old('co_apllicant_mobile') }}" name="co_apllicant_mobile" required>
+                                    value="{{$updatefinancefiledetails['0']['co_apllicant_mobile']}}" name="co_apllicant_mobile" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">CO-Applicant PAN <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="co_apllicant_pan"
-                                    value="{{ old('co_apllicant_pan') }}" name="co_apllicant_pan" required>
+                                    value="{{$updatefinancefiledetails['0']['co_apllicant_pan']}}" name="co_apllicant_pan" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">CO-Applicant Aadhar <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="co_apllicant_aadhar"
-                                    value="{{ old('co_apllicant_aadhar') }}" name="co_apllicant_aadhar" required>
+                                    value="{{$updatefinancefiledetails['0']['co_apllicant_aadhar']}}" name="co_apllicant_aadhar" required>
                             </div>
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Vehicle Registration Number <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="reg_number"
-                                    value="{{ old('reg_number') }}" name="reg_number" required>
+                                    value="{{$updatefinancefiledetails['0']['reg_number']}}" name="reg_number" readonly required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">RTO <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="rto_name"
-                                    value="{{ old('rto_name') }}" name="rto_name" required>
+                                    value="{{$updatefinancefiledetails['0']['rto_name']}}" name="rto_name" readonly required>
                             </div>
                             <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">Financer</label>
-
-                               
                                 <select class="form-select" name="financer_details_id">
                                     <option value="">Select Financer Name...</option>
-                                    @foreach ($financer_list as $item )
-                                        <option value="{{$item->id}}">{{$item->financer_name}}</option>
-                                    @endforeach
+                                    @foreach ($financer_details as $items)
+                                    <option {{old('financer_details_id', $updatefinancefiledetails['0']['financer_details_id'])==$items->id ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->financer_name }}</option>
+                                @endforeach
+                                    
                                 </select>
                             </div>
 
@@ -145,22 +147,30 @@
                                 <label for="total_amount" class="form-label">Booking Amount <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="booking_amount"
-                                    value="{{ old('booking_amount') }}" name="booking_amount" required>
+                                    value="{{$updatefinancefiledetails['0']['booking_amount']}}" name="booking_amount" readonly required>
                             </div>
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">Finance Amount <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="finance_amount"
-                                    value="{{ old('finance_amount') }}" name="finance_amount" required>
+                                    value="{{$updatefinancefiledetails['0']['finance_amount']}}" name="finance_amount" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">File Status</label>
+                                <select class="form-select" name="file_status">
+                                    @foreach ($file_status as $items)
+                                    <option {{old('file_status', $updatefinancefiledetails['0']['file_status'])==$items->id ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->file_status_type }}</option>
+                                @endforeach
+                                    
+                                </select>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Remark's </label>
-                                <input type="Text" class="form-control" id="finance_remarks"
-                                    value="{{ old('finance_remarks') }}" name="finance_remarks" required>
+                                <input type="Text" class="form-control" id="finance_remarks_update"
+                                    value="{{old('finance_remarks_update')}}" name="finance_remarks_update" required>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-
                             </div>
                         </form>
 

@@ -9,6 +9,8 @@ use App\Http\Controllers\EmpController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\admin\VisitorController;
 use App\Http\Controllers\delivary\DelivaryController;
+
+
 use PHPUnit\Event\Code\Test;
 
 Route::get('/', function () {
@@ -70,13 +72,19 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
 
     Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
+    Route::post('admin/add-finance', [FinanceController::class, 'storefinancefiledetails'])->name('storefinancefiledetails');
+
+    Route::get('admin/view-finance-file', [FinanceController::class, 'viewfinancefile'])->name('viewfinancefile');
+    Route::get('admin/finance-file-edit/{id}', [FinanceController::class, 'updatefinancefile'])->name('updatefinancefile');
+    Route::post('admin/finance/update-file-status', [FinanceController::class, 'updatefilestatus'])->name('updatefilestatus');
+    Route::get('admin/finance-file-view/{id}', [FinanceController::class, 'viewrfinancefileremarks'])->name('viewrfinancefileremarks');
+
 
     Route::get('admin/visitor/view-visitor', [VisitorController::class, 'vistordata'])->name('vistordata');
 
     Route::get('admin/delivary/test', [DelivaryController::class, 'test'])->name('test');
     
 });
-
 
 
 Route::get('/employee', [EmpController::class, 'emplogin']);
