@@ -66,7 +66,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="category" class="form-label">Branch</label>
                         <select id="category" class="form-select" name="branch">
-                            @foreach ($financer_details as $items)
+                            @foreach ($branch as $items)
                                 <option {{old('branch', $getRecord['0']['branch'])==$items->branch_name ? 'selected' : ''}} value="{{ $items->id }}">{{ $items->branch_name }}</option>
                             @endforeach
 
