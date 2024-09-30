@@ -107,10 +107,16 @@ class FinanceController extends Controller
 
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $customer_id = $req->cutomer_id;
+        $customerName = $req->cutomer_name;
+        $reg_number = $req->reg_number;
         $finance_name = DB::table('financer_details')->where('id','=' ,$req->financer_details_id)->first();
         $file_status = DB::table('finance_file_status')->where('id','=' ,$req->file_status)->first();
-       
+        $entry_remarks1 =$req->finance_remarks_update;
+
+        $entry_remarks = substr($entry_remarks1, 0, 30);
+
+        $customer_id = $req->cutomer_id;
+        
 
         $FinanceFileModel = FinanceFileModel::find($customer_id);
 
@@ -139,7 +145,45 @@ class FinanceController extends Controller
 
             $UpdateRemarksFinanceFileModel->save();
             $lastid = $UpdateRemarksFinanceFileModel->id;
+
+            if ($lastid)
+            {
+                /* SMS Start */
+
+        $sender = 'CAR4SL';
+        $auth = '3HqJI';
+        $entid = '1701171869640632437';
+        $temid = '1707172767693989061';
+        $mob2 = ['9572563532','9971123140','7979900567','9523731397'];
+        $mob3 = implode(',', $mob2);
+
+       $msg1 = urlencode('Dear Sir,'."\nFile Status Updated\nCustomer Name :" . $customerName. ",\nReg Number :" . $reg_number .",\nFianancer Name : ". $finance_name->financer_name .",\nCurrent Status:" . $file_status->file_status_type .",\nRemarks: " .  $entry_remarks .",\nThanks,\nCar4Sales \nMuzaffarpur, Motihari, Darbhanga \nMobile: 7779995656" );
+
+        $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=false&from=' . $sender . '&to=' . $mob3 . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
+
+        //sms from here
+
+        function SendSMS($hostUrl)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $hostUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            $result = curl_exec($ch);
+            return $result;
         }
+
+        $raa = SendSMS($url); // call function that return response with code
+
+        /* SMS End */
+            }
+        }
+
+        
+
         return redirect('admin/view-finance-file')->with('success', ' Remarks Added Successfully: ' . $lastid);
     }
 
