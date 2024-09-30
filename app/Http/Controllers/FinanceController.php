@@ -28,8 +28,10 @@ class FinanceController extends Controller
             'reg_number' => 'required',
             'rto_name' => 'required',
             'financer_details_id' => 'required',
-            'booking_amount' => 'required',
-            'finance_amount' => 'required',
+            'fiance_code' => 'required',
+            'sales_executive' => 'required',
+            'se_mobile' => 'required',
+            'sold_amount' => 'required',
             'finance_remarks' => 'required',
         ]);
 
@@ -47,7 +49,13 @@ class FinanceController extends Controller
         $FinanceFileModel->address = $req->address;
         $FinanceFileModel->reg_number = $req->reg_number;
         $FinanceFileModel->rto_name = $req->rto_name;
+        $FinanceFileModel->fiance_code = $req->fiance_code;
+        $FinanceFileModel->sales_executive = $req->sales_executive;
+        $FinanceFileModel->se_mobile = $req->se_mobile;
+        $FinanceFileModel->sold_amount = $req->sold_amount;
+        
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
+        
         $FinanceFileModel->booking_amount = $req->booking_amount;
         $FinanceFileModel->finance_amount = $req->finance_amount;
         $FinanceFileModel->finance_remarks = $req->finance_remarks;
@@ -103,6 +111,10 @@ class FinanceController extends Controller
             'financer_details_id' => 'required',
             'finance_amount' => 'required',
             'finance_remarks_update' => 'required',
+            'fiance_code' => 'required',
+            'sales_executive' => 'required',
+            'se_mobile' => 'required',
+            'sold_amount' => 'required',
         ]);
 
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
@@ -128,6 +140,10 @@ class FinanceController extends Controller
         $FinanceFileModel->rto_name = $req->rto_name;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
         $FinanceFileModel->file_status = $req->file_status;
+        $FinanceFileModel->fiance_code = $req->fiance_code;
+        $FinanceFileModel->sales_executive = $req->sales_executive;
+        $FinanceFileModel->se_mobile = $req->se_mobile;
+        $FinanceFileModel->sold_amount = $req->sold_amount;
 
         $FinanceFileModel->finance_amount = $req->finance_amount;
         $FinanceFileModel->updated_at = $mytime;

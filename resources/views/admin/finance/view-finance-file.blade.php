@@ -69,6 +69,7 @@
                                     <th scope="col">RTO</th>
                                     <th scope="col">Financer</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Sold</th>
                                     <th scope="col">Booking</th>
                                     <th scope="col">Funding</th>
                                     <th scope="col">Updated on</th>
@@ -87,6 +88,7 @@
                                         <td>{{ $items->rto_name }}</td>
                                         <td>{{ $items->financer_name }}</td>
                                         <td>{{ $items->finance_file_status }}</td>
+                                        <td>{{ $items->sold_amount }}</td>
                                         <td>{{ $items->booking_amount }}</td>
                                         <td>{{ $items->finance_amount }}</td>
                                         <td>

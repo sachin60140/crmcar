@@ -66,6 +66,10 @@
                 $updated_at = $item->updated_at;
                 $financer_name = $item->financer_name;
                 $file_status_type = $item->file_status_type;
+                $sold_amount = $item->sold_amount;
+                $fiance_code = $item->fiance_code;
+                $sales_executive = $item->sales_executive;
+                $se_mobile = $item->se_mobile;
             }
         @endphp
         <div class="row">
@@ -98,19 +102,22 @@
                                 <label for="fee" class="form-label">RTO: <span><strong>{{ $rto_name}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
+                                <label for="fee" class="form-label">Sold Amount: <span><strong>{{ $sold_amount}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
                                 <label for="fee" class="form-label">Booking Amount: <span><strong>{{ $booking_amount}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Finance Amount: <span><strong>{{ $finance_amount}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
-                                <label for="fee" class="form-label">Entry Done by: <span><strong>{{ $created_by}}</strong></span></label>
+                                <label for="fee" class="form-label">Financer Code: <span><strong>{{ $fiance_code}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
-                                <label for="fee" class="form-label">Created Date: <span><strong>{{ $created_at}}</strong></span></label>
+                                <label for="fee" class="form-label">Sales Executive: <span><strong>{{ $sales_executive}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
-                                <label for="fee" class="form-label">Last Update on: <span><strong>{{ $updated_at}}</strong></span></label>
+                                <label for="fee" class="form-label">Sales Executive Number: <span><strong>{{ $se_mobile}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Financer: <span><strong>{{ $financer_name}}</strong></span></label>
@@ -118,6 +125,14 @@
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Current File Status: <span><strong>{{ $file_status_type}}</strong></span></label>
                             </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">Entry Done by: <span><strong>{{ $created_by}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">Created Date: <span><strong>{{ $created_at}}</strong></span></label>
+                            </div>
+                            
+                            
                         </div>
 
                     </div>

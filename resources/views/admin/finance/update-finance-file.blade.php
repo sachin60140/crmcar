@@ -122,8 +122,32 @@
                                     
                                 </select>
                             </div>
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Finance Code <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="fiance_code"
+                                    value="{{$updatefinancefiledetails['0']['fiance_code']}}" name="fiance_code" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Sales Executive <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="sales_executive"
+                                    value="{{$updatefinancefiledetails['0']['sales_executive']}}" name="sales_executive" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Sales Executive Mobile Number <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="se_mobile"
+                                    value="{{$updatefinancefiledetails['0']['se_mobile']}}" name="se_mobile" required>
+                            </div>
 
                             <hr>
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Sold Amount <span
+                                        style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="sold_amount"
+                                    value="{{$updatefinancefiledetails['0']['sold_amount']}}" name="sold_amount" required>
+                            </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Booking Amount <span
                                         style="color: red;">*</span></label>
