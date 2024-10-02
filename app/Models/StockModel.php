@@ -18,7 +18,7 @@ class StockModel extends Model
                     ->orderBy('car_stock.car_model','asc')
                     ->where('stock_status','!=' ,'3')
                     ->get();
-        return $return; 
+        return $return;  
     }
 
     static function getstock($id)

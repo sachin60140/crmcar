@@ -80,7 +80,7 @@
                         <h5 class="card-title">View Finance file Status </h5>
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="fee" class="form-label">Name of Cusotmer: <span><strong>{{ $name}}</strong></span></label>
+                                <label for="fee" class="form-label">Name of Cusotmer: <span><strong>{{ucwords($name)}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Mobile: <span><strong>{{ $mobile}}</strong></span></label>
@@ -160,7 +160,7 @@
                                         @foreach ($remarks as $remark_stage )
                                             <tr>
                                                 <td>{{$remark_stage->id}}</td>
-                                                <td>{{$remark_stage->remarks}}</td>
+                                                <td>{{ucwords($remark_stage->remarks)}}</td>
                                                 <td>{{$remark_stage->created_at}}</td>
                                                 <td>{{$remark_stage->created_by}}</td>
                                             </tr>

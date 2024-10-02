@@ -116,7 +116,7 @@ class StockController extends Controller
 
     public function booking()
     {
-        $data['car_stock'] = DB::table('car_stock')->orderBy('reg_number', 'asc')->where('stock_status', '=', '2')->get();
+        $data['car_stock'] = DB::table('car_stock')->orderBy('reg_number', 'asc')->where('stock_status', '!=', '3')->get();
 
         $data['ledger'] = DB::table('ledger')->orderBy('id', 'desc')->get();
 
