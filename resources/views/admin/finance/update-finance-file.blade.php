@@ -132,6 +132,7 @@
                             <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">NOC Status</label>
                                 <select class="form-select" name="noc_Status">
+                                    <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'CASH') ? 'selected' : ''}} value="CASH">CASH</option>
                                     <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'NOC') ? 'selected' : ''}} value="NOC">NOC</option>
                                     <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'Closer') ? 'selected' : ''}} value="Closer">Closer</option>
                                     <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'Not - Available') ? 'selected' : ''}} value="Not - Available">Not - Available</option>

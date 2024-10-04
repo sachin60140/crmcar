@@ -128,6 +128,7 @@
                                 <label for="paymentMode" class="form-label">NOC Status</label>
                                 <select class="form-select" name="noc_Status">
                                     <option value="">Select NOC Status...</option>
+                                    <option value="CASH">CASH</option>
                                     <option value="NOC">NOC</option>
                                     <option value="Closer">Closer</option>
                                     <option value="Not - Available">Not - Available</option>
