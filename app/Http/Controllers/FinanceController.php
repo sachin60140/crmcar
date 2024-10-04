@@ -170,7 +170,7 @@ class FinanceController extends Controller
         $auth = '3HqJI';
         $entid = '1701171869640632437';
         $temid = '1707172767693989061';
-        $mob2 = ['9572563532','9971123140','7979900567','9523731397'];
+        $mob2 = ['9572563532','9971123140','7979900567','9523731397','8709903610','9110130400'];
         $mob3 = implode(',', $mob2);
 
        $msg1 = urlencode('Dear Sir,'."\nFile Status Updated\nCustomer Name :" . $customerName. ",\nReg Number :" . $reg_number .",\nFianancer Name : ". $finance_name->financer_name .",\nCurrent Status:" . $file_status->file_status_type .",\nRemarks: " .  $entry_remarks .",\nThanks,\nCar4Sales \nMuzaffarpur, Motihari, Darbhanga \nMobile: 7779995656" );
