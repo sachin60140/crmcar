@@ -19,6 +19,7 @@ class FinanceController extends Controller
 
     public function storefinancefiledetails(Request $req)
     {
+       
         $req->validate([
             'cutomer_name' => 'required',
             'mobile' => 'required|min_digits:10|max_digits:10',
@@ -27,6 +28,9 @@ class FinanceController extends Controller
             'address' => 'required',
             'reg_number' => 'required',
             'rto_name' => 'required',
+            'rc_status' => 'required',
+            'Insurance_status' => 'required',
+            'noc_Status' => 'required',
             'financer_details_id' => 'required',
             'fiance_code' => 'required',
             'sales_executive' => 'required',
@@ -49,6 +53,10 @@ class FinanceController extends Controller
         $FinanceFileModel->address = $req->address;
         $FinanceFileModel->reg_number = $req->reg_number;
         $FinanceFileModel->rto_name = $req->rto_name;
+        $FinanceFileModel->rc_status = $req->rc_status;
+        $FinanceFileModel->Insurance_status = $req->Insurance_status;
+        $FinanceFileModel->noc_Status = $req->noc_Status;
+
         $FinanceFileModel->fiance_code = $req->fiance_code;
         $FinanceFileModel->sales_executive = $req->sales_executive;
         $FinanceFileModel->se_mobile = $req->se_mobile;
@@ -108,6 +116,9 @@ class FinanceController extends Controller
             'address' => 'required',
             'reg_number' => 'required',
             'rto_name' => 'required',
+            'rc_status' => 'required',
+            'Insurance_status' => 'required',
+            'noc_Status' => 'required',
             'financer_details_id' => 'required',
             'finance_amount' => 'required',
             'finance_remarks_update' => 'required',
@@ -138,6 +149,9 @@ class FinanceController extends Controller
         $FinanceFileModel->aadhar = $req->aadhar;
         $FinanceFileModel->address = $req->address;
         $FinanceFileModel->rto_name = $req->rto_name;
+        $FinanceFileModel->rc_status = $req->rc_status;
+        $FinanceFileModel->Insurance_status = $req->Insurance_status;
+        $FinanceFileModel->noc_Status = $req->noc_Status;
         $FinanceFileModel->financer_details_id = $req->financer_details_id;
         $FinanceFileModel->file_status = $req->file_status;
         $FinanceFileModel->fiance_code = $req->fiance_code;

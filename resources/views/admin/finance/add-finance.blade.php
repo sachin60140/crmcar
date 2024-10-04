@@ -63,9 +63,9 @@
                         <h5 class="card-title">Add Finance File</h5>
 
                         <!-- Multi Columns Form -->
-                        <form class="row g-3" action="{{route('storefinancefiledetails')}}" method="POST">
+                        <form class="row g-3" action="{{ route('storefinancefiledetails') }}" method="POST">
                             @csrf
-                            
+
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Name of Customer <span
                                         style="color: red;">*</span></label>
@@ -75,48 +75,70 @@
                             <div class="col-md-12">
                                 <label for="due_amount" class="form-label">Mobile Number <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="mobile"
-                                    value="{{ old('mobile') }}" name="mobile" required>
+                                <input type="Text" class="form-control" id="mobile" value="{{ old('mobile') }}"
+                                    name="mobile" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Customer Pan Card <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="cutomer_pan"
-                                    value="{{ old('cutomer_pan') }}" name="cutomer_pan" required>
+                                <input type="Text" class="form-control" id="cutomer_pan" value="{{ old('cutomer_pan') }}"
+                                    name="cutomer_pan" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Aadhar Number <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="aadhar"
-                                    value="{{ old('aadhar') }}" name="aadhar" required>
+                                <input type="Text" class="form-control" id="aadhar" value="{{ old('aadhar') }}"
+                                    name="aadhar" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Address <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="address"
-                                    value="{{ old('address') }}" name="address" required>
+                                <input type="Text" class="form-control" id="address" value="{{ old('address') }}"
+                                    name="address" required>
                             </div>
                             <hr>
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Vehicle Registration Number <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="reg_number"
-                                    value="{{ old('reg_number') }}" name="reg_number" required>
+                                <input type="Text" class="form-control" id="reg_number" value="{{ old('reg_number') }}"
+                                    name="reg_number" required>
                             </div>
                             <div class="col-md-12">
-                                <label for="total_amount" class="form-label">RTO <span
-                                        style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="rto_name"
-                                    value="{{ old('rto_name') }}" name="rto_name" required>
+                                <label for="total_amount" class="form-label">RTO <span style="color: red;">*</span></label>
+                                <input type="Text" class="form-control" id="rto_name" value="{{ old('rto_name') }}"
+                                    name="rto_name" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">RC Available Status</label>
+                                <select class="form-select" name="rc_status">
+                                    <option value="">Select Rc Status...</option>
+                                    <option value="Available">Available</option>
+                                    <option value="Not - Available">Not - Available</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">Insurance Available Status</label>
+                                <select class="form-select" name="Insurance_status">
+                                    <option value="">Select Insurance Status...</option>
+                                    <option value="Available">Available</option>
+                                    <option value="Not - Available">Not - Available</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">NOC Status</label>
+                                <select class="form-select" name="noc_Status">
+                                    <option value="">Select NOC Status...</option>
+                                    <option value="NOC">NOC</option>
+                                    <option value="Closer">Closer</option>
+                                    <option value="Not - Available">Not - Available</option>
+                                </select>
                             </div>
                             <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">Financer</label>
-
-                               
                                 <select class="form-select" name="financer_details_id">
                                     <option value="">Select Financer Name...</option>
-                                    @foreach ($financer_list as $item )
-                                        <option value="{{$item->id}}">{{$item->financer_name}}</option>
+                                    @foreach ($financer_list as $item)
+                                        <option value="{{ $item->id }}">{{ $item->financer_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -177,5 +199,5 @@
     @endsection
 
     @section('script')
-        
+
     @endsection

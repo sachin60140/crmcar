@@ -70,6 +70,9 @@
                 $fiance_code = $item->fiance_code;
                 $sales_executive = $item->sales_executive;
                 $se_mobile = $item->se_mobile;
+                $rc_status = $item->rc_status;
+                $Insurance_status = $item->Insurance_status;
+                $noc_Status = $item->noc_Status;
             }
         @endphp
         <div class="row">
@@ -100,6 +103,15 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">RTO: <span><strong>{{ $rto_name}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">RC Status: <span><strong>{{ $rc_status}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">Insurance: <span><strong>{{ $Insurance_status}}</strong></span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">NOC: <span><strong>{{ $noc_Status}}</strong></span></label>
                             </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Sold Amount: <span><strong>{{ $sold_amount}}</strong></span></label>

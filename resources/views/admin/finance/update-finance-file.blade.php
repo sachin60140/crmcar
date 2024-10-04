@@ -113,6 +113,31 @@
                                     value="{{$updatefinancefiledetails['0']['rto_name']}}" name="rto_name" readonly required>
                             </div>
                             <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">RC Available Status</label>
+                                <select class="form-select" name="rc_status">
+                                    <option value="">Select Rc Status...</option>
+                                    <option {{(old('rc_status',$updatefinancefiledetails['0']['rc_status'])== 'Available') ? 'selected' : ''}} value="Available">Available</option>
+                                    <option {{(old('rc_status',$updatefinancefiledetails['0']['rc_status'])== 'Not - Available') ? 'selected' : ''}} value="Not - Available">Not - Available</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">Insurance Available Status</label>
+                                <select class="form-select" name="Insurance_status">
+                                    <option value="">Select Insurance Status...</option>
+                                    <option {{(old('Insurance_status',$updatefinancefiledetails['0']['Insurance_status'])== 'Available') ? 'selected' : ''}} value="Available">Available</option>
+                                    <option {{(old('Insurance_status',$updatefinancefiledetails['0']['Insurance_status'])== 'Not - Available') ? 'selected' : ''}} value="Not - Available">Not - Available</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="paymentMode" class="form-label">NOC Status</label>
+                                <select class="form-select" name="noc_Status">
+                                    <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'NOC') ? 'selected' : ''}} value="NOC">NOC</option>
+                                    <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'Closer') ? 'selected' : ''}} value="Closer">Closer</option>
+                                    <option {{(old('noc_Status',$updatefinancefiledetails['0']['noc_Status'])== 'Not - Available') ? 'selected' : ''}} value="Not - Available">Not - Available</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
                                 <label for="paymentMode" class="form-label">Financer</label>
                                 <select class="form-select" name="financer_details_id">
                                     <option value="">Select Financer Name...</option>
