@@ -295,7 +295,17 @@ class StockController extends Controller
 
         $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
 
-        $user = DB::table('car_booking')
+        $delivered_car = DB::table('car_delivary')
+            ->where('reg_number', $req->reg_number)
+            ->first();
+
+            if($delivered_car)
+            {
+                return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
+            }
+            else
+            {
+                $user = DB::table('car_booking')
             ->where('booking_no', $req->booking_id)
             ->first();
         $customer_id = $user->customer_ledger_id;
@@ -350,8 +360,7 @@ class StockController extends Controller
                 ->update(['stock_status' => 3]);
         }
 
-        
-
         return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully ' . $lastid);
+        }
     }
 }
