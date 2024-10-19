@@ -248,6 +248,8 @@
         <div>
             <table>
                 <tr>
+                    <th>Date</th>
+                    <td>{{ date('d/M/Y', strtotime($getRecords[0]['created_at'] ))}}</td>
                     <th>Seller Name</th>
                     <td>Amit Kumar</td>
                     <th>Seller Father's Name</th>
@@ -256,44 +258,37 @@
 
                 <tr>
                     <th>Address</th>
-                    <td colspan="3">Mahamaya Mandir, Damodarpur, Post:Damodarpur, Ps:Kanti, Muzaffarpur, Bihar. 843113</td>
+                    <td colspan="5">Mahamaya Mandir, Damodarpur, Post:Damodarpur, Ps:Kanti, Muzaffarpur, Bihar. 843113</td>
                 </tr>
                 <tr>
                     <th>Booking Number</th>
                     <td>{{ $getRecords[0]['booking_id'] }}</td>
                     <th>Booking Person</th>
                     <td>{{ $getRecords[0]['booking_person'] }}</td>
-                </tr>
-                <tr>
                     <th>Registration</th>
                     <td>{{ $getRecords[0]['reg_number'] }}</td>
-                    <th>Car Model</th>
-                    <td>{{ $getRecords[0]['model_name'] }}</td>
-
                 </tr>
                 <tr>
+                    <th>Car Model</th>
+                    <td>{{ $getRecords[0]['model_name'] }}</td>
                     <th>Model Year</th>
                     <td>{{ $getRecords[0]['model_year'] }}</td>
                     <th>Colour</th>
                     <td>{{ $getRecords[0]['car_color'] }}</td>
+
                 </tr>
                 <tr>
-
                     <th>Owner Sl No.</th>
-                    <td>1</td>
+                    <td>{{ $getRecords[0]['owner_sl_no'] }}</td>
                     <th>Engine No </th>
                     <td>{{ $getRecords[0]['eng_number'] }}</td>
-                </tr>
-                <tr>
                     <th>Chasis No.</th>
                     <td>{{ $getRecords[0]['chassis_number'] }}</td>
-                    <th>Sell Amount</th>
-                    <td>{{ $getRecords[0]['sell_amount'] }}/-</td>
-
-
                 </tr>
                 <tr>
-                    <th>Advance/Boking Amount</th>
+                    <th>Sell Amount</th>
+                    <td>{{ $getRecords[0]['sell_amount'] }}/-</td>
+                    <th>Booking Amount</th>
                     <td>{{ $getRecords[0]['booking_amount'] }}/-</td>
                     <th>Finance Amount</th>
                     <td>{{ $getRecords[0]['finance_amount'] }}/-</td>
@@ -301,8 +296,10 @@
                 <tr>
                     <th>Down Payment</th>
                     <td>{{ $getRecords[0]['dp'] }}/-</td>
-                    <th></th>
-                    <td></td>
+                    <th>Remarks</th>
+                    <td  colspan="3">{{ $getRecords[0]['remarks'] }}</td>
+                </tr>
+                <tr>
                 </tr>
             </table>
         </div>

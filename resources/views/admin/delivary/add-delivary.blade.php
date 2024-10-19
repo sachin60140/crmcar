@@ -135,6 +135,11 @@
                         <input type="text" readonly class="form-control" id="model_year" value="{{$carbooking['0']['model_year']}}"
                             name="model_year">
                     </div>
+                    <div class="col-md-3">
+                        <label for="fee" class="form-label">Owner Sl No. <span style="color: red;">*</span></label>
+                        <input type="text" readonly class="form-control" id="owner_sl_no" value="{{$carbooking['0']['owner_sl_no']}}"
+                            name="owner_sl_no">
+                    </div>
                     <div class="col-md-4">
                         <label for="fee" class="form-label">Colour <span style="color: red;">*</span></label>
                         <input type="text" readonly class="form-control" id="car_color" value="{{$carbooking['0']['car_color']}}"

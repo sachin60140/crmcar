@@ -281,6 +281,7 @@ class StockController extends Controller
             'city' => 'required',
             'address' => 'required',
             'reg_number' => 'required',
+            'owner_sl_no' => 'required',
             'model_name' => 'required',
             'model_year' => 'required',
             'car_color' => 'required',
@@ -312,6 +313,7 @@ class StockController extends Controller
         $CarDelivaryModel->city = $req->city;
         $CarDelivaryModel->address = $req->address;
         $CarDelivaryModel->reg_number = $req->reg_number;
+        $CarDelivaryModel->owner_sl_no = $req->owner_sl_no;
         $CarDelivaryModel->model_name = $req->model_name;
         $CarDelivaryModel->model_year = $req->model_year;
         $CarDelivaryModel->car_color = $req->car_color;
