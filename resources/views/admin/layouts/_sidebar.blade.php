@@ -162,6 +162,11 @@
                         <i class="bi bi-circle"></i><span>View details</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('viewdelivaryfile')}}">
+                        <i class="bi bi-circle"></i><span>View Delivered</span>
+                    </a>
+                </li>
                 
             </ul>
         </li><!-- End Forms Nav -->

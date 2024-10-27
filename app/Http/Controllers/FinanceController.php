@@ -94,6 +94,13 @@ class FinanceController extends Controller
         return view('admin.finance.view-finance-file', $data);
     }
 
+    public function viewdelivaryfile()
+    {
+        $data['viewfinancefiledetails'] = FinanceFileModel::getdeliveredrecord();
+
+        return view('admin.finance.view-delivered-file', $data);
+    }
+
     public function updatefinancefile($id)
     {
         $data['updatefinancefiledetails'] = FinanceFileModel::getrecorddetails($id);

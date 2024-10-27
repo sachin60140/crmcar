@@ -94,8 +94,6 @@ class CustomerLegderController extends Controller
             $lastid = $CustomerStatementModel->id;
     
         return back()->with('success', ' Payment Reciept Successfully txn id is :  ' .$lastid);
-        
-
     }
 
 
