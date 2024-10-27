@@ -69,7 +69,7 @@
                                 <label for="fee" class="form-label">Name <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="cab_fee" value="{{ old('name') }}"
                                     name="name">
-                            </div>
+                            </div> 
         
                             <div class="col-md-12">
                                 <label for="mobile_number" class="form-label">Mobile <span
@@ -77,6 +77,13 @@
                                 <input type="tel" class="form-control" id="inputName5" value="{{ old('mobile_number') }}"
                                     name="mobile_number" maxlength="10" required>
                             </div>
+                            <div class="col-md-12">
+                                <label for="mobile_number" class="form-label">Enquire Car Details <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="enquiry_car_details"
+                                    value="{{ old('enquiry_car_details') }}" name="enquiry_car_details">
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label for="category" class="form-label">Lead Type</label>
                                 <select id="category" class="form-select" name="lead_type">
@@ -90,9 +97,19 @@
                                 </select>
                             </div>
                             <div class="col-12">
+                                <label for="inputAddress2" class="form-label">Next Folloup</label>
+                                <input type="date" class="form-control" id="next_folloup" name="next_folloup"
+                                    value="{{ old('next_folloup') }}">
+                            </div>
+                            <div class="col-12">
                                 <label for="inputAddress2" class="form-label">Address</label>
                                 <input type="text" class="form-control" id="address" name="address"
                                     placeholder="Apartment, studio, or floor" value="{{ old('address') }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="inputAddress2" class="form-label">Remarks</label>
+                                <input type="text" class="form-control" id="remark" name="remark"
+                                    placeholder="Enter Valid Remarks" value="{{ old('remark') }}" required>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Submit</button>

@@ -140,6 +140,11 @@
                         <i class="bi bi-circle"></i><span>View Visitor</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('leadallotment') }}">
+                        <i class="bi bi-circle"></i><span>Allot Lead</span>
+                    </a>
+                </li>
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">

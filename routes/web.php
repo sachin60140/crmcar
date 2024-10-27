@@ -58,6 +58,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/data/view-lead', [CustomerLeadController::class, 'viewleaddata'])->name('viewleaddata1');
     Route::get('admin/data/hot-lead', [CustomerLeadController::class, 'hotleaddata'])->name('hotleaddata');
 
+    Route::get('admin/data/lead-allotment', [VisitorController::class, 'leadallotment'])->name('leadallotment');
+    Route::post('admin/data/store-lead-allotment', [VisitorController::class, 'storeleadallotment'])->name('storeleadallotment');
+
     Route::get('admin/customer/add-ledger', [CustomerLegderController::class, 'addledger'])->name('addledger');
     Route::post('admin/customer/add-ledger', [CustomerLegderController::class, 'storeledger'])->name('storeledger');
     Route::get('admin/customer/view-ledger', [CustomerLegderController::class, 'viewledger'])->name('viewledger');
@@ -83,6 +86,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/visitor/view-visitor', [VisitorController::class, 'vistordata'])->name('vistordata');
 
     Route::get('admin/delivary/test', [DelivaryController::class, 'test'])->name('test');
+
+    Route::get('admin/random', [VisitorController::class, 'randomrecords'])->name('randomrecords');
+
+    
     
 });
 
@@ -97,6 +104,14 @@ Route::group(['middleware' => 'empauth'], function () {
     Route::get('employee/data/add-lead', [EmpController::class, 'addlead'])->name('addlead');
     Route::post('employee/data/add-lead', [EmpController::class, 'storeleaddata'])->name('storeleaddata');
     Route::get('employee/data/view-lead', [EmpController::class, 'viewleaddata'])->name('viewleaddata');
+
+    Route::get('employee/data/update-lead/{id}', [EmpController::class, 'updateleaddata'])->name('updateleaddata');
+    Route::put('employee/data/store-update-lead/{id}', [EmpController::class, 'storeupdatedleaddata'])->name('storeupdatedleaddata');
+
+    Route::get('employee/data/calling-lead', [EmpController::class, 'callingfollouplead'])->name('callingfollouplead');
+    Route::get('employee/data/visit-followup-lead', [EmpController::class, 'visitfollowuplead'])->name('visitfollowuplead');
+
+
 
     Route::get('employee/data/add-visitor', [EmpController::class, 'visitor'])->name('visitor');
     Route::post('employee/data/add-visitor', [EmpController::class, 'addvisitor'])->name('addvisitor');

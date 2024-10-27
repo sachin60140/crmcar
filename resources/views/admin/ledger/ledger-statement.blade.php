@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View Ledger | Ac Info')
+@section('title', 'View Ledger | Car 4 Sales')
 
 
 @section('style')

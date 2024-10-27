@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerLeadModel;
 use App\Models\VisitorModel;
+use App\Models\UpdateRemarksCustomerLeadModel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 
 class EmpController extends Controller
@@ -65,6 +67,36 @@ class EmpController extends Controller
                             ->where('created_by', Auth::user()->name)
                             ->count();
 
+        $data['pending_lead_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','6')
+                            ->count();
+        $data['visit_followup_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','2')
+                            ->count();
+        $data['calling_followup_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','1')
+                            ->count();
+        $data['wrong_number_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','4')
+                            ->count();
+        $data['not_answer_number_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','5')
+                            ->count();
+         $data['not_intrested_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','3')
+                            ->count();
+        $data['after_visit_reject_data'] = DB::table('customer_lead')
+                            ->where('lead_asign', Auth::user()->name)
+                            ->where('lead_status','7')
+                            ->count();
+                                                
+        
         return view('employee.dashboard',$data);
     }
 
@@ -85,7 +117,7 @@ class EmpController extends Controller
             'mobile_number' => 'required|numeric|min_digits:10|max_digits:10|unique:customer_lead',
             'address' => 'required',
         ]);
-
+        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
         $sender = 'CAR4SL';
         $mob = $req->mobile_number;
         $name =$req->name;
@@ -120,20 +152,46 @@ class EmpController extends Controller
             $CustomerLeadModel->Name = $req->name;
             $CustomerLeadModel->mobile_number = $req->mobile_number;
             $CustomerLeadModel->address = $req->address;
+            $CustomerLeadModel->enquiry_car_details = $req->enquiry_car_details;
+            $CustomerLeadModel->lead_status = '1';
             $CustomerLeadModel->lead_type = $req->lead_type;
+            $CustomerLeadModel->lead_asign = Auth::user()->name;
             $CustomerLeadModel->created_by = Auth::user()->name;
 
             $CustomerLeadModel->save();
             $lastid = $CustomerLeadModel->id;
+
+            $car_details = $req->enquiry_car_details;
+            $remarks = $req->remark;
+            $lead_status = 'Calling-Follow-UP';
+
+            if($lastid)
+            {
+                $UpdateRemarksCustomerLeadModel = new UpdateRemarksCustomerLeadModel();
+    
+                $UpdateRemarksCustomerLeadModel->cust_lead_id = $lastid;
+                $UpdateRemarksCustomerLeadModel->next_folloup_date = $req->next_folloup;
+                $UpdateRemarksCustomerLeadModel->calling_stage =  $lead_status;
+                $UpdateRemarksCustomerLeadModel->cus_remarks = $lead_status.'-'.$car_details.'-'.$remarks;
+                $UpdateRemarksCustomerLeadModel->created_by = Auth::user()->name;
+                $UpdateRemarksCustomerLeadModel->created_at = $mytime;
+    
+                $UpdateRemarksCustomerLeadModel->save();
+                $lastid = $UpdateRemarksCustomerLeadModel->id;
+    
+            }
   
         return back()->with('success', ' Lead Added Successfully: ' .$lastid);
     }
     public function viewleaddata()
     {
-        $data = DB::table('customer_lead')
-                    ->where('lead_type', '=', 'Hot Lead')
-                    ->where('created_by', Auth::user()->name)
+       $data = DB::table('customer_lead')
+                    ->join('calling_customer_status','customer_lead.lead_status','=','calling_customer_status.id')
+                    ->select('customer_lead.*','calling_customer_status.calling_status')
+                    ->where('lead_asign', Auth::user()->name)
+                    ->where('lead_status','6')
                     ->get();
+       
        
         return view('employee.data.view-data',compact('data'));
     }
@@ -207,4 +265,101 @@ class EmpController extends Controller
                     ->get();
         return view('employee.visitor.view-visitor',compact('data'));
     }
+
+    public function updateleaddata($id)
+    {
+       
+        $data['lead_data'] = DB::table('customer_lead')->where('id','=' ,$id)->first();
+
+        $data['lead_category'] = DB::table('lead_category')
+                            ->orderBy('lead_type','asc')
+                            ->get();
+        
+        $data['calling_status'] = DB::table('calling_customer_status')
+                            ->orderBy('calling_status','asc')
+                            ->get();
+
+        $data['remarks'] = DB::table('customer_lead_remarks')->where('cust_lead_id', '=', $id)->orderBy('id', 'desc')->get();
+        
+        return  view ('employee.data.update-data',$data);
+    }
+
+    public function storeupdatedleaddata(Request $req, $id)
+    {
+
+        $req->validate([
+            'name' => 'required',
+            'mobile_number' => 'required|numeric|min_digits:10|max_digits:10',
+            'remark' => 'required',
+        ]);
+
+        
+
+        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+
+       $customer_id = $id;
+
+        $CustomerLeadModel = CustomerLeadModel::find($customer_id);
+
+        $CustomerLeadModel->Name = $req->name;
+        $CustomerLeadModel->mobile_number = $req->mobile_number;
+        $CustomerLeadModel->lead_type = $req->lead_category;
+        $CustomerLeadModel->address = $req->address	;
+        $CustomerLeadModel->enquiry_car_details = $req->enquiry_car_details;
+        $CustomerLeadModel->lead_status = $req->calling_status;
+        $CustomerLeadModel->updated_by = Auth::user()->name;
+        $CustomerLeadModel->updated_at = $mytime;
+
+        $result = $CustomerLeadModel->update();
+
+            $car_details = $req->enquiry_car_details;
+            $remarks = $req->remark;
+            $lead_status = DB::table('calling_customer_status')
+                            ->where('id',$req->calling_status)
+                            ->select('calling_status')
+                            ->first();
+            $lead_status_details = $lead_status->calling_status;
+
+        if($result)
+        {
+            $UpdateRemarksCustomerLeadModel = new UpdateRemarksCustomerLeadModel();
+
+            $UpdateRemarksCustomerLeadModel->cust_lead_id = $customer_id;
+            $UpdateRemarksCustomerLeadModel->calling_stage = $lead_status_details;
+            $UpdateRemarksCustomerLeadModel->next_folloup_date = $req->next_folloup;
+            $UpdateRemarksCustomerLeadModel->cus_remarks =  $lead_status_details.'-'.$car_details.'-'.$remarks;
+            $UpdateRemarksCustomerLeadModel->created_by = Auth::user()->name;
+            $UpdateRemarksCustomerLeadModel->created_at = $mytime;
+
+            $UpdateRemarksCustomerLeadModel->save();
+            $lastid = $UpdateRemarksCustomerLeadModel->id;
+
+        }
+        return redirect('employee/data/view-lead')->with('success', 'Remarks Added Successfully: ' . $lastid);
+    }
+
+    public function callingfollouplead()
+    {
+        $data['calling_lead'] = DB::table('customer_lead')
+                    ->join('calling_customer_status','customer_lead.lead_status','=','calling_customer_status.id')
+                    ->select('customer_lead.*','calling_customer_status.calling_status')
+                    ->where('lead_asign', Auth::user()->name)
+                    ->where('lead_status','1')
+                    ->get();
+
+        return view('employee.data.calling-folloup-lead',$data);
+    }
+
+    public function visitfollowuplead()
+    {
+        $data['calling_lead'] = DB::table('customer_lead')
+                                ->join('calling_customer_status','customer_lead.lead_status','=','calling_customer_status.id')
+                                ->select('customer_lead.*','calling_customer_status.calling_status')
+                                ->where('lead_asign', Auth::user()->name)
+                                ->where('lead_status','2')
+                                ->get();
+
+        return view('employee.data.visit-followup-lead',$data);
+    }
+    
 }

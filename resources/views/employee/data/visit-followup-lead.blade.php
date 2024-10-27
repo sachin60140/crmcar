@@ -1,6 +1,6 @@
 @extends('employee.layouts.app')
 
-@section('title', 'View Lead Data | Car 4 Sales')
+@section('title', 'Visit Lead Data | Car 4 Sales')
 
 
 @section('style')
@@ -17,14 +17,15 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('employee/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Lead</li>
+                <li class="breadcrumb-item">View lead</li>
+                <li class="breadcrumb-item">Visit Follow Up lead</li>
                 
             </ol>
         </nav>
     </div><!-- End Page Title -->
     <section class="section dashboard">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div>
                     @if ($errors->any())
                         <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
@@ -56,7 +57,7 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">View Lead </h5>
+                        <h5 class="card-title">Calling Follow Up lead </h5>
                        
                         <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
@@ -66,29 +67,46 @@
                                     <th scope="col">Lead Type</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Mobile</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Entry Date</th>
-                                    <th scope="col">Last Updateed</th>
-                                    <th scope="col">Edit</th>
+                                    
+                                    <th scope="col">Last Updated</th>
+                                    <th scope="col">Follow Up date</th>
+                                    <th scope="col">Update</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $items)
+                                @foreach ($calling_lead as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
                                         <td>{{ $items->Name }}</td>
                                         <td>{{ $items->lead_type }}</td>
                                         <td>{{ $items->calling_status }}</td>
                                         <td>{{ $items->mobile_number }}</td>
-                                        <td>{{ $items->address }}</td>
-                                        <td>{{ $items->created_at }}</td>
-                                        <td>{{ $items->updated_at }}</td>
+                                       
+                                        <td>
+                                            @php
+                                                $last_update_status = DB::table('customer_lead_remarks')
+                                                                    ->where('cust_lead_id','=' , $items->id)
+                                                                    ->latest('updated_at')
+                                                                    ->first();
+                                                echo $last_update_status->updated_at;
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            @php
+                                            $last_update_status = DB::table('customer_lead_remarks')
+                                                                ->where('cust_lead_id','=' , $items->id)
+                                                                ->latest('next_folloup_date')
+                                                                ->first();
+                                            echo date('d-M-Y', strtotime($last_update_status->next_folloup_date));
+                                            
+                                        @endphp
+                                        </td>
                                        
                                         <td>
                                             <a href="{{ url('employee/data/update-lead/' . $items->id) }}"
                                                 class="link-primary">Update</a>
                                         </td>
-                                       
                                     </tr>
                                 @endforeach
 
@@ -126,7 +144,7 @@
                     "pageLength": 50,
 
                     "aaSorting": [
-                        [0, 'desc']
+                        [6, 'desc']
                     ],
                 });
             });
