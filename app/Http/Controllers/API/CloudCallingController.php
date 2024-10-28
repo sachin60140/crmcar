@@ -12,8 +12,6 @@ class CloudCallingController extends Controller
 {
     public function index(Request $req)
     {
-            return $req->all();
-
             $lastid = ApiCloudCallModel::create([
                 'Name' => $req->Name,
                 'mobile_number' => $req->mobile_number,
