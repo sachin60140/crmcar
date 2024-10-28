@@ -13,12 +13,20 @@ class CloudCallingController extends Controller
     public function index(Request $req)
     {
 
-        $lastid = ApiCloudCallModel::create([
+        /* $lastid = ApiCloudCallModel::create([
             'Name' => $req->Name,
             'mobile_number' => $req->mobile_number,
             'address' => $req->address,
             'created_by' => $req->created_by,
-        ]);
+        ]); */
+
+            $ApiCloudCallModel = new ApiCloudCallModel;
+            $ApiCloudCallModel->Name = trim($req->Name);
+            $ApiCloudCallModel->mobile_number =  $req->mobile_number;
+            $ApiCloudCallModel->address =  $req->address;
+            $ApiCloudCallModel->created_by =  $req->created_by;
+            $ApiCloudCallModel->save();
+            $lastid = $ApiCloudCallModel->id;
 
         if ($lastid) {
             $sender = 'CAR4SL';
