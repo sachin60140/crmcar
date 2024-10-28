@@ -22,9 +22,9 @@ class CloudCallingController extends Controller
 
             $ApiCloudCallModel = new ApiCloudCallModel;
             $ApiCloudCallModel->Name = trim($req->Name);
-            $ApiCloudCallModel->mobile_number =  $req->mobile_number;
-            $ApiCloudCallModel->address =  $req->address;
-            $ApiCloudCallModel->created_by =  $req->created_by;
+            $ApiCloudCallModel->mobile_number = trim($req->mobile_number);
+            $ApiCloudCallModel->address = trim($req->address);
+            $ApiCloudCallModel->created_by = trim($req->created_by);
             $ApiCloudCallModel->save();
             $lastid = $ApiCloudCallModel->id;
 
