@@ -80,6 +80,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/view-finance-file', [FinanceController::class, 'viewfinancefile'])->name('viewfinancefile');
 
     Route::get('admin/view-delivered-file', [FinanceController::class, 'viewdelivaryfile'])->name('viewdelivaryfile');
+    Route::get('admin/ready-for-delevery', [FinanceController::class, 'viewreadyfordelivaryfile'])->name('viewreadyfordelivaryfile');
+    Route::get('admin/view-decline-file', [FinanceController::class, 'viewdeclinefile'])->name('viewdeclinefile');
 
     Route::get('admin/finance-file-edit/{id}', [FinanceController::class, 'updatefinancefile'])->name('updatefinancefile');
     Route::post('admin/finance/update-file-status', [FinanceController::class, 'updatefilestatus'])->name('updatefilestatus');

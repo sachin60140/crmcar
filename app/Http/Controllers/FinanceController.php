@@ -94,12 +94,27 @@ class FinanceController extends Controller
         return view('admin.finance.view-finance-file', $data);
     }
 
+    public function viewreadyfordelivaryfile()
+    {
+        $data['viewfinancefiledetails'] = FinanceFileModel::getreadyfordeliveredrecord();
+
+        return view('admin.finance.ready-for-delevery', $data);
+    }
+
     public function viewdelivaryfile()
     {
         $data['viewfinancefiledetails'] = FinanceFileModel::getdeliveredrecord();
 
         return view('admin.finance.view-delivered-file', $data);
     }
+
+    public function viewdeclinefile()
+    {
+        $data['viewfinancefiledetails'] = FinanceFileModel::getdeclinerecord();
+
+        return view('admin.finance.view-decline-file', $data);
+    }
+    
 
     public function updatefinancefile($id)
     {

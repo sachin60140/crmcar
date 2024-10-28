@@ -38,6 +38,9 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">User Type</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Update</th>
                                     
                                 </tr>
                             </thead>
@@ -47,6 +50,9 @@
                                         <td>{{ $items->id }}</td>
                                         <td>{{ $items->name }}</td>
                                         <td>{{ $items->email }}</td>
+                                        <td>User Type</td>
+                                        <td>Status</td>
+                                        <td>Updare</td>
                                         
                                     </tr>
                                 @endforeach

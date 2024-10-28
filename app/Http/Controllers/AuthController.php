@@ -154,7 +154,9 @@ class AuthController extends Controller
 
     public function viewempdata()
     {
-        $data['emplist'] = DB::table('users')->get();
+        $data['emplist'] = DB::table('users')
+                            ->where('id','!=', '1')
+                            ->get();
         return view('admin.employee.view-employee', $data);
     }
 

@@ -15,6 +15,9 @@ class FinanceFileModel extends Model
         $return = FinanceFileModel::select('finace_file.*','financer_details.financer_name as financer_name','finance_file_status.file_status_type as finance_file_status')
                     ->join('financer_details','financer_details.id', 'finace_file.financer_details_id')
                     ->join('finance_file_status','finance_file_status.id','finace_file.file_status')
+                    ->where('finace_file.file_status','!=','5')
+                    ->where('finace_file.file_status','!=','11')
+                    ->where('finace_file.file_status','!=','9')
                     ->orderBy('finace_file.id','asc')
                     ->get();
         return $return; 
@@ -31,6 +34,16 @@ class FinanceFileModel extends Model
         return $return; 
     }
 
+    static function getreadyfordeliveredrecord()
+    {
+        $return = FinanceFileModel::select('finace_file.*','financer_details.financer_name as financer_name','finance_file_status.file_status_type as finance_file_status')
+                    ->join('financer_details','financer_details.id', 'finace_file.financer_details_id')
+                    ->join('finance_file_status','finance_file_status.id','finace_file.file_status')
+                    ->where('finace_file.file_status','=','11')
+                    ->orderBy('finace_file.id','asc')
+                    ->get();
+        return $return;
+    }
     static function getdeliveredrecord()
     {
         $return = FinanceFileModel::select('finace_file.*','financer_details.financer_name as financer_name','finance_file_status.file_status_type as finance_file_status')
@@ -41,4 +54,15 @@ class FinanceFileModel extends Model
                     ->get();
         return $return;
     }
+    static function getdeclinerecord()
+    {
+        $return = FinanceFileModel::select('finace_file.*','financer_details.financer_name as financer_name','finance_file_status.file_status_type as finance_file_status')
+                    ->join('financer_details','financer_details.id', 'finace_file.financer_details_id')
+                    ->join('finance_file_status','finance_file_status.id','finace_file.file_status')
+                    ->where('finace_file.file_status','=','9')
+                    ->orderBy('finace_file.id','asc')
+                    ->get();
+        return $return;
+    }
+  
 }

@@ -163,10 +163,22 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('viewreadyfordelivaryfile')}}">
+                        <i class="bi bi-circle"></i><span>Ready for Delivery</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('viewdelivaryfile')}}">
                         <i class="bi bi-circle"></i><span>View Delivered</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('viewdeclinefile')}}">
+                        <i class="bi bi-circle"></i><span>View Decline File</span>
+                    </a>
+                </li>
+                
+
                 
             </ul>
         </li><!-- End Forms Nav -->
