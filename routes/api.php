@@ -9,3 +9,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('cloud-data', [CloudCallingController::class, 'index']);
+Route::post('cloud-calling', [CloudCallingController::class, 'cloudcallingapidata']);

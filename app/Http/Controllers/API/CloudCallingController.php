@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomerLeadModel;
 use App\Models\ApiCloudCallModel;
 use Illuminate\Support\Facades\AUTH;
+use Carbon\Carbon;
 
 class CloudCallingController extends Controller
 {
@@ -63,5 +64,85 @@ class CloudCallingController extends Controller
                 'message' => 'Data Added Successfully',
             ], 200);
         }
+    }
+
+    public function cloudcallingapidata(Request $req)
+    {  
+        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+
+        $result = ApiCloudCallModel::create([
+            'uuid' => $req->uuid,
+            'caller_number' => $req->caller_number,
+            'caller_name' => $req->caller_name,
+            'user_id' => $req->user_id,
+            'user_email' => $req->user_email,
+            'user_name' => $req->user_name,
+            'did_number' => $req->did_number,
+            'caller_id' => $req->caller_id,
+            'destination_type' => $req->destination_type,
+            'campaign' => $req->campaign,
+            'agent_start_time' => $req->agent_start_time,
+            'agent_answered_time' => $req->agent_answered_time,
+            'agent_end_time' => $req->agent_end_time,
+            'agent_duration' => $req->agent_duration,
+            'customer_start_time' => $req->customer_start_time,
+            'customer_answered_time' => $req->customer_answered_time,
+            'customer_end_time' => $req->customer_end_time,
+            'customer_duration' => $req->customer_duration,
+            'call_start_time' => $req->call_start_time,
+            'call_answered_time' => $req->call_answered_time,
+            'call_end_time' => $req->call_end_time,
+            'call_duration' => $req->call_duration,
+            'total_agents_duration' => $req->total_agents_duration,
+            'queue_duration' => $req->queue_duration,
+            'hold_duration' => $req->hold_duration,
+            'amount' => $req->amount,
+            'recording' => $req->recording,
+            'call_status' => $req->call_status,
+            'call_type' => $req->call_type,
+            'call_mode' => $req->call_mode,
+            'region' => $req->region,
+            'created_at' => $mytime,
+            'updated_at' => $mytime,
+        ]);
+
+        if ($result)
+
+        $sender = 'CAR4SL';
+            $mob = $req->caller_number;
+            $name = 'Customer';
+            $auth = '3HqJI';
+            $entid = '1701171869640632437';
+            $temid = '1707172596077833707';
+            $mob2 = [$mob];
+            $mob3 = implode(',', $mob2);
+            $msg = urlencode('Dear ' . $name . ",\nWelcome to Car4Sales ! We're excited to help you Buy & sell your old car with ease and get the best value for it. If you have any questions or need assistance, please contact us at. 7779995656 . \nThank you for choosing us! \nBest regards,\nCar4Sales, \nMuzaffarpur, Motihari, Bakhri \nPh. 7779995656");
+            $msg1 = urlencode('प्रिय ' . $name . ",\nCar4Sales में आपका हार्दिक स्वागत है! हम पुरानी कार को खरीदते और बेचते हैं, आपकी पुरानी कार का सर्वोत्तम मूल्य दिलाने एवं किफायती कीमत पर पुरानी कार देने का वादा करते है।\nअपनी कार बेचने एवं पुरानी कार खरीदने के लिए हमसे इस नंबर पर संपर्क करें: 7779995656. \nCar4Sales को चुनने के लिए आपका धन्यवाद!,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
+
+            $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
+
+            //sms from here
+
+            function SendSMS($hostUrl)
+            {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $hostUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_POST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+                $result = curl_exec($ch);
+                return $result;
+            }
+            
+            $raa = SendSMS($url); // call function that return response with code
+
+            {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'call log Received',
+                ], 200);
+            }
     }
 }
