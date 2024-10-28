@@ -78,6 +78,7 @@ class AuthController extends Controller
                             ->whereMonth('created_at', Carbon::now()->month)
                             ->count();
     
+        $data['readyfordelivary'] = DB::table('finace_file')->where('file_status','11')->count();
 
         $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
         $headers = [
