@@ -68,11 +68,51 @@ class CloudCallingController extends Controller
 
     public function cloudcallingapidata(Request $req)
     {  
+
+        $data = $req->json()->all();
+
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
 
         $result = ApiCloudCallModel::create([
-            'uuid' => $req->uuid,
-            'caller_number' => $req->caller_number,
+            'uuid' => $data['uuid'],
+            'caller_number' => $data['caller_number'],
+            'caller_name' => $data['caller_name'],
+            'user_id' => $data['user_id'],
+            'user_email' => $data['user_email'],
+            'user_name' => $data['user_name'],
+            'did_number' => $data['did_number'],
+            'caller_id' => $data['caller_id'],
+            'destination_type' => $data['destination_type'],
+            'campaign' => $data['campaign'],
+            'agent_start_time' => $data['agent_start_time'],
+            'agent_answered_time' => $data['agent_answered_time'],
+            'agent_end_time' => $data['agent_end_time'],
+            'agent_duration' => $data['agent_duration'],
+            'customer_start_time' => $data['customer_start_time'],
+            'customer_answered_time' => $data['customer_answered_time'],
+            'customer_end_time' => $data['customer_end_time'],
+            'customer_duration' => $data['customer_duration'],
+            'call_start_time' => $data['call_start_time'],
+            'call_answered_time' => $data['call_answered_time'],
+            'call_end_time' => $data['call_end_time'],
+            'call_duration' => $data['call_duration'],
+            'total_agents_duration' => $data['total_agents_duration'],
+            'queue_duration' => $data['queue_duration'],
+            'hold_duration' => $data['hold_duration'],
+            'amount' => $data['amount'],
+            'recording' => $data['recording'],
+            'call_status' => $data['call_status'],
+            'call_type' => $data['call_type'],
+            'call_mode' => $data['call_mode'],
+            'region' => $data['region'],
+            'created_at' => $mytime,
+            'updated_at' => $mytime,
+            
+        ]);
+
+       /*  $result = ApiCloudCallModel::create([
+            'uuid' => $data['uuid'],
+            'caller_number' => $data['caller_number'],
             'caller_name' => $req->caller_name,
             'user_id' => $req->user_id,
             'user_email' => $req->user_email,
@@ -104,12 +144,12 @@ class CloudCallingController extends Controller
             'region' => $req->region,
             'created_at' => $mytime,
             'updated_at' => $mytime,
-        ]);
+        ]); */
 
         if ($result)
 
         $sender = 'CAR4SL';
-            $mob = $req->caller_number;
+            $mob = $data['caller_number'];
             $name = 'Customer';
             $auth = '3HqJI';
             $entid = '1701171869640632437';
