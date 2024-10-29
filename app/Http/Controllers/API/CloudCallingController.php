@@ -8,6 +8,7 @@ use App\Models\CustomerLeadModel;
 use App\Models\ApiCloudCallModel;
 use Illuminate\Support\Facades\AUTH;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CloudCallingController extends Controller
 {
@@ -184,5 +185,11 @@ class CloudCallingController extends Controller
                     'message' => 'call log Received',
                 ], 200);
             }
+    }
+
+    public function showcloudacalldata()
+    {
+        $data['cloud_call_data'] = DB::table('cloud_calling_data')->orderBy('id', 'desc')->get();
+        return view('admin.cloud-calling.cloud-calling-data',$data);
     }
 }

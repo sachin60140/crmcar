@@ -9,6 +9,7 @@ use App\Http\Controllers\EmpController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\admin\VisitorController;
 use App\Http\Controllers\delivary\DelivaryController;
+use App\Http\Controllers\API\CloudCallingController;
 
 
 use PHPUnit\Event\Code\Test;
@@ -93,6 +94,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/delivary/test', [DelivaryController::class, 'test'])->name('test');
 
     Route::get('admin/random', [VisitorController::class, 'randomrecords'])->name('randomrecords');
+
+    /* Cloud Calling Data */
+    Route::get('admin/cloud-calling/cloud-calling-data', [CloudCallingController::class, 'showcloudacalldata'])->name('showcloudacalldata');
 
     
     

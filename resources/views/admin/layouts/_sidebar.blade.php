@@ -126,6 +126,11 @@
                      </a>
                  </li>
                  <li>
+                    <a href="{{ route('showcloudacalldata') }}">
+                        <i class="bi bi-circle"></i><span>View Cloud Call Data</span>
+                    </a>
+                </li>
+                 <li>
                      <a href="{{ route('viewleaddata1') }}">
                          <i class="bi bi-circle"></i><span>View Contact</span>
                      </a>
