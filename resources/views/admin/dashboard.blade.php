@@ -119,6 +119,32 @@
                         <div class="card info-card customers-card">
 
                             <div class="card-body">
+                                <h5 class="card-title">Cloud Call Count</span></h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cloud-check-fill"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Total Contact</p>
+                                        <h6>{{ $cloud_contacts }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Today Contact</p>
+                                        <h6>{{ $today_cloud_contacts }}</h6>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div><!-- End Customers Card -->
+                    <!-- Customers Card -->
+                    <div class="col-xxl-4 col-md-4">
+
+                        <div class="card info-card customers-card">
+
+                            <div class="card-body">
                                 <h5 class="card-title">Total <span>| Visitor</span></h5>
 
                                 <div class="d-flex align-items-center">

@@ -50,6 +50,10 @@ class AuthController extends Controller
         ->where('stock_status','!=' ,'3')->count();
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
+
+        $data['cloud_contacts'] = DB::table('cloud_calling_data')->count();
+        $data['today_cloud_contacts'] = DB::table('cloud_calling_data')->whereDate('created_at', Carbon::today())->count();
+
         $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
 
         $data['totalvisitor'] = DB::table('visitor')->count();
