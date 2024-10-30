@@ -55,7 +55,7 @@
                                         <td>{{ $items->customer_number }}</td>
                                         <td>{{ $items->call_duration }}</td>
                                         <td>{{ $items->call_status }}</td>
-                                        <td>{{$items->recording}} </td>
+                                        <td><a href=" {{$items->recording}}" target="_blank">Recording</a> </td>
                                         <td>{{ $items->created_at }}</td>
                                        
                                     </tr>
