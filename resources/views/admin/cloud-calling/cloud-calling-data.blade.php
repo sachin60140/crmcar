@@ -50,9 +50,9 @@
                                 @foreach ($cloud_call_data as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->customer_number }}</td>
-                                        <td>{{ $items->call_type }}</td>
                                         <td>{{ $items->did_number }}</td>
+                                        <td>{{ $items->call_type }}</td>
+                                        <td>{{ $items->customer_number }}</td>
                                         <td>{{ $items->call_duration }}</td>
                                         <td>{{ $items->call_status }}</td>
                                         <td>{{$items->recording}} </td>
