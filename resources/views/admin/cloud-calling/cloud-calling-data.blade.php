@@ -40,6 +40,7 @@
                                     <th scope="col">Call Type</th>
                                     <th scope="col">Mobile</th>
                                     <th scope="col">Call Time</th>
+                                    <th scope="col">Call Status</th>
                                     <th scope="col">Recording</th>
                                     <th scope="col">Created</th>
                                     
@@ -49,10 +50,11 @@
                                 @foreach ($cloud_call_data as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->did_number }}</td>
+                                        <td>{{ $items->customer_number }}</td>
                                         <td>{{ $items->call_type }}</td>
-                                        <td>{{ $items->caller_number }}</td>
+                                        <td>{{ $items->did_number }}</td>
                                         <td>{{ $items->call_duration }}</td>
+                                        <td>{{ $items->call_status }}</td>
                                         <td>{{$items->recording}} </td>
                                         <td>{{ $items->created_at }}</td>
                                        
