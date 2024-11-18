@@ -95,6 +95,10 @@ class EmpController extends Controller
                             ->where('lead_asign', Auth::user()->name)
                             ->where('lead_status','7')
                             ->count();
+       $data['Pendingtilltoday'] = DB::table('customer_lead_remarks')
+                            ->where('created_by', Auth::user()->name)
+                            ->where('next_folloup_date','<=', Carbon::now())
+                            ->count();
                                                 
         
         return view('employee.dashboard',$data);

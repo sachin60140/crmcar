@@ -10,6 +10,8 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\admin\VisitorController;
 use App\Http\Controllers\delivary\DelivaryController;
 use App\Http\Controllers\API\CloudCallingController;
+use App\Http\Controllers\dto\DtoController;
+
 
 
 use PHPUnit\Event\Code\Test;
@@ -97,9 +99,10 @@ Route::group(['middleware' => 'admin'], function () {
 
     /* Cloud Calling Data */
     Route::get('admin/cloud-calling/cloud-calling-data', [CloudCallingController::class, 'showcloudacalldata'])->name('showcloudacalldata');
+    
+    /* DTO File  */
+    Route::get('admin/dto/add-file', [DtoController::class, 'index'])->name('adddtofile');
 
-    
-    
 });
 
 

@@ -81,6 +81,9 @@ class AuthController extends Controller
                              ->whereYear('created_at', Carbon::now()->year)
                             ->whereMonth('created_at', Carbon::now()->month)
                             ->count();
+        $data['Pendingtilltoday'] = DB::table('customer_lead_remarks')
+                            ->where('next_folloup_date','<=', Carbon::now())
+                            ->count();
     
         $data['readyfordelivary'] = DB::table('finace_file')->where('file_status','11')->count();
 

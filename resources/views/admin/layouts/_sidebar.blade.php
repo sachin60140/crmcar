@@ -182,24 +182,21 @@
                         <i class="bi bi-circle"></i><span>View Decline File</span>
                     </a>
                 </li>
-                
-
-                
             </ul>
         </li><!-- End Forms Nav -->
          <li class="nav-item">
           <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-journal-text"></i><span>WorkShop</span><i class="bi bi-chevron-down ms-auto"></i>
+              <i class="bi bi-journal-text"></i><span>DTO File</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="workshop-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
-                  <a href="#">
-                      <i class="bi bi-circle"></i><span>New Job Card</span>
+                  <a href="{{route('adddtofile')}}">
+                      <i class="bi bi-circle"></i><span>Add Dto FIle</span>
                   </a>
               </li>
               <li>
                   <a href="#">
-                      <i class="bi bi-circle"></i><span>View Contact</span>
+                      <i class="bi bi-circle"></i><span>View Dto File</span>
                   </a>
               </li>
           </ul>
