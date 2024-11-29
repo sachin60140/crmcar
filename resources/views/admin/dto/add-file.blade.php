@@ -12,6 +12,17 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        @keyframes blink {
+
+            0% { opacity: 1; }
+
+            50% { opacity: 0; }
+
+            100% { opacity: 1; }
+
+            }
+
     </style>
 
 @endsection
@@ -57,52 +68,56 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Add DTO File</h5>
+                <h5 class="card-title">Add DTO File <span style="animation: blink 1s infinite; color: red;">Please Upload File Less then 10MB</span></h5>
 
                 <!-- Multi Columns Form -->
-                <form class="row g-3" action="{{url('admin/add-stock')}}" method="POST">
+                <form class="row g-3" action="{{url('admin/dto/store-dto-file')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Registration Number <span
+                        <label for="reg_number" class="form-label">Registration Number <span
                                 style="color: red;">*</span></label>
                         <input type="Text" class="form-control" id="inputName5" value="{{ old('reg_number') }}"
-                            name="reg_number" required>
+                            name="reg_number" autofocus required>
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">DTO <span
+                        <label for="rto_location" class="form-label">RTO Location <span
                                 style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="inputName5" value="{{ old('eng_number') }}"
-                            name="eng_number" placeholder="Enter Location" maxlength="5" required>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ old('rto_location') }}"
+                            name="rto_location" placeholder="Enter Rto Location" required>
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Vendor Name <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="inputName5" value="{{ old('chassis_number') }}"
-                            name="chassis_number" placeholder="Enter Vendor Name" maxlength="5" required>
+                        <label for="vendor_name" class="form-label">Vendor Name </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ old('vendor_name') }}"
+                            name="vendor_name" placeholder="Enter Vendor Name">
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Vendor Mobile <span style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="inputName5" value="{{ old('car_model_year') }}"
-                            name="car_model_year" required>
+                        <label for="vendor_mobile_number" class="form-label">Vendor Mobile </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ old('vendor_mobile_number') }}"
+                            name="vendor_mobile_number" >
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Dispatch Date <span style="color: red;">*</span></label>
-                        <input type="date" class="form-control" id="inputName5" value="{{ old('color') }}"
-                            name="color" required>
+                        <label for="dispatch_date" class="form-label">Dispatch Date </label>
+                        <input type="date" class="form-control" id="inputName5" value="{{ old('dispatch_date') }}"
+                            name="dispatch_date" >
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Status <span style="color: red;">*</span></label>
-                        <select id="category" class="form-select" name="fuel_type">
+                        <label for="status" class="form-label">Status <span style="color: red;">*</span></label>
+                        <select id="status" class="form-select" name="status">
                             <option value="" selected>Choose...</option>
                             <option value="Ready to Dispatch">Ready to Dispatch</option>
                             <option value="Dispatched">Dispatched</option>
                             <option value="Online">Online</option>
-                            
+                            <option value="Hold">Hold</option>
                         </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="upload_pdf" class="form-label">Upload PDF File <span style="color: red;">Less then 10MB *</span></label>
+                        <input type="file" class="form-control" id="inputName5" value="{{ old('upload_pdf') }}"
+                            name="upload_pdf" required>
                     </div>
                    
                     <div class="col-12">
-                        <label for="inputAddress2" class="form-label">Remarks <span style="color: red;">*</span></label>
+                        <label for="inputAddress2" class="form-label">Remarks <span style="color: red;">* </span></label>
                         <input type="text" class="form-control" id="remarks" name="remarks"
                             value="{{ old('remarks') }}" required>
                     </div>

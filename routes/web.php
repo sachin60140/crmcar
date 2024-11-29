@@ -102,6 +102,9 @@ Route::group(['middleware' => 'admin'], function () {
     
     /* DTO File  */
     Route::get('admin/dto/add-file', [DtoController::class, 'index'])->name('adddtofile');
+    Route::post('admin/dto/store-dto-file', [DtoController::class, 'adddtofile'])->name('storetofile');
+    Route::get('admin/dto/view-dto-file', [DtoController::class, 'viewdtofile'])->name('viewdtofile');
+    
 
 });
 

@@ -195,7 +195,7 @@
                   </a>
               </li>
               <li>
-                  <a href="#">
+                  <a href="{{route('viewdtofile')}}">
                       <i class="bi bi-circle"></i><span>View Dto File</span>
                   </a>
               </li>
