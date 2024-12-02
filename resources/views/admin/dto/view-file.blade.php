@@ -126,7 +126,7 @@
                     ],
                     columnDefs: [{ width: 25, targets: 0 }],
                         fixedColumns: true,
-                        paging: false,
+                        paging: true,
                         scrollCollapse: true,
                         scrollX: true,
                         scrollY: 300
