@@ -30,7 +30,7 @@
                     <div class="card-body" >
                         <h5 class="card-title">View Dto File  </h5>
                         
-                    
+                       
 
                         <!-- Table with stripped rows -->
                         <table class="table display" style="font-size: 13px;" id="example">
@@ -54,14 +54,18 @@
                             </thead>
                                 @php
                                     $mytime = Carbon\Carbon::now();
-                                    $todaytime = Carbon\Carbon::parse($mytime)->format('Y-m-d'); 
+                                    $todaytime = Carbon\Carbon::parse($mytime)->format('Y-m-d');
+                                    
                                 @endphp
                            
                             <tbody>
                                 @foreach ($dtofiledata as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>{{ $items->reg_number        }}</td>
+                                        <td>
+                                            <a href="{{url('admin/dto/edit-dto-file')}}/{{ $items->id }}" class="badge bg-primary"> {{ $items->reg_number}}</a>
+                                           
+                                        </td>
                                         <td>{{ $items->rto_location }}</td>
                                         <td>{{ $items->vendor_name }}</td>
                                         <td>{{ $items->vendor_mobile_number }}</td>

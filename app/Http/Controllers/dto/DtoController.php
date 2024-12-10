@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DtoModel;
 use DateTime;
+use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -55,8 +56,47 @@ class DtoController extends Controller
 
     public function viewdtofile()
     {
-        $data['dtofiledata'] = DB::table('dto_dispatch')->get();
+        $data['dtofiledata'] = DB::table('dto_dispatch')->orderBy('dispatch_date', 'DESC')->get();
         return view('admin.dto.view-file',$data);
 
+    }
+
+    public function editdtofile($id)
+    {
+         $data['getRecord'] = DB::table('dto_dispatch')->where('id', '=', $id)->first();
+        
+        return view('admin.dto.edit-file', $data);
+    }
+
+    public function updatedtofile(Request $req, $id)
+    {
+        $req->validate([
+           
+            'vendor_name' => 'required',
+            'vendor_mobile_number' => 'required|min_digits:5|max_digits:10',
+            'dispatch_date' => 'required',
+            'status' => 'required',
+            'remarks' => 'required',
+        ]);
+
+        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+
+        $DtoModel = DtoModel::find($id);
+
+        $DtoModel->vendor_name = $req->vendor_name;
+        $DtoModel->vendor_mobile_number = $req->vendor_mobile_number;
+        $DtoModel->dispatch_date = $req->dispatch_date;
+        $DtoModel->status = $req->status;
+        $DtoModel->remarks = $req->remarks;
+
+        $DtoModel->updated_by = Auth::user()->name;
+
+        $DtoModel->updated_at = $mytime;
+
+        $DtoModel->update();
+
+        return back()->with('success', 'DTO File  Updated Succesfully');
+
+        //return redirect('admin/view-stock')->with('success', 'DTO File  Updated Succesfully');
     }
 }
