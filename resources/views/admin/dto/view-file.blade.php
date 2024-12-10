@@ -129,7 +129,7 @@
                         paging: true,
                         scrollCollapse: true,
                         scrollX: true,
-                        scrollY: 300
+                        
                     
                 });
             });

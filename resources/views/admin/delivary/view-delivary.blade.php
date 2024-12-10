@@ -76,7 +76,6 @@
                                     <th scope="col">Booking</th>
                                     <th scope="col">Finance</th>
                                     <th scope="col">DP</th>
-                                    
                                     <th scope="col">Date</th>
                                     
                                 </tr>
@@ -88,7 +87,7 @@
                                         <td>
                                             <a href="{{url('/admin/delivary/delivary_pdf')}}/{{ $items->id }}"> {{ $items->booking_id }} </a>
                                         </td>
-                                        <td>{{ $items->booking_date }}</td>
+                                        <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
                                         <td>{{ $items->booking_person }}</td>
                                         <td>{{ $items->name }}</td>
                                        
