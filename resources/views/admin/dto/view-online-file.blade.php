@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'View DTO File | Car 4 Sales')
+@section('title', 'View Online DTO File | Car 4 Sales')
 
 
 @section('style')
@@ -17,7 +17,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View DTO FIle</li>
+                <li class="breadcrumb-item">View Online DTO FIle</li>
                 
             </ol>
         </nav>
@@ -25,36 +25,10 @@
     <section class="section dashboard">
         <div class="row">
             <div class="col-lg-12">
-                <div>
-                    @if ($errors->any())
-                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-        
-                    @if (Session::has('success'))
-                        <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                        </div>
-                    @endif
-        
-                    @if (Session::has('error'))
-                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                            {{ Session::get('error') }}
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                        </div>
-                    @endif
-                </div>
+
                 <div class="card">
                     <div class="card-body" >
-                        <h5 class="card-title">View Dto File  </h5>
+                        <h5 class="card-title">View Online Dto File  </h5>
                         
                        
 
@@ -68,6 +42,7 @@
                                     <th scope="col">Vendor</th>
                                     <th scope="col">Vendor Mobile</th>
                                     <th scope="col">Dispatch Date</th>
+                                    <th scope="col">Online Date</th>
                                     <th scope="col">Days</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">PDF</th>
@@ -88,18 +63,16 @@
                                 @foreach ($dtofiledata as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
-                                        <td>
-                                            <a href="{{url('admin/dto/edit-dto-file')}}/{{ $items->id }}" class="badge bg-primary"> {{ $items->reg_number}}</a>
-                                           
-                                        </td>
+                                        <td>{{ $items->reg_number}}</td>
                                         <td>{{ $items->rto_location }}</td>
                                         <td>{{ $items->vendor_name }}</td>
                                         <td>{{ $items->vendor_mobile_number }}</td>
                                         <td>{{ $items->dispatch_date }}</td>
+                                        <td>{{ $items->online_date }}</td>
                                         <td>
                                             @if ($items->dispatch_date != "")
                                            
-                                                {{ Carbon\Carbon::parse($items->dispatch_date)->diffInDays($todaytime, true) }}
+                                                {{ Carbon\Carbon::parse($items->dispatch_date)->diffInDays(Carbon\Carbon::parse($items->online_date)->format('Y-m-d'), true) }}
                                             
                                             @endif
                                             

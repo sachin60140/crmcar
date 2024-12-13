@@ -106,6 +106,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/dto/view-dto-file', [DtoController::class, 'viewdtofile'])->name('viewdtofile');
     Route::get('admin/dto/edit-dto-file/{id}', [DtoController::class, 'editdtofile'])->name('editdtofile');
     Route::put('admin/dto/update-dto-file/{id}', [DtoController::class, 'updatedtofile'])->name('updatedtofile');
+    Route::get('admin/dto/view-online-dto-file', [DtoController::class, 'viewonlinedtofile'])->name('viewonlinedtofile');
     
 
 });

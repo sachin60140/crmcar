@@ -46,7 +46,6 @@
                         <i class="bi bi-circle"></i><span>Reciept</span>
                     </a>
                 </li>
-                
              </ul>
          </li>
          <li class="nav-item">
@@ -81,8 +80,16 @@
                          <i class="bi bi-circle"></i><span>View Stock</span>
                      </a>
                  </li>
-                 
-
+                 <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Upload Stock Paper</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>View Stock Paper</span>
+                    </a>
+                </li>
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">
@@ -199,6 +206,11 @@
                       <i class="bi bi-circle"></i><span>View Dto File</span>
                   </a>
               </li>
+              <li>
+                <a href="{{route('viewonlinedtofile')}}">
+                    <i class="bi bi-circle"></i><span>View Online File</span>
+                </a>
+            </li>
           </ul>
       </li><!-- End Forms Nav -->
 

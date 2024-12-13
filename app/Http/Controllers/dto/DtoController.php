@@ -56,9 +56,18 @@ class DtoController extends Controller
 
     public function viewdtofile()
     {
-        $data['dtofiledata'] = DB::table('dto_dispatch')->orderBy('dispatch_date', 'DESC')->get();
+        $data['dtofiledata'] = DB::table('dto_dispatch')
+                                ->whereIn('status',['Ready to Dispatch','Dispatched','Hold'])->orderBy('dispatch_date', 'DESC')->get();
         return view('admin.dto.view-file',$data);
 
+    }
+
+    function viewonlinedtofile()
+    {
+        $data['dtofiledata'] = DB::table('dto_dispatch')
+                                ->where('status','Online')->orderBy('online_date', 'DESC')->get();
+
+        return view('admin.dto.view-online-file',$data);
     }
 
     public function editdtofile($id)
@@ -76,6 +85,7 @@ class DtoController extends Controller
             'vendor_mobile_number' => 'required|min_digits:5|max_digits:10',
             'dispatch_date' => 'required',
             'status' => 'required',
+            'upload_mparivahan' => 'nullable|mimes:png,jpg,jpeg,pdf',
             'remarks' => 'required',
         ]);
 
@@ -87,6 +97,21 @@ class DtoController extends Controller
         $DtoModel->vendor_mobile_number = $req->vendor_mobile_number;
         $DtoModel->dispatch_date = $req->dispatch_date;
         $DtoModel->status = $req->status;
+
+        if ($req->hasFile('upload_mparivahan'))
+        {
+            $d = new DateTime();
+            $nd = $d->format("YmdHisv");
+
+            $file = $req->file('upload_mparivahan');
+            $pdfext = $req->file('upload_mparivahan')->getClientOriginalExtension();
+            $pdfFileName = $d->format("YmdHisv") . 'mpari' . '.' . $pdfext;
+            $file->move('files/', $pdfFileName);
+            $DtoModel->upload_mparivahan = $pdfFileName;
+        }
+
+        $DtoModel->online_date = $req->online_date;
+
         $DtoModel->remarks = $req->remarks;
 
         $DtoModel->updated_by = Auth::user()->name;
@@ -95,8 +120,8 @@ class DtoController extends Controller
 
         $DtoModel->update();
 
-        return back()->with('success', 'DTO File  Updated Succesfully');
+        //return back()->with('success', 'DTO File  Updated Succesfully');
 
-        //return redirect('admin/view-stock')->with('success', 'DTO File  Updated Succesfully');
+        return redirect('admin/dto/view-dto-file')->with('success', 'DTO File  Updated Succesfully');
     }
 }
