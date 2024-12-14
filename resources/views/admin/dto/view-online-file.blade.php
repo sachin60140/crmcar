@@ -46,10 +46,13 @@
                                     <th scope="col">Days</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">PDF</th>
+                                    <th scope="col">M-Pari</th>
                                     <th scope="col">Remarks</th>
+                                    <th scope="col">Updated by</th>
+                                    <th scope="col">Updated Date</th>
                                     <th scope="col">Added By</th>
-                                    <th scope="col">Updated By</th>
-                                    <th scope="col">Entry Date</th>
+                                    <th scope="col">added Date</th>
+                                    
                                     
                                 </tr>
                             </thead>
@@ -83,11 +86,17 @@
                                             <i class="bi bi-box-arrow-down"></i>
                                             </a>
                                         </td>
+                                        <td>
+                                            <a href="{{asset('files/')}}/{{$items->upload_mparivahan}}" class="btn btn-sm btn-success" download>
+                                            <i class="bi bi-box-arrow-down"></i>
+                                            </a>
+                                        </td>
                                         <td>{{ $items->remarks }}</td>
+                                        <td>{{ $items->updated_by }}</td>
+                                        <td>{{date('d-m-Y H:i:s', strtotime($items->updated_at))}}</td>
                                         <td>{{ $items->created_by }}</td>
-                                        <td>{{ $items->created_at }}</td>
+                                        <td>{{date('d-m-Y H:i:s', strtotime($items->created_at))}}</td>
                                         
-                                        <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
                                     </tr>
                                 @endforeach
 
