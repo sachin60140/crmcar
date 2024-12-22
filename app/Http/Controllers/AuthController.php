@@ -168,6 +168,30 @@ class AuthController extends Controller
         return view('admin.employee.view-employee', $data);
     }
 
+    public function editempdata($id)
+    {
+         $data['user_data'] =  DB::table('users')
+                            ->where('id','=', $id)
+                            ->first();
+        return view('admin.employee.update-password',$data);
+    }
+
+    public function updateuserPassword(Request $req, $id)
+    {
+        $req->validate([
+            'update_password' => 'required',
+        ]);
+
+        $pass = Hash::make($req->update_password);
+
+        $UserModel = User::find($id);
+
+        $UserModel->password = $pass;
+        $UserModel->update();
+
+        return back()->with('success', 'Password Reset Succesfully');
+    }
+
     public function smsbalance()
     {
         $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';

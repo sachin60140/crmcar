@@ -41,7 +41,6 @@
                                     <th scope="col">User Type</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Update</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,7 +51,10 @@
                                         <td>{{ $items->email }}</td>
                                         <td>User Type</td>
                                         <td>Status</td>
-                                        <td>Updare</td>
+                                        <td>
+                                            <a href="{{url('admin/edit-employee')}}/{{ $items->id }}" class="badge bg-primary"> Update </a>
+                                           
+                                        </td>
                                         
                                     </tr>
                                 @endforeach

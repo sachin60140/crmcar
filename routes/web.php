@@ -76,6 +76,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-employee', [AuthController::class, 'addemployee'])->name('addemployee');
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
+    Route::get('admin/edit-employee/{id?}', [AuthController::class, 'editempdata'])->name('editempdata');
+    Route::put('admin/edit-employee/{id?}', [AuthController::class, 'updateuserPassword'])->name('updateuserPassword');
 
     Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
     Route::post('admin/add-finance', [FinanceController::class, 'storefinancefiledetails'])->name('storefinancefiledetails');
