@@ -121,7 +121,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/workshop/inspection', [CarInspectionController::class, 'index'])->name('inspection');
     Route::post('admin/workshop/store-inspection', [CarInspectionController::class, 'storeinspection'])->name('storeinspection');
     Route::get('admin/workshop/view-inspection', [CarInspectionController::class, 'viewinspection'])->name('viewinspection');
-
+    /* End Inspection  */
 
 });
 
