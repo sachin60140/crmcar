@@ -180,11 +180,21 @@
                     <div class="col-md-4">
                         <label for="paymentMode" class="form-label">Payment Mode</label>
                         <select class="form-select" name="paymentMode">
-                            <option>Select Payment Mode...</option>
+                            <option value="">Select Payment Mode...</option>
                             <option value="Cash">Cash</option>
+                            <option value="Cash">Cash+UPI</option>
                             <option value="UPI">UPI</option>
                             <option value="Neft">NEFT</option>
                             <option value="RTGS">RTGS</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="paymentMode" class="form-label">Payment Mode</label>
+                        <select class="form-select" name="financer">
+                            <option value="">Select Payment Mode...</option>
+                            @foreach ($financer as $item)
+                                <option value="{{$item->financer_name}}">{{$item->financer_name}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-12  mb-5">

@@ -12,6 +12,7 @@ class FinanceController extends Controller
 {
     public function addfinancefile()
     {
+        $data['branch_name'] = DB::table('branch')->orderBy('branch_name', 'asc')->get();
         $data['financer_list'] = DB::table('financer_details')->orderBy('financer_name', 'asc')->get();
 
         return view('admin.finance.add-finance', $data);
@@ -21,6 +22,7 @@ class FinanceController extends Controller
     {
 
         $req->validate([
+            'branch_name' => 'required',
             'cutomer_name' => 'required',
             'mobile' => 'required|min_digits:10|max_digits:10',
             'cutomer_pan' => 'required|min:10|max:10',
@@ -46,6 +48,7 @@ class FinanceController extends Controller
 
         $FinanceFileModel = new FinanceFileModel();
 
+        $FinanceFileModel->branch_name = $req->branch_name;
         $FinanceFileModel->cutomer_name = $req->cutomer_name;
         $FinanceFileModel->mobile = $req->mobile;
         $FinanceFileModel->cutomer_pan = $req->cutomer_pan;

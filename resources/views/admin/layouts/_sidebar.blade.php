@@ -81,7 +81,7 @@
                      </a>
                  </li>
                  <li>
-                    <a href="#">
+                    <a href="{{route('addstockpaper')}}">
                         <i class="bi bi-circle"></i><span>Upload Stock Paper</span>
                     </a>
                 </li>
@@ -192,10 +192,10 @@
             </ul>
         </li><!-- End Forms Nav -->
          <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
+          <a class="nav-link collapsed" data-bs-target="#dto-lead" data-bs-toggle="collapse" href="#">
               <i class="bi bi-journal-text"></i><span>DTO File</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
-          <ul id="workshop-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <ul id="dto-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
                   <a href="{{route('adddtofile')}}">
                       <i class="bi bi-circle"></i><span>Add Dto FIle</span>
@@ -213,16 +213,31 @@
             </li>
           </ul>
       </li><!-- End Forms Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-journal-text"></i><span>Workshop</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="workshop-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="{{route('inspection')}}">
+                    <i class="bi bi-circle"></i><span>Add Inspection</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{route('viewinspection')}}">
+                    <i class="bi bi-circle"></i><span>View Inspection</span>
+                </a>
+            </li>
+            
+        </ul>
+    </li><!-- End Forms Nav -->
 
-         <li class="nav-item">
+         <!-- <li class="nav-item">
              <a class="nav-link collapsed" href="{{ route('trafficchallan') }}">
                  <i class="bi bi-stoplights-fill"></i>
                  <span>Traffic Challan</span>
              </a>
-         </li>
-
-
-
+         </li> -->
      </ul>
 
  </aside><!-- End Sidebar-->

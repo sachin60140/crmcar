@@ -263,6 +263,7 @@ class StockController extends Controller
         $data['carbooking'] = BookingModel::getRecordpdf($id);
 
         $regnumber = $data['carbooking'][0]['regnumber'];
+        $data['financer'] = DB::table('financer_details')->orderBy('financer_name','asc')->get();
 
         return view('admin.delivary.add-delivary', $data);
     }
@@ -291,6 +292,7 @@ class StockController extends Controller
             'booking_amount' => 'required',
             'finance_amount' => 'required',
             'dp' => 'required',
+            'financer' => 'required',
         ]);
 
         $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
@@ -334,6 +336,7 @@ class StockController extends Controller
         $CarDelivaryModel->finance_amount = $req->finance_amount;
         $CarDelivaryModel->dp = $req->dp;
         $CarDelivaryModel->paymentMode = $req->paymentMode;
+        $CarDelivaryModel->financer = $req->financer;
         $CarDelivaryModel->remarks = $req->remarks;
         $CarDelivaryModel->added_by = Auth::user()->name;
         $CarDelivaryModel->save();

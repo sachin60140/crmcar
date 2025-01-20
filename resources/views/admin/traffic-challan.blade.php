@@ -80,8 +80,6 @@
                 $(".car_number").keyup(function() {
                     $(this).val($(this).val().replace(/\s/g, ""));
                     
-                    
-                    
                 });
             });
         </script>

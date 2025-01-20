@@ -53,6 +53,7 @@
         @php
             foreach ($customer_details as $item) {
                 $name = $item->cutomer_name;
+                $branch = $item->branch_name;
                 $mobile = $item->mobile;
                 $cutomer_pan = $item->cutomer_pan;
                 $aadhar = $item->aadhar;
@@ -82,6 +83,9 @@
                     <div class="card-body">
                         <h5 class="card-title">View Finance file Status </h5>
                         <div class="row">
+                            <div class="col-md-4">
+                                <label for="fee" class="form-label">Branch: <span><strong>{{ucwords($branch)}}</strong></span></label>
+                            </div>
                             <div class="col-md-4">
                                 <label for="fee" class="form-label">Name of Cusotmer: <span><strong>{{ucwords($name)}}</strong></span></label>
                             </div>

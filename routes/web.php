@@ -11,6 +11,8 @@ use App\Http\Controllers\admin\VisitorController;
 use App\Http\Controllers\delivary\DelivaryController;
 use App\Http\Controllers\API\CloudCallingController;
 use App\Http\Controllers\dto\DtoController;
+use App\Http\Controllers\workshop\CarInspectionController;
+use App\Http\Controllers\UploadStockPaperController;
 
 
 
@@ -42,6 +44,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/view-stock', [StockController::class, 'viewstock'])->name('viewstock');
     Route::get('admin/stock-transfer/{id}', [StockController::class, 'stocktransfer'])->name('stocktransfer');
     Route::put('admin/stock-transfer/{id}', [StockController::class, 'updatestock'])->name('updatestock');
+     
+    /* CPaper Upload Start Here */
+    Route::get('admin/stock/add-stock-paper', [UploadStockPaperController::class,'addstockpaper' ])->name('addstockpaper');
+     /* Paper Upload end Here */
+     
 
     Route::get('admin/tarffic-challan', [StockController::class, 'trafficchallan'])->name('trafficchallan');
 
@@ -110,6 +117,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::put('admin/dto/update-dto-file/{id}', [DtoController::class, 'updatedtofile'])->name('updatedtofile');
     Route::get('admin/dto/view-online-dto-file', [DtoController::class, 'viewonlinedtofile'])->name('viewonlinedtofile');
     
+    /* Inspection  */
+    Route::get('admin/workshop/inspection', [CarInspectionController::class, 'index'])->name('inspection');
+    Route::post('admin/workshop/store-inspection', [CarInspectionController::class, 'storeinspection'])->name('storeinspection');
+    Route::get('admin/workshop/view-inspection', [CarInspectionController::class, 'viewinspection'])->name('viewinspection');
+
 
 });
 

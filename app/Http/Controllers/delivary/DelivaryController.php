@@ -17,9 +17,11 @@ class DelivaryController extends Controller
                 ->where('stock_status','=','1')
                 ->get();
 
-                $data['ledger'] = DB::table('ledger')
+        $data['ledger'] = DB::table('ledger')
                 ->orderBy('id','desc')
                 ->get();
+
+        
 
         return view('admin.delivary.add-delivary',$data);
     }
@@ -34,6 +36,8 @@ class DelivaryController extends Controller
     {
         
         $data['cardelivary'] = DB::table('car_delivary')->get();
+        
+
             
         return view('admin.delivary.view-delivary',$data);
     }

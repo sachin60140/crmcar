@@ -65,6 +65,16 @@
                         <!-- Multi Columns Form -->
                         <form class="row g-3" action="{{ route('storefinancefiledetails') }}" method="POST">
                             @csrf
+                            <div class="col-md-12">
+                                <label for="total_amount" class="form-label">Branch <span
+                                        style="color: red;">*</span></label>
+                                        <select class="form-select" name="branch_name">
+                                    <option value="">Select Branch</option>
+                                    @foreach ($branch_name as $item)
+                                        <option value="{{ $item->branch_name }}">{{ $item->branch_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <div class="col-md-12">
                                 <label for="total_amount" class="form-label">Name of Customer <span

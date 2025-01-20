@@ -67,7 +67,7 @@
                         </td>
                         <td>
                             <p style="text-align: center;"><strong style="font-size: 30px;">Car 4 Sales </strong></p>
-                            <p style="text-align: justify">Chandani Cowk, Near Mahindra & Mahindra Showroom, Near Over
+                            <p style="text-align: justify">Chandani Chowk, Near Mahindra & Mahindra Showroom, Near Over
                                 Bridge, Muzaffarpur, Bihar, 842003</p>
                             <p><strong>Ph. 777 999 5656</strong></p>
                         </td>

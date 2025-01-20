@@ -63,6 +63,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    <th scope="col">Branch</th>
                                     <th scope="col">Name</th>
                                    
                                     <th scope="col">Registration</th>
@@ -81,6 +82,7 @@
                                 @foreach ($viewfinancefiledetails as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
+                                        <td>{{ $items->branch_name }}</td>
                                         <td>{{ $items->cutomer_name }}</td>
                                        
                                         

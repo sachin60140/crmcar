@@ -97,7 +97,7 @@
             text-align: center;
             margin-top: 70px;
             font-size: 10px;
-            color: #777;
+            color: #000000;
         }
 
         /* Gatepass */
@@ -110,8 +110,8 @@
 
         .container1 {
 
-            margin: 20px auto;
-            padding: 10px;
+            margin: 10px auto;
+            padding: 5px;
             border: 1px solid #ccc;
         }
 
@@ -252,7 +252,7 @@
                     <td>{{ date('d/M/Y', strtotime($getRecords[0]['created_at'] ))}}</td>
                     <th>Seller Name</th>
                     <td>Amit Kumar</td>
-                    <th>Seller Father's Name</th>
+                    <th>Father's Name</th>
                     <td>Ramekbal Prasad</td>
                 </tr>
 
@@ -317,16 +317,20 @@
                     <td>{{ $getRecords[0]['name'] }}</td>
                     <th>Father's Name</th>
                     <td>{{ $getRecords[0]['father_name'] }}</td>
+                    <th>Mobile No.</th>
+                    <td>{{ $getRecords[0]['mobile'] }}</td>
                 </tr>
                 <tr>
                     <th>Address</th>
-                    <td colspan="3">{{ $getRecords[0]['address'] }}</td>
+                    <td colspan="5">{{ $getRecords[0]['address'] }}</td>
                 </tr>
                 <tr>
                     <th>Aadhar No.</th>
                     <td>{{ $getRecords[0]['aadhar'] }}</td>
                     <th>Pan Card</th>
                     <td>{{ $getRecords[0]['pan_card'] }}</td>
+                    <th>Finance By</th>
+                    <td>{{ $getRecords[0]['financer'] }}</td>
                 </tr>
             </table>
         </div>
@@ -371,7 +375,8 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>Thank you for choosing Car4Sales. For any inquiries, contact us at +91 777 999 5656.</p>
+            <p>Thank you for choosing Car4Sales.</p>
+            <p> For RC transfer-related issues, contact our helpline at 7070711795</p>
         </div>
 
 
