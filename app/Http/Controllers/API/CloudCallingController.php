@@ -72,13 +72,15 @@ class CloudCallingController extends Controller
 
        $data = $req->json()->all();
 
+       $last_10_digits = substr($data['did_number'], -10);
+
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
 
         $result =ApiCloudCallModel::create([
             'log_uuid' => $data['log_uuid'],
             'customer_number' => $data['customer_number'],
             'call_type' => $data['call_type'],
-            'did_number' => $data['did_number'],
+            'did_number' => $last_10_digits,
             'call_start_time' => $data['call_start_time'],
             'call_end_time' => $data['call_end_time'],
             'call_duration' => $data['call_duration'],
@@ -89,79 +91,6 @@ class CloudCallingController extends Controller
             'agents' => $data['agents'],
         ]);
 
-
-       /*  $result = ApiCloudCallModel::create([
-            'uuid' => $data['log_uuid'],
-            'caller_number' => $data['caller_number'],
-            'caller_name' => $data['caller_name'],
-            'user_id' => $data['user_id'],
-            'user_email' => $data['user_email'],
-            'user_name' => $data['user_name'],
-            'did_number' => $data['did_number'],
-            'caller_id' => $data['caller_id'],
-            'destination_type' => $data['destination_type'],
-            'campaign' => $data['campaign'],
-            'agent_start_time' => $data['agent_start_time'],
-            'agent_answered_time' => $data['agent_answered_time'],
-            'agent_end_time' => $data['agent_end_time'],
-            'agent_duration' => $data['agent_duration'],
-            'customer_start_time' => $data['customer_start_time'],
-            'customer_answered_time' => $data['customer_answered_time'],
-            'customer_end_time' => $data['customer_end_time'],
-            'customer_duration' => $data['customer_duration'],
-            'call_start_time' => $data['call_start_time'],
-            'call_answered_time' => $data['call_answered_time'],
-            'call_end_time' => $data['call_end_time'],
-            'call_duration' => $data['call_duration'],
-            'total_agents_duration' => $data['total_agents_duration'],
-            'queue_duration' => $data['queue_duration'],
-            'hold_duration' => $data['hold_duration'],
-            'amount' => $data['amount'],
-            'recording' => $data['recording'],
-            'call_status' => $data['call_status'],
-            'call_type' => $data['call_type'],
-            'call_mode' => $data['call_mode'],
-            'region' => $data['region'],
-            'created_at' => $mytime,
-            'updated_at' => $mytime,
-            
-        ]); */
-
-       /*  $result = ApiCloudCallModel::create([
-            'uuid' => $data['uuid'],
-            'caller_number' => $data['caller_number'],
-            'caller_name' => $req->caller_name,
-            'user_id' => $req->user_id,
-            'user_email' => $req->user_email,
-            'user_name' => $req->user_name,
-            'did_number' => $req->did_number,
-            'caller_id' => $req->caller_id,
-            'destination_type' => $req->destination_type,
-            'campaign' => $req->campaign,
-            'agent_start_time' => $req->agent_start_time,
-            'agent_answered_time' => $req->agent_answered_time,
-            'agent_end_time' => $req->agent_end_time,
-            'agent_duration' => $req->agent_duration,
-            'customer_start_time' => $req->customer_start_time,
-            'customer_answered_time' => $req->customer_answered_time,
-            'customer_end_time' => $req->customer_end_time,
-            'customer_duration' => $req->customer_duration,
-            'call_start_time' => $req->call_start_time,
-            'call_answered_time' => $req->call_answered_time,
-            'call_end_time' => $req->call_end_time,
-            'call_duration' => $req->call_duration,
-            'total_agents_duration' => $req->total_agents_duration,
-            'queue_duration' => $req->queue_duration,
-            'hold_duration' => $req->hold_duration,
-            'amount' => $req->amount,
-            'recording' => $req->recording,
-            'call_status' => $req->call_status,
-            'call_type' => $req->call_type,
-            'call_mode' => $req->call_mode,
-            'region' => $req->region,
-            'created_at' => $mytime,
-            'updated_at' => $mytime,
-        ]); */
 
         if ($result)
 
@@ -205,7 +134,12 @@ class CloudCallingController extends Controller
 
     public function showcloudacalldata()
     {
-        $data['cloud_call_data'] = DB::table('cloud_calling_data')->orderBy('id', 'desc')->get();
+        $now = Carbon::now();
+        $sevenDaysAgo = $now->copy()->subDays(15);
+
+        $data['cloud_call_data'] = DB::table('cloud_calling_data')->whereDate('created_at', '>=', $sevenDaysAgo)->get();
+
         return view('admin.cloud-calling.cloud-calling-data',$data);
     }
+
 }

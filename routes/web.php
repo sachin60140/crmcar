@@ -84,7 +84,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
     Route::get('admin/edit-employee/{id?}', [AuthController::class, 'editempdata'])->name('editempdata');
-    Route::put('admin/edit-employee/{id?}', [AuthController::class, 'updateuserPassword'])->name('updateuserPassword');
+    Route::put('admin/edit-employee/{user}', [AuthController::class, 'updateuserPassword'])->name('updateuserPassword');
 
     Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
     Route::post('admin/add-finance', [FinanceController::class, 'storefinancefiledetails'])->name('storefinancefiledetails');
@@ -148,5 +148,8 @@ Route::group(['middleware' => 'empauth'], function () {
     Route::get('employee/data/add-visitor', [EmpController::class, 'visitor'])->name('visitor');
     Route::post('employee/data/add-visitor', [EmpController::class, 'addvisitor'])->name('addvisitor');
     Route::get('employee/data/show-visitor', [EmpController::class, 'viewvisitor'])->name('viewvisitor');
+
+    /* Cloud Call Data View */ 
+    Route::get('employee/Cloud-Call/Cloud-Call-Data', [EmpController::class, 'showcloudacalldata'])->name('viewcloudcalldata');
 
 });

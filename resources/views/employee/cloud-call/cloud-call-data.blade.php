@@ -1,6 +1,6 @@
-@extends('admin.layouts.app')
+@extends('employee.layouts.app')
 
-@section('title', 'View Lead Data | Car 4 Sales')
+@section('title', 'View Cloud Call Data | Car 4 Sales')
 
 
 @section('style')
@@ -13,11 +13,11 @@
 
 @section('content')
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Employee Dashboard</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Branch</li>
+                <li class="breadcrumb-item"><a href="{{ url('employee/dashboard') }}">Home</a></li>
+                <li class="breadcrumb-item">View Cloud Call Data</li>
                 
             </ol>
         </nav>
@@ -28,37 +28,33 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">View Branch </h5>
-                        {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
-
-                        <!-- Table with stripped rows -->
-                        <table class="table display" style="font-size: 13px;" id="example">
+                        <h5 class="card-title">View Cloud Call Data of Last 2 Days </h5>
+                       
+                        <table class="table display" id="example" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Cloud Number</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">User Type</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Update</th>
+                                    <th scope="col">DID</th>
+                                    <th scope="col">Call Type</th>
+                                    <th scope="col">Mobile</th>
+                                    <th scope="col">Call Time</th>
+                                    <th scope="col">Call Status</th>
+                                    <th scope="col">Recording</th>
+                                    <th scope="col">Created</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($emplist as $items)
-                                    <tr>
-                                        <td>{{ $items->id }}</td>
-                                        <td>{{ $items->name }}</td>
-                                        <td>{{ $items->cloud_calling_number }}</td>
-                                        <td>{{ $items->email }}</td>
-                                        <td>User Type</td>
-                                        <td>Status</td>
-                                        <td>
-                                            <a href="{{url('admin/edit-employee')}}/{{ $items->id }}" class="badge bg-primary"> Update </a>
-                                           
-                                        </td>
-                                        
-                                    </tr>
+                                @foreach ($cloud_call_data as $items)
+                                <tr>
+                                    <td>{{ $items->id }}</td>
+                                        <td>{{ $items->did_number }}</td>
+                                        <td>{{ $items->call_type }}</td>
+                                        <td>{{ $items->customer_number }}</td>
+                                        <td>{{ $items->call_duration }}</td>
+                                        <td>{{ $items->call_status }}</td>
+                                        <td><a href=" {{$items->recording}}" target="_blank">Recording</a> </td>
+                                    <td>{{ $items->created_at }}</td>
+                                </tr>
                                 @endforeach
 
                             </tbody>
@@ -74,17 +70,21 @@
     @endsection
 
     @section('script')
-        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    
+        <script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.js"></script>
+        <script src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.bootstrap5.js"></script>
 
         <script>
             $(document).ready(function() {
                 $('#example').DataTable({
+                    responsive: 'true',
                     dom: 'Bfrtip',
                     buttons: [
                         'copyHtml5',
@@ -95,8 +95,9 @@
                     "pageLength": 50,
 
                     "aaSorting": [
-                        [0, 'desc']
+                        [0,'Desc']
                     ],
+                    
                 });
             });
         </script>

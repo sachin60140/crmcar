@@ -366,5 +366,23 @@ class EmpController extends Controller
 
         return view('employee.data.visit-followup-lead',$data);
     }
+
+    public function showcloudacalldata()
+    {
+        $now = Carbon::now();
+        //$sevenDaysAgo = $now->copy()->subDays(2);
+        $sevenDaysAgo = Carbon::now()->subDays(100)->toDateString();
+
+        $cloud_calling_number = Auth::user()->cloud_calling_number;
+
+        $data['cloud_call_data'] = DB::table('cloud_calling_data')
+                                    ->where('did_number', Auth::user()->cloud_calling_number)
+                                    
+                                    ->whereDate('created_at', '>=', $sevenDaysAgo)
+                                    ->orderBy('id','desc')
+                                    ->get();
+
+        return view('employee.cloud-call.cloud-call-data',$data);
+    }
     
 }

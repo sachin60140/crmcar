@@ -64,25 +64,36 @@
                 <form class="row g-3" action="{{url('admin/edit-employee/'.$user_data->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="fee" class="form-label">Name <span style="color: red;">*</span></label>
                         <input type="text" class="form-control" style="background-color: #8d9797;" readonly id="name" value="{{ $user_data->name}}"
                             name="name">
                     </div>
                     
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="email" class="form-label">Login Email ID <span
                                 style="color: red;">*</span></label>
                         <input type="email" class="form-control" id="email" style="background-color: #8d9797;" readonly value="{{ $user_data->email }}"
                             name="email" required>
                     </div>
-                    <div class="col-6">
-                        <label for="update_password" class="form-label">New Password</label>
-                        <input type="text" class="form-control" id="update_password" name="update_password" required>
+                    <div class="col-md-4">
+                        <label for="email" class="form-label">Login Email ID <span
+                                style="color: red;">*</span></label>
+                        <input type="email" class="form-control" id="email" style="background-color: #8d9797;" readonly value="{{ $user_data->email }}"
+                            name="email" required>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-4">
+                        <label for="email" class="form-label">Cloud Calling Number </label>
+                        <input type="text" class="form-control" id="cloud_calling_number" value="{{ $user_data->cloud_calling_number }}"
+                            name="cloud_calling_number" >
+                    </div>
+                    <div class="col-4">
+                        <label for="update_password" class="form-label">New Password</label>
+                        <input type="text" class="form-control" id="password" name="password" >
+                    </div>
+                    <div class="col-4">
                         <label for="ConfirmPassword" class="form-label">Confirm Password</label>
-                        <input type="text" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <input type="text" class="form-control" id="password_confirmation" name="password_confirmation" >
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>

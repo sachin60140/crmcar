@@ -70,14 +70,19 @@
                             <div class="col-md-12">
                                 <label for="Name" class="form-label">Name of Employee <span
                                         style="color: red;">*</span></label>
-                                <input type="Text" class="form-control" id="emp_name"
-                                    value="{{ old('emp_name') }}" name="emp_name" required>
+                                <input type="Text" class="form-control" id="name"
+                                    value="{{ old('name') }}" name="name" required>
                             </div>
                             <div class="col-md-12">
                                 <label for="adv_amount" class="form-label">Mobile Number <span
                                         style="color: red;">*</span></label>
                                 <input type="Text" class="form-control" id="emp_mobile"
                                     value="{{ old('emp_mobile') }}" name="emp_mobile" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="cloud_calling_number" class="form-label">Cloud Calling Number </label>
+                                <input type="Text" class="form-control" id="cloud_calling_number"
+                                    value="{{ old('cloud_calling_number') }}" name="cloud_calling_number">
                             </div>
                             <div class="col-md-12">
                                 <label for="adv_amount" class="form-label">Email Id <span
