@@ -371,7 +371,7 @@ class EmpController extends Controller
     {
         $now = Carbon::now();
         //$sevenDaysAgo = $now->copy()->subDays(2);
-        $sevenDaysAgo = Carbon::now()->subDays(100)->toDateString();
+        $sevenDaysAgo = Carbon::now()->subDays(2)->toDateString();
 
         $cloud_calling_number = Auth::user()->cloud_calling_number;
 
