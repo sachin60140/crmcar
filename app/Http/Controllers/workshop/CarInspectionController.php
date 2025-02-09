@@ -20,7 +20,7 @@ class CarInspectionController extends Controller
             'purchase_date' => 'required|date',
             'vendor_name' => 'required',
             'vendor_mobile' => 'required|numeric',
-            'pur_ins_image.*' => 'required|mimes:jpg,png,jpeg,pdf|max:10240',
+            'pur_ins_image.*' => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
             'remarks' => 'required',
         ]);
 

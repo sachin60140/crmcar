@@ -293,6 +293,17 @@ class StockController extends Controller
             'finance_amount' => 'required',
             'dp' => 'required',
             'financer' => 'required',
+            'remarks' => 'required',
+            'electricle_work' => 'required',
+            'ac_work_status' => 'required',
+            'suspenstion_status' => 'required',
+            'engine_status' => 'required',
+            'starting_status' => 'required',
+            'stepny_status' => 'required',
+            'tools_kit_status' => 'required',
+            'inspection_by' => 'required',
+            'pdi_image' => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
+            'pdi_remarks' => 'required',
         ]);
 
         $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
@@ -308,8 +319,8 @@ class StockController extends Controller
             else
             {
                 $user = DB::table('car_booking')
-            ->where('booking_no', $req->booking_id)
-            ->first();
+                        ->where('booking_no', $req->booking_id)
+                        ->first();
         $customer_id = $user->customer_ledger_id;
 
         $CarDelivaryModel = new CarDelivaryModel();
@@ -338,6 +349,31 @@ class StockController extends Controller
         $CarDelivaryModel->paymentMode = $req->paymentMode;
         $CarDelivaryModel->financer = $req->financer;
         $CarDelivaryModel->remarks = $req->remarks;
+        $CarDelivaryModel->electricle_work = $req->electricle_work;
+        $CarDelivaryModel->ac_work_status = $req->ac_work_status;
+        $CarDelivaryModel->suspenstion_status = $req->suspenstion_status;
+        $CarDelivaryModel->engine_status = $req->engine_status;
+        $CarDelivaryModel->starting_status = $req->starting_status;
+        $CarDelivaryModel->stepny_status = $req->stepny_status;
+        $CarDelivaryModel->tools_kit_status = $req->tools_kit_status;
+        $CarDelivaryModel->inspection_by = $req->inspection_by;
+        if ($req->hasFile('pdi_image'))
+        {
+            $d = new DateTime();
+            $nd = $d->format("YmdHisv");
+            $regnumber = $req->reg_number;
+            $pdfext = $req->file('pdi_image')->getClientOriginalExtension();
+
+            $uniqueFileName = uniqid() . '_' . time() . '_'. $regnumber . '.' . $pdfext;
+
+            $file = $req->file('pdi_image');
+            $file->move('upload/pdi', $uniqueFileName); 
+
+            $CarDelivaryModel->pdi_image = $uniqueFileName;
+        }
+
+        $CarDelivaryModel->pdi_remarks = $req->pdi_remarks;
+
         $CarDelivaryModel->added_by = Auth::user()->name;
         $CarDelivaryModel->save();
         $lastid = $CarDelivaryModel->id;
