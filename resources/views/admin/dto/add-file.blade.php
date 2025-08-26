@@ -76,8 +76,8 @@
                     <div class="col-md-4">
                         <label for="reg_number" class="form-label">Registration Number <span
                                 style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="inputName5" value="{{ old('reg_number') }}"
-                            name="reg_number" autofocus required>
+                        <input type="Text" class="form-control"  value="{{ old('reg_number') }}"
+                            name="reg_number" autofocus required style="text-transform: uppercase">
                     </div>
                     <div class="col-md-4">
                         <label for="rto_location" class="form-label">RTO Location <span
@@ -136,4 +136,5 @@
     @endsection
 
     @section('script')
+
     @endsection

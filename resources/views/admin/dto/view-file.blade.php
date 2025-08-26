@@ -89,7 +89,7 @@
                                     <tr>
                                         <td>{{ $items->id }}</td>
                                         <td>
-                                            <a href="{{url('admin/dto/edit-dto-file')}}/{{ $items->id }}" class="badge bg-primary"> {{ $items->reg_number}}</a>
+                                            <a href="{{url('admin/dto/edit-dto-file')}}/{{ $items->id }}" class="badge bg-primary"> {{ strtoupper($items->reg_number) }} </a>
                                            
                                         </td>
                                         <td>{{ $items->rto_location }}</td>
@@ -112,7 +112,7 @@
                                         </td>
                                         <td>{{ $items->remarks }}</td>
                                         <td>{{ $items->created_by }}</td>
-                                        <td>{{ $items->created_at }}</td>
+                                        <td>{{ $items->updated_by }}</td>
                                         
                                         <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
                                     </tr>

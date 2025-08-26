@@ -9,6 +9,8 @@ use DateTime;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 
 class DtoController extends Controller
 {
@@ -40,10 +42,10 @@ class DtoController extends Controller
         {
             $d = new DateTime();
             $nd = $d->format("YmdHisv");
-
+            $reg_number = Str::upper($req->reg_number);
             $file = $req->file('upload_pdf');
             $pdfext = $req->file('upload_pdf')->getClientOriginalExtension();
-            $pdfFileName = $d->format("YmdHisv") . 'dto' . '.' . $pdfext;
+            $pdfFileName = $reg_number.'_'.$d->format("YmdHisv") . 'dto' . '.' . $pdfext;
             $file->move('files/', $pdfFileName);
             $DtoModel->upload_pdf = $pdfFileName;
         }
