@@ -18,7 +18,6 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
                 <li class="breadcrumb-item">View DTO FIle</li>
-                
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -81,9 +80,7 @@
                                 @php
                                     $mytime = Carbon\Carbon::now();
                                     $todaytime = Carbon\Carbon::parse($mytime)->format('Y-m-d');
-                                    
                                 @endphp
-                           
                             <tbody>
                                 @foreach ($dtofiledata as $items)
                                     <tr>

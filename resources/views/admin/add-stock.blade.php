@@ -65,7 +65,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="category" class="form-label">Branch</label>
                         <select id="category" class="form-select" name="branch">
-                            <option selected>Choose...</option>
+                            <option selected value="">Choose...</option>
                             @foreach ($data as $item)
                                 <option value="{{ $item->id }}" @selected(old('branch') == $item->id)>{{ $item->branch_name }}
                                 </option>
@@ -110,7 +110,7 @@
                     <div class="col-md-4">
                         <label for="mobile_number" class="form-label">Fuel <span style="color: red;">*</span></label>
                         <select id="category" class="form-select" name="fuel_type">
-                            <option selected>Choose...</option>
+                            <option selected value="">Choose...</option>
                             <option value="CNG">CNG</option>
                             <option value="Diesel">Diesel</option>
                             <option value="Petrol">Petrol</option>
