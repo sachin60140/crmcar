@@ -99,7 +99,8 @@ class AuthController extends Controller
 
         $data1 = $response;
 
-        $data['balance'] = $data1['balance']['sms_wallet'];
+        //$data['balance'] = $data1['balance']['sms_wallet'];
+        $data['balance'] = '00';
 
         return view('admin.dashboard', $data);
     }
