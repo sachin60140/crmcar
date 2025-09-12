@@ -13,6 +13,7 @@ use App\Http\Controllers\API\CloudCallingController;
 use App\Http\Controllers\dto\DtoController;
 use App\Http\Controllers\workshop\CarInspectionController;
 use App\Http\Controllers\UploadStockPaperController;
+use App\Http\Controllers\WaterMarkController;
 
 
 
@@ -21,6 +22,8 @@ use PHPUnit\Event\Code\Test;
 Route::get('/', function () {
     return redirect('/admin');
 });
+
+Route::get('/watermark', [WaterMarkController::class, 'watermark']);
 
 Route::get('/admin', [AuthController::class, 'login']);
 
