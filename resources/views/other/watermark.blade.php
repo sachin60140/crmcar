@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Watermark Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -43,20 +44,20 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             box-sizing: border-box;
-            -webkit-appearance: none; /* For color input, to remove default styling */
+            -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
         }
         input[type="color"] {
             padding: 0;
-            height: 40px; /* Adjust height for better visual */
-            width: 80px; /* Make it smaller */
+            height: 40px;
+            width: 80px;
             vertical-align: middle;
             border: none;
             cursor: pointer;
         }
         input[type="number"] {
-            width: auto; /* Allow number input to be smaller */
+            width: auto;
             max-width: 100px;
             display: inline-block;
         }
@@ -68,7 +69,7 @@
         }
         .setting-row label {
             margin-bottom: 0;
-            white-space: nowrap; /* Prevent label from wrapping */
+            white-space: nowrap;
         }
         button {
             display: block;
@@ -148,17 +149,25 @@
             </div>
         </div>
 
-        <button id="processBtn">Apply Watermark & Download</button>
+        <button id="processBtn">Apply Watermark & Generate</button>
+        
+        <button id="downloadAllBtn" style="display: none; margin-top: 10px; background-color: #28a745;">
+            Download All as ZIP
+        </button>
 
         <div id="results"></div>
     </div>
 
     <script>
+        // This array will hold the processed image data for the zip file
+        let processedFiles = [];
+
         document.getElementById('processBtn').addEventListener('click', async () => {
             const imageInput = document.getElementById('imageInput');
             const logoInput = document.getElementById('logoInput');
             const textInput = document.getElementById('textInput');
             const resultsDiv = document.getElementById('results');
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
 
             const textColorInput = document.getElementById('textColor');
             const textSizeInput = document.getElementById('textSize');
@@ -174,25 +183,24 @@
                 return;
             }
 
+            // Reset for reprocessing
+            processedFiles = [];
+            resultsDiv.innerHTML = 'Processing...';
+            downloadAllBtn.style.display = 'none';
+
             const watermarkText = textInput.value || '';
             const chosenTextColor = textColorInput.value;
-            // Convert percentage to a decimal for calculation (e.g., 2 -> 0.02)
             const chosenTextSizePercentage = parseFloat(textSizeInput.value) / 100;
             const chosenLogoSizePercentage = parseFloat(logoSizeInput.value) / 100;
-
-            if (isNaN(chosenTextSizePercentage) || chosenTextSizePercentage <= 0) {
-                alert('Please enter a valid positive number for Text Size.');
+            
+            // Further validation for size inputs
+            if (isNaN(chosenTextSizePercentage) || chosenTextSizePercentage <= 0 || isNaN(chosenLogoSizePercentage) || chosenLogoSizePercentage <= 0) {
+                alert('Please enter valid, positive numbers for text and logo sizes.');
+                resultsDiv.innerHTML = '';
                 return;
             }
-            if (isNaN(chosenLogoSizePercentage) || chosenLogoSizePercentage <= 0) {
-                alert('Please enter a valid positive number for Logo Size.');
-                return;
-            }
-
-            resultsDiv.innerHTML = 'Processing...';
-
-            const logoFile = logoInput.files[0];
-            const logo = await loadImage(URL.createObjectURL(logoFile));
+            
+            const logo = await loadImage(URL.createObjectURL(logoInput.files[0]));
 
             resultsDiv.innerHTML = ''; 
             for (let i = 0; i < imageInput.files.length; i++) {
@@ -204,56 +212,71 @@
                 canvas.width = originalImage.width;
                 canvas.height = originalImage.height;
 
-                // 1. Draw the original image
                 ctx.drawImage(originalImage, 0, 0);
 
-                // 2. Draw the watermark logo (TOP-RIGHT)
-                // Use the user-defined percentage for logo width
                 const logoWidth = canvas.width * chosenLogoSizePercentage; 
                 const logoHeight = (logo.height / logo.width) * logoWidth;
                 const logoPadding = canvas.width * 0.025; 
-                
                 const logoX = canvas.width - logoWidth - logoPadding;
                 const logoY = logoPadding;
-                
                 ctx.globalAlpha = 0.8;
                 ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
                 ctx.globalAlpha = 1.0;
 
-                // 3. Draw the watermark text (BOTTOM-CENTER)
-                // Use the user-defined percentage for font size
                 const fontSize = canvas.width * chosenTextSizePercentage;
                 ctx.font = `bold ${fontSize}px Arial`;
-                ctx.fillStyle = chosenTextColor; // Use user-defined color
+                ctx.fillStyle = chosenTextColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
                 const textPadding = canvas.width * 0.02;
-                const textX = canvas.width / 2;
-                const textY = canvas.height - textPadding;
-                ctx.fillText(watermarkText, textX, textY);
+                ctx.fillText(watermarkText, canvas.width / 2, canvas.height - textPadding);
 
-                // --- Generate and display the result ---
                 const dataUrl = canvas.toDataURL('image/jpeg');
+                const newFileName = `${imageFile.name.split('.').slice(0, -1).join('.')}_watermarked.jpg`;
                 
+                // Store the file data for zipping later
+                processedFiles.push({ name: newFileName, data: dataUrl });
+
+                // Create and display preview and individual download link
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
-
                 const previewImg = document.createElement('img');
                 previewImg.src = dataUrl;
-
                 const downloadLink = document.createElement('a');
                 downloadLink.href = dataUrl;
-                const newFileName = `${imageFile.name.split('.').slice(0, -1).join('.')}_watermarked.jpg`;
                 downloadLink.download = newFileName;
                 downloadLink.textContent = `Download ${newFileName}`;
-
                 resultItem.appendChild(previewImg);
                 resultItem.appendChild(downloadLink);
                 resultsDiv.appendChild(resultItem);
             }
+            
+            // Show the "Download All" button if there are processed files
+            if (processedFiles.length > 0) {
+                downloadAllBtn.style.display = 'block';
+            }
+        });
+        
+        document.getElementById('downloadAllBtn').addEventListener('click', () => {
+            const zip = new JSZip();
+            
+            processedFiles.forEach(file => {
+                // Get the base64 part of the data URL
+                const base64Data = file.data.split(',')[1];
+                zip.file(file.name, base64Data, { base64: true });
+            });
+            
+            // Generate the zip file and trigger download
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = "watermarked_images.zip";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         });
 
-        // Helper function to load an image and return a promise
         function loadImage(src) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
