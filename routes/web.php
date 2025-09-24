@@ -24,6 +24,7 @@ Route::get('/', function () {
 });
 
 Route::get('/watermark', [WaterMarkController::class, 'watermark']);
+Route::get('/qr-code', [WaterMarkController::class, 'qrcode']);
 
 Route::get('/admin', [AuthController::class, 'login']);
 

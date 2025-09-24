@@ -10,4 +10,9 @@ class WaterMarkController extends Controller
     {
         return view('other.watermark');
     }
+
+    public function qrcode()
+    {
+        return view('other.qr-code');
+    }
 }
