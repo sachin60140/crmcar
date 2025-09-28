@@ -5,12 +5,25 @@
 
 @section('style')
 
+    {{-- Step 1: Add the Select2 CSS --}}
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <style>
         /* Chrome, Safari, Edge, Opera */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
+        }
+
+        /* Optional: Style Select2 to better fit Bootstrap 5 */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid #ced4da;
+            padding: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
         }
     </style>
 
@@ -27,8 +40,7 @@
                 <li class="breadcrumb-item active">Add Stock Paper</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
-    <section class="section dashboard">
+    </div><section class="section dashboard">
         <div>
             @if ($errors->any())
                 <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
@@ -73,7 +85,9 @@
                                     <div class="row product-entry mb-3">
                                         <div class="col-md-4 mb-3">
                                             <label for="category" class="form-label">Reg Number</label>
-                                            <select id="reg_number" class="form-select" name="reg_number">
+                                            
+                                            {{-- Step 2: Add the class to the select element --}}
+                                            <select id="reg_number" class="form-select select2-searchable" name="reg_number">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($car_stock as $item)
                                                     <option value="{{ $item->reg_number }}" @selected(old('reg_number') == $item->reg_number)>
@@ -84,7 +98,9 @@
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label for="category" class="form-label">Doc Type</label>
-                                            <select id="doc_type" class="form-select" name="doc_type">
+
+                                            {{-- Step 2: Add the class to this select element as well --}}
+                                            <select id="doc_type" class="form-select select2-searchable" name="doc_type">
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($stock_paper_cat as $item_type)
                                                     <option value="{{ $item_type->doc_type }}" @selected(old('doc_type') == $item_type->doc_type)>
@@ -114,6 +130,19 @@
 @endsection
 
 @section('script')
-   
+    
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    {{-- Step 3: Initialize Select2 --}}
+    <script>
+        $(document).ready(function() {
+            $('.select2-searchable').select2({
+                placeholder: "Select an option",
+                allowClear: true
+            });
+        });
+    </script>
 
 @endsection
