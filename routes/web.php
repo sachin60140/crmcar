@@ -51,7 +51,10 @@ Route::group(['middleware' => 'admin'], function () {
      
     /* CPaper Upload Start Here */
     Route::get('admin/stock/add-stock-paper', [UploadStockPaperController::class,'addstockpaper' ])->name('addstockpaper');
-     /* Paper Upload end Here */
+    Route::post('admin/stock/store-stock-paper', [UploadStockPaperController::class,'storestockpaper' ])->name('storestockpaper');
+    Route::get('admin/stock/view-stock-paper', [UploadStockPaperController::class,'viewstockpaper' ])->name('viewstockpaper');
+    Route::get('admin/stock/download/{id}', [UploadStockPaperController::class,'downloadfile' ])->name('files.download');
+    /* Paper Upload end Here */
      
 
     Route::get('admin/tarffic-challan', [StockController::class, 'trafficchallan'])->name('trafficchallan');

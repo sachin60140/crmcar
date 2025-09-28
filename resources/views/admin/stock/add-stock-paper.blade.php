@@ -63,46 +63,45 @@
                 <div class="container mt-4">
                     <div class="card shadow">
                         <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">Create Item with Dynamic Fields</h4>
+                            <h4 class="mb-0 text-center">Upload Stock Paper</h4>
                         </div>
 
                         <div class="card-body mt-4">
-                            <form action="" method="POST" id="dynamicForm">
+                            <form action="{{ route('storestockpaper') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="row product-entry mb-3">
-                                        <div class="col-md-6">
-                                            <label for="Stock_Doc" class="mb-3">Registration Number</label>
-                                            <input type="text" name="File_Name[0][file_name]" class="form-control"
-                                                placeholder="Registration Number" required>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="category" class="form-label">Reg Number</label>
+                                            <select id="reg_number" class="form-select" name="reg_number">
+                                                <option value="" selected>Choose...</option>
+                                                @foreach ($car_stock as $item)
+                                                    <option value="{{ $item->reg_number }}" @selected(old('reg_number') == $item->reg_number)>
+                                                        {{ $item->reg_number }}- {{ $item->car_model }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="Stock_Doc" class="mb-3">Model Name</label>
-                                            <input type="text" name="File_Name[0][file_name]" class="form-control"
-                                                placeholder="Model Name" required>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="category" class="form-label">Doc Type</label>
+                                            <select id="doc_type" class="form-select" name="doc_type">
+                                                <option value="" selected>Choose...</option>
+                                                @foreach ($stock_paper_cat as $item_type)
+                                                    <option value="{{ $item_type->doc_type }}" @selected(old('doc_type') == $item_type->doc_type)>
+                                                        {{ $item_type->doc_type }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="product-fields">
-                                    <div class="row product-entry mb-3">
-                                        <div class="col-md-5">
-                                            <input type="text" name="File_Name[0][file_name]" class="form-control"
-                                                placeholder="File Name" required>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="file" name="Stock_Doc[0][stock_doc]" class="form-control"
+                                        <div class="col-md-4">
+                                            <label for="category" class="form-label">Choose File</label>
+                                            <input type="file" name="stock_doc" class="form-control"
                                                 placeholder="Upload File" required>
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button"
-                                                class="btn btn-danger remove-product-field">Remove</button>
-                                        </div>
+                                        
                                     </div>
                                 </div>
-
-                                <button type="button" id="add-product-field" class="btn btn-primary">Add More
-                                    Products</button>
-                                <button type="submit" class="btn btn-success">Save Products</button>
+                                <button type="submit" class="btn btn-success">Upload Files</button>
                             </form>
                         </div>
                     </div>
@@ -115,33 +114,6 @@
 @endsection
 
 @section('script')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            let File_Name_index = 1;
-            let File_index = 1;
-
-            $('#add-product-field').click(function() {
-                let newField = `
-                <div class="row product-entry mb-3">
-                    <div class="col-md-5">
-                        <input type="text" name="File_Name[${File_Name_index}][name]" class="form-control" placeholder="File Name" required>
-                    </div>
-                    <div class="col-md-5">
-                        <input type="file" name="Stock_Doc[${File_index}][stock_doc]" class="form-control"  required>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-danger remove-product-field">Remove</button>
-                    </div>
-                </div>`;
-                $('#product-fields').append(newField);
-                productIndex++;
-            });
-
-            $('#product-fields').on('click', '.remove-product-field', function() {
-                $(this).closest('.product-entry').remove();
-            });
-        });
-    </script>
+   
 
 @endsection

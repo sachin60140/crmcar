@@ -20,7 +20,7 @@ class DtoController extends Controller
     }
 
     public function adddtofile(Request $req)
-    {
+    { 
         $req->validate([
             
             'reg_number' => 'required',

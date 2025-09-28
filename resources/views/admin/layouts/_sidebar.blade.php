@@ -87,7 +87,7 @@
                      </a>
                  </li>
                  <li>
-                     <a href="#">
+                     <a href="{{ route('viewstockpaper') }}">
                          <i class="bi bi-circle"></i><span>View Stock Paper</span>
                      </a>
                  </li>

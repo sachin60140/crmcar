@@ -66,6 +66,6 @@ class CarInspectionController extends Controller
         }
         
         return view('admin.workshop.view-inspection')->with(compact('inspection', 'search'));
-        
+         
     }
 }
