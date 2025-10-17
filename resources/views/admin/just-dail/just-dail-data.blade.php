@@ -33,7 +33,7 @@
                         {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
 
                         <!-- Table with stripped rows -->
-                        <table class="table display" style="font-size: 13px;" id="example">
+                        <table class="table display" style="font-size: 13px; width:100%; " id="example">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -76,11 +76,11 @@
                                         <td>{{ $items->brancharea }}</td>
                                         <td>
                                             @if ( $items->dncmobile == 0)
-                                                <button class="btn btn-danger btn-sm">DND</button>
+                                                <span class="badge bg-danger">DND</span>                                                
                                             @endif
                                         <td>
                                             @if ( $items->dncphone == 0)
-                                                <button class="btn btn-danger btn-sm">DND</button>
+                                                <span class="badge bg-danger">DND</span>
                                             @endif
                                         </td>
                                         <td>{{ $items->company }}</td>
