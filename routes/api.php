@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 
 Route::post('cloud-data', [CloudCallingController::class, 'index']);
 Route::post('cloud-calling', [CloudCallingController::class, 'cloudcallingapidata']);
+Route::post('just-dail', [CloudCallingController::class, 'JustDailData']);

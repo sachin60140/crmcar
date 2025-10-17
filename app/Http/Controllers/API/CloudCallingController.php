@@ -6,22 +6,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CustomerLeadModel;
 use App\Models\ApiCloudCallModel;
+use App\Models\API\JustDailModel;
 use Illuminate\Support\Facades\AUTH;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class CloudCallingController extends Controller
 {
     public function index(Request $req)
     {
-            $lastid = ApiCloudCallModel::create([
-                'Name' => $req->Name,
-                'mobile_number' => $req->mobile_number,
-                'address' => $req->address,
-                'created_by' => $req->created_by,
-            ]);
+        $lastid = ApiCloudCallModel::create([
+            'Name' => $req->Name,
+            'mobile_number' => $req->mobile_number,
+            'address' => $req->address,
+            'created_by' => $req->created_by,
+        ]);
 
-            /* $ApiCloudCallModel = new ApiCloudCallModel;
+        /* $ApiCloudCallModel = new ApiCloudCallModel;
             $ApiCloudCallModel->Name = trim($req->Name);
             $ApiCloudCallModel->mobile_number = trim($req->mobile_number);
             $ApiCloudCallModel->address =  trim($req->address);
@@ -68,15 +71,15 @@ class CloudCallingController extends Controller
     }
 
     public function cloudcallingapidata(Request $req)
-    {  
+    {
 
-       $data = $req->json()->all();
+        $data = $req->json()->all();
 
-       $last_10_digits = substr($data['did_number'], -10);
+        $last_10_digits = substr($data['did_number'], -10);
 
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
 
-        $result =ApiCloudCallModel::create([
+        $result = ApiCloudCallModel::create([
             'log_uuid' => $data['log_uuid'],
             'customer_number' => $data['customer_number'],
             'call_type' => $data['call_type'],
@@ -94,42 +97,42 @@ class CloudCallingController extends Controller
 
         if ($result)
 
-        $sender = 'CAR4SL';
-            $mob = $data['customer_number'];
-            $name = 'Customer';
-            $auth = '3HqJI';
-            $entid = '1701171869640632437';
-            $temid = '1707172596077833707';
-            $mob2 = [$mob];
-            $mob3 = implode(',', $mob2);
-            $msg = urlencode('Dear ' . $name . ",\nWelcome to Car4Sales ! We're excited to help you Buy & sell your old car with ease and get the best value for it. If you have any questions or need assistance, please contact us at. 7779995656 . \nThank you for choosing us! \nBest regards,\nCar4Sales, \nMuzaffarpur, Motihari, Bakhri \nPh. 7779995656");
-            $msg1 = urlencode('प्रिय ' . $name . ",\nCar4Sales में आपका हार्दिक स्वागत है! हम पुरानी कार को खरीदते और बेचते हैं, आपकी पुरानी कार का सर्वोत्तम मूल्य दिलाने एवं किफायती कीमत पर पुरानी कार देने का वादा करते है।\nअपनी कार बेचने एवं पुरानी कार खरीदने के लिए हमसे इस नंबर पर संपर्क करें: 7779995656. \nCar4Sales को चुनने के लिए आपका धन्यवाद!,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
+            $sender = 'CAR4SL';
+        $mob = $data['customer_number'];
+        $name = 'Customer';
+        $auth = '3HqJI';
+        $entid = '1701171869640632437';
+        $temid = '1707172596077833707';
+        $mob2 = [$mob];
+        $mob3 = implode(',', $mob2);
+        $msg = urlencode('Dear ' . $name . ",\nWelcome to Car4Sales ! We're excited to help you Buy & sell your old car with ease and get the best value for it. If you have any questions or need assistance, please contact us at. 7779995656 . \nThank you for choosing us! \nBest regards,\nCar4Sales, \nMuzaffarpur, Motihari, Bakhri \nPh. 7779995656");
+        $msg1 = urlencode('प्रिय ' . $name . ",\nCar4Sales में आपका हार्दिक स्वागत है! हम पुरानी कार को खरीदते और बेचते हैं, आपकी पुरानी कार का सर्वोत्तम मूल्य दिलाने एवं किफायती कीमत पर पुरानी कार देने का वादा करते है।\nअपनी कार बेचने एवं पुरानी कार खरीदने के लिए हमसे इस नंबर पर संपर्क करें: 7779995656. \nCar4Sales को चुनने के लिए आपका धन्यवाद!,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
 
-            $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
+        $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
 
-            //sms from here
+        //sms from here
 
-            function SendSMS($hostUrl)
-            {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $hostUrl);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($ch, CURLOPT_POST, 0);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-                $result = curl_exec($ch);
-                return $result;
-            }
-            
-            $raa = SendSMS($url); // call function that return response with code
+        function SendSMS($hostUrl)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $hostUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+            $result = curl_exec($ch);
+            return $result;
+        }
 
-            {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'call log Received',
-                ], 200);
-            }
+        $raa = SendSMS($url); // call function that return response with code
+
+        {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'call log Received',
+            ], 200);
+        }
     }
 
     public function showcloudacalldata()
@@ -139,7 +142,84 @@ class CloudCallingController extends Controller
 
         $data['cloud_call_data'] = DB::table('cloud_calling_data')->whereDate('created_at', '>=', $sevenDaysAgo)->get();
 
-        return view('admin.cloud-calling.cloud-calling-data',$data);
+        return view('admin.cloud-calling.cloud-calling-data', $data);
     }
 
+    public function JustDailData(Request $req)
+    {
+        // Best Practice: Validate the incoming data first
+        $validator = Validator::make($req->all(), [
+            'leadid' => 'required',
+            'name' => 'required|string|max:255',
+
+            // Add other validation rules as needed...
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Get validated data
+        $data1 = $validator->validated();
+        $data = $req->json()->all();
+
+        try {
+            // Correction 1: Changed $$data['name'] to $data['name']
+            $result = JustDailModel::create([
+                'leadid' => $data['leadid'],
+                'leadtype' => $data['leadtype'] ?? null,
+                'prefix' => $data['prefix'] ?? null,
+                'name' => $data['name'], // Corrected from $$data['name']
+                'mobile' => $data['mobile'],
+                'phone' => $data['phone'],
+                'email' => $data['email'] ?? null,
+                'date' => $data['date'] ?? null,
+                'category' => $data['category'] ?? null,
+                'area' => $data['area'] ?? null,
+                'city' => $data['city'] ?? null,
+                'brancharea' => $data['brancharea'] ?? null,
+                'dncmobile' => $data['dncmobile'] ?? null,
+                'dncphone' => $data['dncphone'] ?? null,
+                'company' => $data['company'] ?? null,
+                'pincode' => $data['pincode'] ?? null,
+                'time' => $data['time'] ?? null,
+                'branchpin' => $data['branchpin'] ?? null,
+                'parentid' => $data['parentid'] ?? null,
+            ]);
+
+            if ($result) {
+                // Correction 2: Added the 'return' keyword
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'RECEIVED',
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            // Optional: Log the actual error for debugging
+            Log::error('Failed to save JustDial data: ' . $e->getMessage());
+
+            // Correction 3: Handle potential errors
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to save data. Please try again.',
+            ], 500);
+        }
+    }
+
+     public function showjustdaildata()
+    {
+        $now = Carbon::now();
+        $fifteenDaysAgo = $now->copy()->subDays(15);
+
+        $data['just_dail_data'] = DB::table('just_dail_data')
+                                ->whereDate('created_at', '>=', $fifteenDaysAgo)
+                                ->orderBy('id', 'desc')
+                                ->get();
+
+        return view('admin.just-dail.just-dail-data', $data);
+    }
 }

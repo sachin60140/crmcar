@@ -134,6 +134,11 @@
                      </a>
                  </li>
                  <li>
+                     <a href="{{ route('showjustdaildata') }}">
+                         <i class="bi bi-circle"></i><span>View Just-dail Data</span>
+                     </a>
+                 </li>
+                 <li>
                      <a href="{{ route('showcloudacalldata') }}">
                          <i class="bi bi-circle"></i><span>View Cloud Call Data</span>
                      </a>
