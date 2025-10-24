@@ -13,6 +13,6 @@ class QkonnectModel extends Model
      
 
     protected $fillable = [
-        'caller_number','call_id','call_start_time','call_pickup_time','total_call_time','call_transfer_time','call_recording','call_hangup_cause','destination_number','agent_number','call_end_time','call_hangup_time','call_action','call_confrence_uid','call_status'
+        'caller_number', 'Call_type','call_id','call_start_time','call_pickup_time','total_call_time','call_transfer_time','call_recording','call_hangup_cause','destination_number','agent_number','call_end_time','call_hangup_time','call_action','call_confrence_uid','call_status'
     ] ;
 }

@@ -230,6 +230,7 @@ class CloudCallingController extends Controller
         $result = QkonnectModel::create([
             
             'caller_number' => $data['caller_number'],
+            'Call_type' => $data['Call_type'],
             'call_id' => $data['call_id'],
             'call_start_time' => $data['call_start_time'],
             'call_pickup_time' => $data['call_pickup_time'],
