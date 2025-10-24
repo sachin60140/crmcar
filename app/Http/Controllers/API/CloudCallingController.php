@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomerLeadModel;
 use App\Models\ApiCloudCallModel;
 use App\Models\API\JustDailModel;
+use App\Models\API\QkonnectModel;
 use Illuminate\Support\Facades\AUTH;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -221,5 +222,35 @@ class CloudCallingController extends Controller
                                 ->get();
 
         return view('admin.just-dail.just-dail-data', $data);
+    }
+    public function qkonnectData(Request $req)
+    {
+       $data = $req->json()->all();
+
+        $result = QkonnectModel::create([
+            
+            'caller_number' => $data['caller_number'],
+            'call_id' => $data['call_id'],
+            'call_start_time' => $data['call_start_time'],
+            'call_pickup_time' => $data['call_pickup_time'],
+            'total_call_time' => $data['total_call_time'],
+            'call_transfer_time' => $data['call_transfer_time'],
+            'call_recording' => $data['call_recording'],
+            'call_hangup_cause' => $data['call_hangup_cause'],
+            'destination_number' => $data['destination_number'],
+            'agent_number' => $data['agent_number'],
+            'call_end_time' => $data['call_end_time'],
+            'call_hangup_time' => $data['call_hangup_time'],
+            'call_action' => $data['call_action'],
+            'call_confrence_uid' => $data['call_confrence_uid'],
+            'call_status' => $data['call_status'],
+        ]);
+
+        if ($result) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'call log Received',
+            ], 200);
+        }
     }
 }
