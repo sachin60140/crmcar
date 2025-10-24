@@ -37,6 +37,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    <th scope="col">Call Type</th>
                                     <th scope="col">Caller</th>
                                     <th scope="col">Call Time</th>
                                     <th scope="col">Call End Time</th>
@@ -51,6 +52,7 @@
                                 @foreach ($qkonnect_Data as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
+                                        <td>{{ $items->Call_type }}</td>
                                         <td>{{ $items->caller_number }}</td>
                                         <td>{{ $items->call_start_time }}</td>
                                         <td>{{ $items->call_end_time }}</td>
