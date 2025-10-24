@@ -116,6 +116,7 @@ Route::group(['middleware' => 'admin'], function () {
     /* Cloud Calling Data */
     Route::get('admin/cloud-calling/cloud-calling-data', [CloudCallingController::class, 'showcloudacalldata'])->name('showcloudacalldata');
     Route::get('admin/just-dail/just-dail-data', [CloudCallingController::class, 'showjustdaildata'])->name('showjustdaildata');
+    Route::get('admin/Cloud-Call/Qkonnect-Call-Data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
     
     /* DTO File  */
     Route::get('admin/dto/add-file', [DtoController::class, 'index'])->name('adddtofile');

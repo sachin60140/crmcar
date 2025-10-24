@@ -253,4 +253,16 @@ class CloudCallingController extends Controller
             ], 200);
         }
     }
+    public function showqkonnectdata()
+    {
+        $now = Carbon::now();
+        $fifteenDaysAgo = $now->copy()->subDays(15);
+
+        $data['qkonnect_Data'] = DB::table('qkonnect_data')
+                                ->whereDate('created_at', '>=', $fifteenDaysAgo)
+                                ->orderBy('id', 'desc')
+                                ->get();
+
+        return view('admin.cloud-calling.qkonnect-call-data', $data);
+    }
 }

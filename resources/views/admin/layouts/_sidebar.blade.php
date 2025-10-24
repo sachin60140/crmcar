@@ -144,6 +144,11 @@
                      </a>
                  </li>
                  <li>
+                     <a href="{{ route('qkonnectcalldata') }}">
+                         <i class="bi bi-circle"></i><span>Qkonnect Call Data</span>
+                     </a>
+                 </li>
+                 <li>
                      <a href="{{ route('viewleaddata1') }}">
                          <i class="bi bi-circle"></i><span>View Contact</span>
                      </a>
