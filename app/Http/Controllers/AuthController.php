@@ -54,6 +54,8 @@ class AuthController extends Controller
 
         $data['cloud_contacts'] = DB::table('cloud_calling_data')->distinct('customer_number')->count('customer_number');
         $data['today_cloud_contacts'] = DB::table('cloud_calling_data')->whereDate('created_at', Carbon::today())->count();
+         $data['qkonnect_contacts'] = DB::table('qkonnect_data')->distinct('caller_number')->count('caller_number');
+        $data['today_qkonnect_contacts'] = DB::table('qkonnect_data')->whereDate('created_at', Carbon::today())->count();
 
         $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
 

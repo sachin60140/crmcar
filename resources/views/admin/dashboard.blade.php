@@ -126,12 +126,16 @@
                                         <i class="bi bi-cloud-check-fill"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p>Total Contact</p>
+                                        <p>Old Data</p>
                                         <h6>{{ $cloud_contacts }}</h6>
                                     </div>
                                     <div class="ps-3">
-                                        <p>Today Contact</p>
-                                        <h6>{{ $today_cloud_contacts }}</h6>
+                                        <p>New Total Data</p>
+                                        <h6>{{ $qkonnect_contacts }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>Today</p>
+                                        <h6>{{ $today_qkonnect_contacts }}</h6>
                                     </div>
                                 </div>
 
