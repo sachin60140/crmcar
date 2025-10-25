@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\TryCatch;
 
 class CloudCallingController extends Controller
 {
@@ -211,47 +212,55 @@ class CloudCallingController extends Controller
         }
     }
 
-     public function showjustdaildata()
+    public function showjustdaildata()
     {
         $now = Carbon::now();
         $fifteenDaysAgo = $now->copy()->subDays(15);
 
         $data['just_dail_data'] = DB::table('just_dail_data')
-                                ->whereDate('created_at', '>=', $fifteenDaysAgo)
-                                ->orderBy('id', 'desc')
-                                ->get();
+            ->whereDate('created_at', '>=', $fifteenDaysAgo)
+            ->orderBy('id', 'desc')
+            ->get();
 
         return view('admin.just-dail.just-dail-data', $data);
     }
     public function qkonnectData(Request $req)
     {
-       $data = $req->json()->all();
+        $data = $req->json()->all();
+        try {
+            $result = QkonnectModel::create([
 
-        $result = QkonnectModel::create([
-            
-            'caller_number' => $data['caller_number'],
-            'Call_type' => $data['Call_type'],
-            'call_id' => $data['call_id'],
-            'call_start_time' => $data['call_start_time'],
-            'call_pickup_time' => $data['call_pickup_time'],
-            'total_call_time' => $data['total_call_time'],
-            'call_transfer_time' => $data['call_transfer_time'],
-            'call_recording' => $data['call_recording'],
-            'call_hangup_cause' => $data['call_hangup_cause'],
-            'destination_number' => $data['destination_number'],
-            'agent_number' => $data['agent_number'],
-            'call_end_time' => $data['call_end_time'],
-            'call_hangup_time' => $data['call_hangup_time'],
-            'call_action' => $data['call_action'],
-            'call_confrence_uid' => $data['call_confrence_uid'],
-            'call_status' => $data['call_status'],
-        ]);
+                'caller_number' => $data['caller_number'] ?? null,
+                'Call_type' => $data['Call_type'] ?? null,
+                'call_id' => $data['call_id'] ?? null,
+                'call_start_time' => $data['call_start_time'] ?? null,
+                'call_pickup_time' => $data['call_pickup_time'] ?? null,
+                'total_call_time' => $data['total_call_time'] ?? null,
+                'call_transfer_time' => $data['call_transfer_time'] ?? null,
+                'call_recording' => $data['call_recording'] ?? null,
+                'call_hangup_cause' => $data['call_hangup_cause'] ?? null,
+                'destination_number' => $data['destination_number'] ?? null,
+                'agent_number' => $data['agent_number'] ?? null,
+                'call_end_time' => $data['call_end_time'] ?? null,
+                'call_hangup_time' => $data['call_hangup_time'] ?? null,
+                'call_action' => $data['call_action'] ?? null,
+                'call_confrence_uid' => $data['call_confrence_uid'] ?? null,
+                'call_status' => $data['call_status'] ?? null,
+            ]);
 
-        if ($result) {
+            if ($result) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'call log Received',
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to save Qkonnect data: ' . $e->getMessage());
+
             return response()->json([
-                'status' => 'success',
-                'message' => 'call log Received',
-            ], 200);
+                'status' => 'error',
+                'message' => 'Failed to save data. Please try again.',
+            ], 500);
         }
     }
     public function showqkonnectdata()
@@ -260,9 +269,9 @@ class CloudCallingController extends Controller
         $fifteenDaysAgo = $now->copy()->subDays(15);
 
         $data['qkonnect_Data'] = DB::table('qkonnect_data')
-                                ->whereDate('created_at', '>=', $fifteenDaysAgo)
-                                ->orderBy('id', 'desc')
-                                ->get();
+            ->whereDate('created_at', '>=', $fifteenDaysAgo)
+            ->orderBy('id', 'desc')
+            ->get();
 
         return view('admin.cloud-calling.qkonnect-call-data', $data);
     }
