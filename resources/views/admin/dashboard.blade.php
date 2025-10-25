@@ -131,11 +131,11 @@
                                     </div>
                                     <div class="ps-3">
                                         <p>New Total Data</p>
-                                        <h6>{{ $qkonnect_contacts }}</h6>
+                                        <h6 id="qkonnectTotalData">Loading...</h6>
                                     </div>
                                     <div class="ps-3">
                                         <p>Today</p>
-                                        <h6>{{ $today_qkonnect_contacts }}</h6>
+                                        <h6 id="qkonnectTodayData">Loading...</h6>
                                     </div>
                                 </div>
 
@@ -233,5 +233,32 @@
 @endsection
 
 @section('script')
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        function fetchDashboardData() {
+            $.ajax({
+                url: "{{ route('dashboard_data') }}",
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    $('#qkonnectTotalData').text(response.total_qkonnect_data);
+                    $('#qkonnectTodayData').text(response.today_qkonnect_contacts);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching dashboard data:', error);
+                }
+            });
+        }
+        // Initial fetch
+        fetchDashboardData();
+        // Set interval to fetch data every 1 minutes (300000 milliseconds)
+        setInterval(fetchDashboardData, 60000);
+    });
+
+</script>
 
 @endsection

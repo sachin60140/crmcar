@@ -14,6 +14,7 @@ use App\Http\Controllers\dto\DtoController;
 use App\Http\Controllers\workshop\CarInspectionController;
 use App\Http\Controllers\UploadStockPaperController;
 use App\Http\Controllers\WaterMarkController;
+use App\Http\Controllers\admin\DashboardDataController;
 
 
 
@@ -131,6 +132,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/workshop/store-inspection', [CarInspectionController::class, 'storeinspection'])->name('storeinspection');
     Route::get('admin/workshop/view-inspection', [CarInspectionController::class, 'viewinspection'])->name('viewinspection');
     /* End Inspection  */
+    
+    /* Dashboard Ajax Data*/
+    Route::get('/dashboard-stats', [DashboardDataController::class, 'fetchData'])->name('dashboard_data');
+    /* End Dashboard Ajax Data*/
 
 });
 
