@@ -18,8 +18,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">Cloud Call Data</li>
-                
+                <li class="breadcrumb-item">Cloud Call Data</li>                
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -44,8 +43,7 @@
                                     <th scope="col">Total Call Time</th>
                                     <th scope="col">Agent</th>
                                     <th scope="col">Recording</th>
-                                    <th scope="col">Crated At</th>
-                                    
+                                    <th scope="col">Crated At</th>                                    
                                 </tr>
                             </thead>
                             <tbody>

@@ -56,8 +56,6 @@ class UploadStockPaperController extends Controller
     public function viewstockpaper(Request $request)
     {
         
-
-
         $query = $request->input('query');
         
         // Check if the query is not empty before searching
@@ -66,7 +64,7 @@ class UploadStockPaperController extends Controller
             $files = StockFileModel::query()
                 ->where('Reg_no', 'LIKE', "%{$query}%")
                 ->latest()
-                ->paginate(10);
+                ->paginate(25);
         } else {
             // If there's no query, create an empty paginator instance.
             // This ensures the $files variable is always a paginator object,
