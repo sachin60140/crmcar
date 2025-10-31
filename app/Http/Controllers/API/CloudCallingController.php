@@ -227,7 +227,47 @@ class CloudCallingController extends Controller
     public function qkonnectData(Request $req)
     {
         $data = $req->json()->all();
+
         try {
+
+             $url = 'https://api.interakt.ai/v1/public/message/';
+        $data = [
+            "countryCode"  => "+91",
+            "phoneNumber"  => $data['caller_number'],
+            "callbackData" => "some text here",
+            "type"         => "Template",
+            "template"     => [
+                "name"         => "wel_new_hindi",
+                "languageCode" => "hi"
+            ]
+        ];
+        
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        // json_encode() will correctly convert your PHP array to a JSON string
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Basic Y2RjU0Y5Nkdfc0FRREhDQXpjTTB1LThUZExJWnJjSHFLM2U5RVYtMjU1azo='
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_error($ch)) {
+            $error = curl_error($ch);
+            // You should handle the error here, e.g., log it or return it
+            // error_log("cURL Error: " . $error);
+        }
+
+        curl_close($ch);
+
+        // Simplified the return statement
+        //return json_decode($response, true);
+            
             $result = QkonnectModel::create([
 
                 'caller_number' => $data['caller_number'] ?? null,
@@ -254,6 +294,7 @@ class CloudCallingController extends Controller
                     'message' => 'call log Received',
                 ], 200);
             }
+
         } catch (\Exception $e) {
             Log::error('Failed to save Qkonnect data: ' . $e->getMessage());
 

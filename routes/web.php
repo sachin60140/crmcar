@@ -10,6 +10,7 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\admin\VisitorController;
 use App\Http\Controllers\delivary\DelivaryController;
 use App\Http\Controllers\API\CloudCallingController;
+use App\Http\Controllers\API\WhatsAppApiController;
 use App\Http\Controllers\dto\DtoController;
 use App\Http\Controllers\workshop\CarInspectionController;
 use App\Http\Controllers\UploadStockPaperController;
@@ -26,6 +27,8 @@ Route::get('/', function () {
 
 Route::get('/watermark', [WaterMarkController::class, 'watermark']);
 Route::get('/qr-code', [WaterMarkController::class, 'qrcode']);
+
+Route::get('/test-api', [WhatsAppApiController::class, 'testapi']);
 
 Route::get('/admin', [AuthController::class, 'login']);
 
