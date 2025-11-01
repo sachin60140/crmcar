@@ -234,7 +234,7 @@ class CloudCallingController extends Controller
         $data = [
             "countryCode"  => "+91",
             "phoneNumber"  => $data['caller_number'],
-            "campaignId"  => $data['4c54326f-0d3b-411f-a458-1c92df296e7e'],
+            "campaignId"  => '4c54326f-0d3b-411f-a458-1c92df296e7e',
             "callbackData" => "some text here",
             "type"         => "Template",
             "template"     => [
