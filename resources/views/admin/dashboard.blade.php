@@ -100,12 +100,16 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <p>Total Contact</p>
+                                        <p>Contact</p>
                                         <h6>{{ $contacts }}</h6>
                                     </div>
                                     <div class="ps-3">
-                                        <p>Today Contact</p>
+                                        <p>Today</p>
                                         <h6>{{ $todaycontacts }}</h6>
+                                    </div>
+                                    <div class="ps-3">
+                                        <p>JD Data</p>
+                                        <h6 id="jd_data">loading....</h6>
                                     </div>
                                 </div>
 
@@ -244,9 +248,10 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     $('#qkonnectTotalData').text(response.total_qkonnect_data);
                     $('#qkonnectTodayData').text(response.today_qkonnect_contacts);
+                    $('#jd_data').text(response.just_dail_contacts);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching dashboard data:', error);

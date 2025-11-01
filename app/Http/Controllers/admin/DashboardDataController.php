@@ -15,10 +15,12 @@ class DashboardDataController extends Controller
 
         $qkonnect_contacts = DB::table('qkonnect_data')->distinct('caller_number')->count('caller_number');
         $today_qkonnect_contacts = DB::table('qkonnect_data')->whereDate('created_at', Carbon::today())->count();
+        $justdail_contacts = DB::table('just_dail_data')->count();
 
         return response()->json([
             'total_qkonnect_data' => $qkonnect_contacts,
             'today_qkonnect_contacts'=> $today_qkonnect_contacts,
+            'just_dail_contacts'=> $justdail_contacts,
         ]);
     }
 }
