@@ -18,7 +18,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
                 <li class="breadcrumb-item">View Booking</li>
-                
+
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -76,7 +76,7 @@
                                     <th scope="col">Date</th>
                                     <th scope="col">Print</th>
                                     <th scope="col">Delivary</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,14 +93,16 @@
                                         <td>{{ $items->finance_amount }}</td>
                                         <td>{{ $items->due_amount }}</td>
                                         <td>{{ $items->remarks }}</td>
-                                        <td>{{date('d-M-Y', strtotime($items->created_at))}}</td>
+                                        <td>{{ date('d-M-Y', strtotime($items->created_at)) }}</td>
                                         <td>
-                                            <a href="{{url('/admin/print-booking-pdf')}}/{{ $items->id }}" class="badge bg-primary">Print </a>
-                                          </td>
-                                          <td>
-                                            <a href="{{url('/admin/delivary/add-delivary')}}/{{ $items->id }}" class="badge bg-success">Delivary </a>
-                                          </td>
-                                       
+                                            <a href="{{ url('/admin/print-booking-pdf') }}/{{ $items->id }}"
+                                                class="badge bg-primary">Print </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('/admin/delivary/add-delivary') }}/{{ $items->id }}"
+                                                class="badge bg-success">Delivary </a>
+                                        </td>
+
                                     </tr>
                                 @endforeach
 
@@ -125,7 +127,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 
-        <script>
+        {{-- <script>
             $(document).ready(function() {
                 $('#example').DataTable({
                     dom: 'Bfrtip',
@@ -137,6 +139,49 @@
                     ],
                     "pageLength": 50,
 
+                    "aaSorting": [
+                        [0, 'desc']
+                    ],
+                });
+            });
+        </script> --}}
+
+
+        <script>
+            $(document).ready(function() {
+
+                // 1. Get current date
+                var d = new Date();
+
+                // 2. Format to DD-MM-YYYY
+                var strDate = d.getDate().toString().padStart(2, '0') + "-" +
+                    (d.getMonth() + 1).toString().padStart(2, '0') + "-" +
+                    d.getFullYear();
+
+                // Result example: "25-11-2025"
+
+                $('#example').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copyHtml5', // Simple button (no custom name)
+                        {
+                            extend: 'excelHtml5',
+                            title: 'Booking Report Car4Sales - ' +
+                            strDate, // Sets filename to "My Custom Report Name.xlsx"
+                            messageTop: 'The data in this file is strictly confidential.' // Optional: Text inside the file
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            title: 'Booking Report Car4Sales - ' +
+                                strDate // Sets filename to "My Custom Report Name.csv"
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Booking Report Car4Sales - ' +
+                                strDate // Sets filename to "My Custom Report Name.pdf"
+                        }
+                    ],
+                    "pageLength": 50,
                     "aaSorting": [
                         [0, 'desc']
                     ],

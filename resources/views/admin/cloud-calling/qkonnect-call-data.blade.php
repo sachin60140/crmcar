@@ -83,7 +83,7 @@
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-        <script>
+        {{-- <script>
             $(document).ready(function() {
                 $('#example').DataTable({
                     dom: 'Bfrtip',
@@ -96,6 +96,45 @@
                     ],
                     "pageLength": 50,
 
+                    "aaSorting": [
+                        [0, 'desc']
+                    ],
+                });
+            });
+        </script> --}}
+
+        <script>
+            $(document).ready(function() {
+
+                // 1. Get current date
+                var d = new Date();
+
+                // 2. Format to DD-MM-YYYY
+                var strDate = d.getDate().toString().padStart(2, '0') + "-" +
+                    (d.getMonth() + 1).toString().padStart(2, '0') + "-" +
+                    d.getFullYear();
+
+                // Result example: "25-11-2025"
+
+                $('#example').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copyHtml5', // Simple button (no custom name)
+                        {
+                            extend: 'excelHtml5',
+                            title: 'Cloud Call Data Car4Sales - ' + strDate, // Sets filename to "My Custom Report Name.xlsx"
+                            messageTop: 'The data in this file is strictly confidential.' // Optional: Text inside the file
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            title: 'Cloud Call Data Car4Sales - ' + strDate // Sets filename to "My Custom Report Name.csv"
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'Cloud Call Data Car4Sales - ' + strDate // Sets filename to "My Custom Report Name.pdf"
+                        }
+                    ],
+                    "pageLength": 50,
                     "aaSorting": [
                         [0, 'desc']
                     ],

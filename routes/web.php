@@ -30,7 +30,7 @@ Route::get('/qr-code', [WaterMarkController::class, 'qrcode']);
 
 Route::get('/test-api', [WhatsAppApiController::class, 'testapi']);
 
-Route::get('/admin', [AuthController::class, 'login']);
+Route::get('/admin', [AuthController::class, 'login'])->name('login');
 
 Route::get('/smsbalance', [AuthController::class, 'smsbalance']);
 
