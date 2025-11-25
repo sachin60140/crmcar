@@ -63,6 +63,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    <th scope="col">Booking by</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Reg</th>
                                     <th scope="col">Model</th>
@@ -82,6 +83,7 @@
                                 @foreach ($carbooking as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
+                                        <td>{{ $items->created_by }}</td>
                                         <td>{{ $items->name }}</td>
                                         <td>{{ $items->regnumber }}</td>
                                         <td>{{ $items->carmodel }}</td>
