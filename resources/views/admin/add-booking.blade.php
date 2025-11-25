@@ -88,9 +88,9 @@
                             <div class="col-md-12 mb-3">
                                 <label for="category" class="form-label">Customer</label>
                                 <select id="category" class="form-select" name="customer">
-                                    <option selected>Choose...</option>
+                                    <option selected value="">Choose...</option>
                                     @foreach ($ledger as $item)
-                                        <option value="{{ $item->id }}" @selected(old('customer') == $item->id)>{{ $item->name }}
+                                        <option value="{{ $item->id }}" @selected(old('customer') == $item->id)>{{ $item->id }} - {{ $item->name }} - {{ $item->mobile_number }}
                                         </option>
                                     @endforeach
 

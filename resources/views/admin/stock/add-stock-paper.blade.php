@@ -6,7 +6,7 @@
 @section('style')
 
     {{-- Step 1: Add the Select2 CSS --}}
-      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
         /* Chrome, Safari, Edge, Opera */
@@ -22,6 +22,7 @@
             border: 1px solid #ced4da;
             padding: 5px;
         }
+
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             height: 36px;
         }
@@ -40,7 +41,8 @@
                 <li class="breadcrumb-item active">Add Stock Paper</li>
             </ol>
         </nav>
-    </div><section class="section dashboard">
+    </div>
+    <section class="section dashboard">
         <div>
             @if ($errors->any())
                 <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
@@ -85,9 +87,10 @@
                                     <div class="row product-entry mb-3">
                                         <div class="col-md-4 mb-3">
                                             <label for="category" class="form-label">Reg Number</label>
-                                            
+
                                             {{-- Step 2: Add the class to the select element --}}
-                                            <select id="reg_number" class="form-select select2-searchable" name="reg_number">
+                                            <select id="reg_number" class="form-select select2-searchable" name="reg_number"
+                                                autofocus>
                                                 <option value="" selected>Choose...</option>
                                                 @foreach ($car_stock as $item)
                                                     <option value="{{ $item->reg_number }}" @selected(old('reg_number') == $item->reg_number)>
@@ -114,7 +117,7 @@
                                             <input type="file" name="stock_doc" class="form-control"
                                                 placeholder="Upload File" required>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-success">Upload Files</button>
@@ -130,17 +133,21 @@
 @endsection
 
 @section('script')
-    
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     {{-- Step 3: Initialize Select2 --}}
     <script>
         $(document).ready(function() {
             $('.select2-searchable').select2({
                 placeholder: "Select an option",
-                allowClear: true
+                allowClear: true,
+                dropdownAutoWidth: true
+            }).on('select2:open', function() {
+                // Select the search field and focus it
+                document.querySelector('.select2-search__field').focus();
             });
         });
     </script>
