@@ -76,21 +76,28 @@
         </div>
 
         <div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content" style="height: 90vh;">
-                    <div class="modal-header bg-light">
-                        <h5 class="modal-title">File Preview</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body p-0 d-flex align-items-center justify-content-center bg-dark">
-                        <div id="modalContent" class="text-white">Loading...</div>
-                    </div>
-                    <div class="modal-footer bg-light">
-                        <a href="#" id="downloadLink" class="btn btn-success" download>Download</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+    <div class="modal-dialog modal-xl modal-dialog-centered"> 
+        <div class="modal-content" style="height: 90vh;"> <!-- 90% of screen height -->
+            
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="modalTitle">Document Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <!-- CHANGED: Added specific style to modal-body -->
+            <div class="modal-body p-0 bg-dark" style="height: 100%; overflow: hidden;">
+                <!-- Content injected here -->
+                <div id="modalContent" class="w-100 h-100 d-flex justify-content-center align-items-center">
+                    <span class="text-white">Loading...</span>
                 </div>
             </div>
+
+            <div class="modal-footer bg-light">
+                <a href="#" id="downloadLink" class="btn btn-success" download>Download</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
         </div>
 
     </section>
@@ -148,8 +155,7 @@
             if(['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileType)) {
                 htmlContent = '<img src="' + fileUrl + '" style="max-height: 100%; max-width: 100%; object-fit: contain;">';
             } else if (fileType === 'pdf') {
-               // htmlContent = '<iframe src="' + fileUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>';
-                htmlContent = '<iframe src="https://docs.google.com/gview?url=' + encodeURIComponent(fileUrl) + '&embedded=true" style="width:100%; height:100%; border:none;"></iframe>';
+                htmlContent = '<iframe src="' + fileUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>';
             } else {
                 htmlContent = '<div class="text-white">Cannot preview. Please download.</div>';
             }

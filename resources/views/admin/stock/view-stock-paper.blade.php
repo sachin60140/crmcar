@@ -166,7 +166,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Handle Image Modal
+            // Handle Image Modal 
             const imagePreviewModal = document.getElementById('imagePreviewModal');
             if (imagePreviewModal) {
                 imagePreviewModal.addEventListener('show.bs.modal', function(event) {
