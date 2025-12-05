@@ -17,6 +17,7 @@ use App\Http\Controllers\UploadStockPaperController;
 use App\Http\Controllers\WaterMarkController;
 use App\Http\Controllers\admin\DashboardDataController;
 use App\Http\Controllers\Vendor\VendorController;
+use App\Http\Controllers\chart\ChartController;
 
 
 
@@ -147,6 +148,12 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/add-vendor', [VendorController::class, 'index'])->name('addvendor');
     Route::post('admin/store-vendor', [VendorController::class, 'store'])->name('storevendor');
     /* End Vendor Section */
+
+    /* Chart Section Section */
+    
+    Route::get('/chart-data', [ChartController::class, 'newChartData'])->name('chart.data');
+    /* End Chart Section */
+    
 });
 
 
