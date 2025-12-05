@@ -123,7 +123,7 @@
                 }
             },
             paging: true,
-            pageLength: 25,
+            pageLength: 50,
             dom: 'rtip' // Hide default search box ('f' is removed from dom)
         });
 
