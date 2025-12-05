@@ -148,7 +148,8 @@
             if(['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileType)) {
                 htmlContent = '<img src="' + fileUrl + '" style="max-height: 100%; max-width: 100%; object-fit: contain;">';
             } else if (fileType === 'pdf') {
-                htmlContent = '<iframe src="' + fileUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>';
+               // htmlContent = '<iframe src="' + fileUrl + '" style="width: 100%; height: 100%; border: none;"></iframe>';
+                htmlContent = '<iframe src="https://docs.google.com/gview?url=' + encodeURIComponent(fileUrl) + '&embedded=true" style="width:100%; height:100%; border:none;"></iframe>';
             } else {
                 htmlContent = '<div class="text-white">Cannot preview. Please download.</div>';
             }
