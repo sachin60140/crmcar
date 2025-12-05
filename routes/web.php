@@ -16,6 +16,7 @@ use App\Http\Controllers\workshop\CarInspectionController;
 use App\Http\Controllers\UploadStockPaperController;
 use App\Http\Controllers\WaterMarkController;
 use App\Http\Controllers\admin\DashboardDataController;
+use App\Http\Controllers\Vendor\VendorController;
 
 
 
@@ -58,6 +59,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/stock/store-stock-paper', [UploadStockPaperController::class,'storestockpaper' ])->name('storestockpaper');
     Route::get('admin/stock/view-stock-paper', [UploadStockPaperController::class,'viewstockpaper' ])->name('viewstockpaper');
     Route::get('admin/stock/download/{id}', [UploadStockPaperController::class,'downloadfile' ])->name('files.download');
+
+    Route::get('admin/stock/stock-paper-details', [UploadStockPaperController::class,'stockpaperdetails' ])->name('stockpaperdetails');
     /* Paper Upload end Here */
      
 
@@ -140,6 +143,10 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/dashboard-stats', [DashboardDataController::class, 'fetchData'])->name('dashboard_data');
     /* End Dashboard Ajax Data*/
 
+    /* Add Vendor Section */
+    Route::get('admin/add-vendor', [VendorController::class, 'index'])->name('addvendor');
+    Route::post('admin/store-vendor', [VendorController::class, 'store'])->name('storevendor');
+    /* End Vendor Section */
 });
 
 

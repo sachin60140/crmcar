@@ -91,6 +91,11 @@
                          <i class="bi bi-circle"></i><span>View Stock Paper</span>
                      </a>
                  </li>
+                 <li>
+                     <a href="{{ route('stockpaperdetails') }}">
+                         <i class="bi bi-circle"></i><span>Stock Paper Details</span>
+                     </a>
+                 </li>
              </ul>
          </li><!-- End Forms Nav -->
          <li class="nav-item">
@@ -227,6 +232,25 @@
          </li><!-- End Forms Nav -->
              
          @endif
+
+         <li class="nav-item">
+             <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
+                 <i class="bi bi-journal-text"></i><span>Purchase</span><i class="bi bi-chevron-down ms-auto"></i>
+             </a>
+             <ul id="workshop-lead" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                 <li>
+                     <a href="{{ route('addvendor') }}">
+                         <i class="bi bi-circle"></i><span>Add Vendor</span>
+                     </a>
+                 </li>
+                 <li>
+                     <a href="{{ route('viewinspection') }}">
+                         <i class="bi bi-circle"></i><span>View Inspection</span>
+                     </a>
+                 </li>
+
+             </ul>
+         </li>
          
          <li class="nav-item">
              <a class="nav-link collapsed" data-bs-target="#workshop-lead" data-bs-toggle="collapse" href="#">
@@ -245,7 +269,8 @@
                  </li>
 
              </ul>
-         </li><!-- End Forms Nav -->
+         </li>
+         <!-- End Forms Nav -->
 
          <!-- <li class="nav-item">
              <a class="nav-link collapsed" href="{{ route('trafficchallan') }}">
