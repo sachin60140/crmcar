@@ -10,10 +10,17 @@ use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
+use App\Services\SmsService;
 
 class DtoController extends Controller
 {
+    protected $smsService;
+
+    public function __construct(SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
+
     public function index()
     {
         return view("admin.dto.add-file");
@@ -21,10 +28,13 @@ class DtoController extends Controller
 
     public function adddtofile(Request $req)
     { 
+        
         $req->validate([
             
             'reg_number' => 'required',
             'rto_location' => 'required',
+            'Purchaser_mobile_number' => 'required|numeric|digits_between:9,12',
+            'vendor_name' => 'required',
             'status' => 'required',
             'remarks' => 'required|min:3',
             'upload_pdf' => 'required|mimes:pdf|max:20000',
@@ -34,6 +44,8 @@ class DtoController extends Controller
 
         $DtoModel->reg_number = $req->reg_number;
         $DtoModel->rto_location = $req->rto_location;
+        $DtoModel->purchaser_name = $req->purchaser_name;
+        $DtoModel->Purchaser_mobile_number = $req->Purchaser_mobile_number;
         $DtoModel->vendor_name = $req->vendor_name;
         $DtoModel->vendor_mobile_number = $req->vendor_mobile_number;
         $DtoModel->dispatch_date = $req->dispatch_date;
@@ -82,7 +94,8 @@ class DtoController extends Controller
     public function updatedtofile(Request $req, $id)
     {
         $req->validate([
-           
+            'Purchaser_mobile_number' => 'required|numeric|digits_between:9,12',
+            'vendor_name' => 'required',
             'vendor_name' => 'required',
             'vendor_mobile_number' => 'required|min_digits:5|max_digits:10',
             'dispatch_date' => 'required',
@@ -94,7 +107,8 @@ class DtoController extends Controller
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
 
         $DtoModel = DtoModel::find($id);
-
+        $DtoModel->purchaser_name = $req->purchaser_name;
+        $DtoModel->Purchaser_mobile_number = $req->Purchaser_mobile_number;
         $DtoModel->vendor_name = $req->vendor_name;
         $DtoModel->vendor_mobile_number = $req->vendor_mobile_number;
         $DtoModel->dispatch_date = $req->dispatch_date;
@@ -124,6 +138,17 @@ class DtoController extends Controller
 
         //return back()->with('success', 'DTO File  Updated Succesfully');
 
+        if($req->status == 'Online'){
+            $this->smsService->sendCarTransferNotification(
+                $DtoModel->purchaser_name,
+                $DtoModel->Purchaser_mobile_number,
+                $DtoModel->reg_number, // Assuming you have this field
+                $DtoModel->online_date
+            );
+        }
+
         return redirect('admin/dto/view-dto-file')->with('success', 'DTO File  Updated Succesfully');
     }
+
+    
 }

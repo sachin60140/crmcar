@@ -73,34 +73,44 @@
                 <!-- Multi Columns Form -->
                 <form class="row g-3" action="{{url('admin/dto/store-dto-file')}}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="reg_number" class="form-label">Registration Number <span
                                 style="color: red;">*</span></label>
                         <input type="Text" class="form-control"  value="{{ old('reg_number') }}"
                             name="reg_number" autofocus required style="text-transform: uppercase">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="rto_location" class="form-label">RTO Location <span
                                 style="color: red;">*</span></label>
                         <input type="Text" class="form-control" id="inputName5" value="{{ old('rto_location') }}"
                             name="rto_location" placeholder="Enter Rto Location" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label for="vendor_name" class="form-label">Purchaser Name </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ old('purchaser_name') }}"
+                            name="purchaser_name" placeholder="Enter Purchaser Name">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="vendor_mobile_number" class="form-label">Purchaser Mobile </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ old('Purchaser_mobile_number') }}"
+                            name="Purchaser_mobile_number" >
+                    </div>
+                    <div class="col-md-3">
                         <label for="vendor_name" class="form-label">Vendor Name </label>
                         <input type="Text" class="form-control" id="inputName5" value="{{ old('vendor_name') }}"
                             name="vendor_name" placeholder="Enter Vendor Name">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="vendor_mobile_number" class="form-label">Vendor Mobile </label>
                         <input type="Text" class="form-control" id="inputName5" value="{{ old('vendor_mobile_number') }}"
                             name="vendor_mobile_number" >
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="dispatch_date" class="form-label">Dispatch Date </label>
                         <input type="date" class="form-control" id="inputName5" value="{{ old('dispatch_date') }}"
                             name="dispatch_date" >
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="status" class="form-label">Status <span style="color: red;">*</span></label>
                         <select id="status" class="form-select" name="status">
                             <option value="" selected>Choose...</option>

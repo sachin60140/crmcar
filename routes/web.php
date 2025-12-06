@@ -184,3 +184,5 @@ Route::group(['middleware' => 'empauth'], function () {
     Route::get('employee/Cloud-Call/Cloud-Call-Data', [EmpController::class, 'showcloudacalldata'])->name('viewcloudcalldata');
 
 });
+
+

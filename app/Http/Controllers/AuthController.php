@@ -217,20 +217,44 @@ class AuthController extends Controller
 
     public function smsbalance()
     {
-        $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
-        $headers = [
-            'Content-Type' => 'application/json',
-            'username' => 'Y2FyNHNhbGVz',
-            'password' => 'M0hxSkk=',
+        // $apiURL = 'https://pgapi.sparc.smartping.io/fe/api/v1/getBalance/';
+        // $headers = [
+        //     'Content-Type' => 'application/json',
+        //     'username' => 'car4sales.trans',
+        //     'password' => '@i?-^ho3LBfvxk202',
+        // ];
+
+        // $response = Http::withHeaders($headers)->get($apiURL);
+        // $data = $response->json();
+
+        // return $data1 = $response;
+
+        // //return $data->balance->sms_wallet;
+
+        // //return $balance = $data1['balance']['sms_wallet'];
+         $message = "Dear SACHIN,\nOwnership of car BR28B1234 was transferred on 12/dec/2025. Please check mParivahan for your RC. Urgently transfer your insurance to your name.\nThanks,\nCar4Sales, Muzzfarpur";
+        $queryParams = [
+            'username' => 'car4sales.trans',
+            'password' => '@i?-^ho3LBfvxk202',
+            'unicode' => 'true',
+            'from' => 'C4SALE',
+            'text' => $message,
+            'to' => '7766018777',
+            'dltContentId' => '1707176503052721615',
+            'dltPrincipalEntityId' => '1701171869640632437',
+            'dltTelemarketerId' => '1702176485193910037'
         ];
+         $response = Http::withHeaders([
+            'accept' => 'application/json'
+        ])->get('https://pgapi.sparc.smartping.io/fe/api/v1/send', $queryParams);
 
-        $response = Http::withHeaders($headers)->get($apiURL);
-        $data = $response->json();
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return $response->throw();
+        }
 
-        $data1 = $response;
-
-        //return $data->balance->sms_wallet;
-
-        return $balance = $data1['balance']['sms_wallet'];
+        
     }
+   
 }

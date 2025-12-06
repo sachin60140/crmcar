@@ -69,6 +69,7 @@
                         <input type="text" style="background-color: #8d9797;" readonly class="form-control" id="reg_number" value="{{$getRecord->reg_number}}"
                             name="reg_number"> 
                     </div>
+                    
 
                     <div class="col-md-4">
                         <label for="mobile_number" class="form-label">RTO Location <span
@@ -97,6 +98,17 @@
                         <input type="Text" style="background-color: #8d9797;" readonly class="form-control" id="inputName5" value="{{$getRecord->updated_at}}"
                             name="updated_at" required>
                     </div>
+                    <div class="col-md-4">
+                        <label for="vendor_name" class="form-label">Purchaser Name </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ $getRecord->purchaser_name }}"
+                            name="purchaser_name" placeholder="Enter Purchaser Name">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="vendor_mobile_number" class="form-label">Purchaser Mobile </label>
+                        <input type="Text" class="form-control" id="inputName5" value="{{ $getRecord->Purchaser_mobile_number }}"
+                            name="Purchaser_mobile_number" >
+                    </div>
+                    
                     <div class="col-md-4">
                         <label for="mobile_number" class="form-label">Vendor Name <span
                                 style="color: red;">*</span></label>
