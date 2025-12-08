@@ -16,8 +16,8 @@ class SmsService
         try {
             $formattedDate = Carbon::parse($online_date)->format('d/M/Y');
 
-            $message = "Dear {$purchaser_name},\nOwnership of car {$reg_number} was transferred on {$formattedDate}. Please check mParivahan for your RC. Urgently transfer your insurance to your name.\nThanks,\nCar4Sales, Muzzfarpur";
-
+            //$message = "Dear {$purchaser_name},\nOwnership of car {$reg_number} was transferred on {$formattedDate}. Please check mParivahan for your RC. Urgently transfer your insurance to your name.\nThanks,\nCar4Sales, Muzzfarpur";
+            $message = "प्रिय {$purchaser_name}, \nगाड़ी संख्या {$reg_number} का स्वामित्व {$formattedDate} को आपके नाम पर स्थानांतरित कर दिया गया है। कृपया अपना आर.सी. (रजिस्ट्रेशन प्रमाणपत्र) देखने के लिए एम-परिवहन ऐप या वेबसाइट जांचें। साथ ही, अपना वाहन बीमा भी जल्द से जल्द अपने नाम पर स्थानांतरित करवा लें। \nध्यान दें: आर.सी. प्राप्त करना एवं बीमा स्थानांतरित करवाने की ज़िम्मेदारी अब आपकी है, Car4Sales की नहीं। \nधन्यवाद, \nCar4Sales, \nमुज़फ़्फ़रपुर";
             $params = [
                 'username' => 'car4sales.trans',
                 'password' => '@i?-^ho3LBfvxk202',
@@ -25,7 +25,7 @@ class SmsService
                 'from' => 'C4SALE',
                 'text' => $message,
                 'to' => $Purchaser_mobile_number,
-                'dltContentId' => '1707176503052721615',
+                'dltContentId' => '1707176519245226390',
                 'dltPrincipalEntityId' => '1701171869640632437',
                 'dltTelemarketerId' => '1702176485193910037'
             ];
