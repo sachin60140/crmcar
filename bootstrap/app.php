@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\EmpMiddleware;
+use App\Http\Middleware\CheckSingleSession;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'empauth' => EmpMiddleware::class,
+            'single.session' => CheckSingleSession::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

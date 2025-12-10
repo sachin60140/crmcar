@@ -93,6 +93,19 @@
             }, 1000);
         });
     </script>
+
+    <script>
+    // Check session status every 10 seconds
+    setInterval(function() {
+        $.get("{{ url('admin/dashboard') }}") // Pings the server
+        .fail(function(xhr) {
+            // If server returns 401 (Unauthenticated) or redirects to login
+            if (xhr.status === 401 || xhr.status === 302 || xhr.responseText.includes('login')) {
+                window.location.href = "{{ route('login') }}"; // Force redirect
+            }
+        });
+    }, 10000); 
+</script>
     @yield('script')
 
 </body>

@@ -39,12 +39,14 @@ Route::get('/smsbalance', [AuthController::class, 'smsbalance']);
 
 Route::get('pass', [AuthController::class, 'pass']);
 
-Route::post('admin-login', [AuthController::class, 'authlogin']);
+Route::post('admin-login', [AuthController::class, 'authlogin'])->name('admin-login');
 
 Route::get('admin/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => 'admin'], function () {
+Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/dashboard', [AuthController::class, 'dashboard']);
+    Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('change.password');
+    Route::put('/change-password', [AuthController::class, 'updatePassword'])->name('change.password.update');
     Route::get('admin/add-branch', [AuthController::class, 'branch'])->name('branch');
     Route::post('admin/add-branch', [AuthController::class, 'addbranch'])->name('addbranch');
     Route::get('admin/view-branch', [AuthController::class, 'viewbranch'])->name('viewbranch');;

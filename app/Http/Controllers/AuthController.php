@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Hash;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +13,11 @@ use App\Models\User;
 use App\Models\BranchModel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
     public function login()
     {
         if (!empty(Auth::check())) {
@@ -26,35 +28,170 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        Session::flush();
+        if (Auth::check()) {
+            // Clear session ID from user record
+            $user = Auth::user();
+            $user->session_id = null;
+            $user->save();
+        }
 
         Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/admin');
     }
 
+    // public function authlogin(Request $req)
+    // {
+    //     if (Auth::attempt(['email' => $req->email, 'password' => $req->password], true)) {
+    //         return redirect('admin/dashboard');
+    //     } else {
+    //         return redirect()->back()->with('error', 'Email or password is incorrect');
+    //     }
+    // }
+
+    // public function authlogin(Request $req)
+    // {
+    //     if (Auth::attempt(['email' => $req->email, 'password' => $req->password], true)) {
+
+    //         // 1. Regenerate session FIRST (This creates the secure, final ID)
+    //         $req->session()->regenerate();
+
+    //         $user = Auth::user();
+
+    //         // 2. NOW get the new Session ID
+    //         $currentSessionId = Session::getId();
+
+    //         // 3. Store the correct ID in the database
+    //         $user->session_id = $currentSessionId;
+    //         $user->last_login_at = now();
+    //         $user->last_login_ip = $req->ip();
+    //         $user->save();
+
+    //         // Store session ID in current session (optional, but fine to keep)
+    //         Session::put('user_session_id', $currentSessionId);
+
+    //         return redirect('admin/dashboard');
+    //     } else {
+    //         return redirect()->back()->with('error', 'Email or password is incorrect');
+    //     }
+    // }
+
     public function authlogin(Request $req)
     {
+        // 1. Attempt Login
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password], true)) {
+
+            $user = Auth::user();
+
+            // --- FIX 1: Check if value is NOT 1 (Don't use has()) ---
+            if (!empty($user->session_id) && $req->force_logout != 1) {
+
+                Auth::logout(); // Logout temporarily to prevent session fixation
+
+                // Get Details
+                $timeAgo = $user->last_login_at ? \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() : 'Unknown';
+                $ipAddress = $user->last_login_ip ?? 'Unknown IP';
+
+                // --- FIX 2: Ensure JSON is returned for AJAX ---
+                if ($req->ajax()) {
+                    return response()->json([
+                        'status' => 'conflict',
+                        'message' => 'Active Session Found',
+                        'details' => ['time' => $timeAgo, 'ip' => $ipAddress]
+                    ]);
+                }
+            }
+
+            // 2. Process Login (Force Logout or Fresh Login)
+            $req->session()->regenerate();
+
+            // Update Database with NEW Session ID
+            $user->session_id = Session::getId();
+            $user->last_login_at = now();
+            $user->last_login_ip = $req->ip();
+            $user->save(); // <--- This KICKS OUT the first user
+
+            Session::put('user_session_id', $user->session_id);
+
+            if ($req->ajax()) {
+                return response()->json(['status' => 'success', 'redirect' => url('admin/dashboard')]);
+            }
             return redirect('admin/dashboard');
         } else {
-            return redirect()->back()->with('error', 'Email or password is incorrect');
+            if ($req->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Invalid Credentials']);
+            }
+            return redirect()->back()->with('error', 'Invalid Credentials');
         }
     }
+    public function showChangePasswordForm()
+    {
+        return view('admin.change-password');
+    }
+
+     public function updatePassword(Request $request)
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['required', 'string'],
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+        ], [
+            'new_password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'new_password.confirmed' => 'The new password confirmation does not match.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $user = Auth::user();
+
+        // Check current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()
+                ->with('error', 'Your current password is incorrect.')
+                ->withInput();
+        }
+
+        // Check if new password is same as current password
+        if (Hash::check($request->new_password, $user->password)) {
+            return redirect()->back()
+                ->with('error', 'New password cannot be the same as your current password.')
+                ->withInput();
+        }
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Logout from other devices (optional)
+        // Auth::logoutOtherDevices($request->new_password);
+
+        return redirect()->route('change.password')
+            ->with('success', 'Your password has been changed successfully!');
+    }
+
+
     public function dashboard()
     {
         $data['totalstock'] = DB::table('car_stock')
-        ->where('stock_status','!=' ,'3')->count();
+            ->where('stock_status', '!=', '3')->count();
         $data['totalbranch'] = DB::table('branch')->count();
         $data['contacts'] = DB::table('customer_lead')->count();
 
         $data['cloud_contacts'] = DB::table('cloud_calling_data')->distinct('customer_number')->count('customer_number');
         $data['today_cloud_contacts'] = DB::table('cloud_calling_data')->whereDate('created_at', Carbon::today())->count();
-         $data['qkonnect_contacts'] = DB::table('qkonnect_data')->distinct('caller_number')->count('caller_number');
+        $data['qkonnect_contacts'] = DB::table('qkonnect_data')->distinct('caller_number')->count('caller_number');
         $data['today_qkonnect_contacts'] = DB::table('qkonnect_data')->whereDate('created_at', Carbon::today())->count();
 
         $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
@@ -67,28 +204,28 @@ class AuthController extends Controller
         $data['currentMonthName'] = Carbon::now()->format('F');
 
         $data['todaybookedcar'] = DB::table('car_booking')
-                            ->whereDate('created_at', Carbon::today())
-                            ->count();
+            ->whereDate('created_at', Carbon::today())
+            ->count();
 
         $data['currentmonthbooking'] =  DB::table('car_booking')
-                             ->whereYear('created_at', Carbon::now()->year)
-                            ->whereMonth('created_at', Carbon::now()->month)
-                            ->count();
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
 
         $data['totaldelivary'] = DB::table('car_delivary')->count();
         $data['todaydelivary'] = DB::table('car_delivary')
-                            ->whereDate('created_at', Carbon::today())
-                            ->count();
+            ->whereDate('created_at', Carbon::today())
+            ->count();
 
         $data['currentmonthdelivary'] =  DB::table('car_delivary')
-                             ->whereYear('created_at', Carbon::now()->year)
-                            ->whereMonth('created_at', Carbon::now()->month)
-                            ->count();
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
         $data['Pendingtilltoday'] = DB::table('customer_lead_remarks')
-                            ->where('next_folloup_date','<=', Carbon::now())
-                            ->count();
-    
-        $data['readyfordelivary'] = DB::table('finace_file')->where('file_status','11')->count();
+            ->where('next_folloup_date', '<=', Carbon::now())
+            ->count();
+
+        $data['readyfordelivary'] = DB::table('finace_file')->where('file_status', '11')->count();
 
         $apiURL = 'https://pgapi.vispl.in/fe/api/v1/getBalance/';
         $headers = [
@@ -165,7 +302,7 @@ class AuthController extends Controller
             'cloud_calling_number' => 'nullable|numeric|unique:users|digits:10',
             'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
         ], $messages);
-        
+
 
         $pass = Hash::make($req->input('password'));
 
@@ -174,7 +311,7 @@ class AuthController extends Controller
         $User->name = $req->name;
         $User->email = $req->email;
         $User->cloud_calling_number = $req->cloud_calling_number;
-        
+
         $User->password = $pass;
         $User->save();
 
@@ -186,17 +323,17 @@ class AuthController extends Controller
     public function viewempdata()
     {
         $data['emplist'] = DB::table('users')
-                            ->where('id','!=', '1')
-                            ->get();
+            ->where('id', '!=', '1')
+            ->get();
         return view('admin.employee.view-employee', $data);
     }
 
     public function editempdata($id)
     {
-         $data['user_data'] =  DB::table('users')
-                            ->where('id','=', $id)
-                            ->first();
-        return view('admin.employee.update-password',$data);
+        $data['user_data'] =  DB::table('users')
+            ->where('id', '=', $id)
+            ->first();
+        return view('admin.employee.update-password', $data);
     }
 
     public function updateuserPassword(Request $request, User $user)
@@ -235,7 +372,7 @@ class AuthController extends Controller
         // $message = "Dear SACHIN,\nOwnership of car BR28B1234 was transferred on 12/dec/2025. Please check mParivahan for your RC. Urgently transfer your insurance to your name.\nThanks,\nCar4Sales, Muzzfarpur";
         //$message = urlencode("प्रिय मनोज जी, \nगाड़ी संख्या BR-06-AD-1234 का स्वामित्व 12 दिसंबर 2025 को आपके नाम पर स्थानांतरित कर दिया गया है। कृपया अपना आर.सी. (रजिस्ट्रेशन प्रमाणपत्र) देखने के लिए एम-परिवहन ऐप या वेबसाइट जांचें। साथ ही, अपना वाहन बीमा भी जल्द से जल्द अपने नाम पर स्थानांतरित करवा लें। \nध्यान दें: आर.सी. प्राप्त करना एवं बीमा स्थानांतरित करवाने की ज़िम्मेदारी अब आपकी है, Car4Sales की नहीं। \nधन्यवाद, \nCar4Sales, \nमुज़फ़्फ़रपुर");
         $message = "प्रिय मनोज जी, \nगाड़ी संख्या BR-06-AD-1234 का स्वामित्व 12 दिसंबर 2025 को आपके नाम पर स्थानांतरित कर दिया गया है। कृपया अपना आर.सी. (रजिस्ट्रेशन प्रमाणपत्र) देखने के लिए एम-परिवहन ऐप या वेबसाइट जांचें। साथ ही, अपना वाहन बीमा भी जल्द से जल्द अपने नाम पर स्थानांतरित करवा लें। \nध्यान दें: आर.सी. प्राप्त करना एवं बीमा स्थानांतरित करवाने की ज़िम्मेदारी अब आपकी है, Car4Sales की नहीं। \nधन्यवाद, \nCar4Sales, \nमुज़फ़्फ़रपुर";
-         $queryParams = [
+        $queryParams = [
             'username' => 'car4sales.trans',
             'password' => '@i?-^ho3LBfvxk202',
             'unicode' => 'true',
@@ -246,7 +383,7 @@ class AuthController extends Controller
             'dltPrincipalEntityId' => '1701171869640632437',
             'dltTelemarketerId' => '1702176485193910037'
         ];
-         $response = Http::withHeaders([
+        $response = Http::withHeaders([
             'accept' => 'application/json'
         ])->get('https://pgapi.sparc.smartping.io/fe/api/v1/send', $queryParams);
 
@@ -255,8 +392,5 @@ class AuthController extends Controller
         } else {
             return $response->throw();
         }
-
-        
     }
-   
 }
