@@ -1,191 +1,192 @@
 @extends('admin.layouts.app')
-
 @section('title', 'View Booking | Car 4 Sales')
 
-
 @section('style')
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-
+    <style>
+        .table-font-sm { font-size: 13px; }
+        .filter-box { background: #f6f9ff; padding: 15px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #e0e0e0; }
+        /* Optional: Hide the processing loader background if it conflicts with theme */
+        .dataTables_processing { z-index: 1000; background-color: rgba(255,255,255,0.9); }
+    </style>
 @endsection
 
 @section('content')
-    <div class="pagetitle">
-        <h1>Dashboard</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item">View Booking</li>
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">View Booking</li>
+        </ol>
+    </nav>
+</div>
 
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
-    <section class="section dashboard">
-        <div>
-            @if ($errors->any())
-                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+<section class="section dashboard">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">View Booking Details</h5>
 
-            @if (Session::has('success'))
-                <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
-                    {{ Session::get('success') }}
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                        aria-label="Close"></button>
-                </div>
-            @endif
+                    {{-- DATE SEARCH INPUTS --}}
+                    <div class="filter-box">
+                        <div class="row align-items-end">
+                            <div class="col-md-3">
+                                <label for="from_date" class="form-label fw-bold">From Date</label>
+                                <input type="date" name="from_date" id="from_date" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="to_date" class="form-label fw-bold">To Date</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" id="filter" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Filter
+                                </button>
+                                <button type="button" id="refresh" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- END DATE SEARCH INPUTS --}}
 
-            @if (Session::has('error'))
-                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                    {{ Session::get('error') }}
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                        aria-label="Close"></button>
-                </div>
-            @endif
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">View Booking Details </h5>
-                        {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
-
-                        <!-- Table with stripped rows -->
-                        <table class="table display" style="font-size: 13px;" id="example">
+                    <div class="table-responsive">
+                        <table class="table display table-font-sm" id="booking_table" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Booking by</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Reg</th>
-                                    <th scope="col">Model</th>
-                                    <th scope="col">Booking by</th>
-                                    <th scope="col">Sell </th>
-                                    <th scope="col">Booking</th>
-                                    <th scope="col">Finance</th>
-                                    <th scope="col">DP</th>
-                                    <th scope="col">Remarks</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Print</th>
-                                    <th scope="col">Delivary</th>
-
+                                    <th>#</th>
+                                    <th>Created By</th>
+                                    <th>Booking No.</th>
+                                    <th>Name</th>
+                                    <th>Reg</th>
+                                    <th>Model</th>
+                                    <th>Booking Person</th>
+                                    <th>Sell</th>
+                                    <th>Booking</th>
+                                    <th>Finance</th>
+                                    <th>Due</th>
+                                    <th>Remarks</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($carbooking as $items)
-                                    <tr>
-                                        <td>{{ $items->id }}</td>
-                                        <td>{{ $items->created_by }}</td>
-                                        <td>{{ $items->name }}</td>
-                                        <td>{{ $items->regnumber }}</td>
-                                        <td>{{ $items->carmodel }}</td>
-                                        <td>{{ $items->booking_person }}</td>
-                                        <td>{{ $items->total_amount }}</td>
-                                        <td>{{ $items->adv_amount }}</td>
-                                        <td>{{ $items->finance_amount }}</td>
-                                        <td>{{ $items->due_amount }}</td>
-                                        <td>{{ $items->remarks }}</td>
-                                        <td>{{ date('d-M-Y', strtotime($items->created_at)) }}</td>
-                                        <td>
-                                            <a href="{{ url('/admin/print-booking-pdf') }}/{{ $items->id }}"
-                                                class="badge bg-primary">Print </a>
-                                        </td>
-                                        <td>
-                                            <a href="{{ url('/admin/delivary/add-delivary') }}/{{ $items->id }}"
-                                                class="badge bg-success">Delivary </a>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
+                            <tbody></tbody>
                         </table>
-                        <!-- End Table with stripped rows -->
-
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
+    </div>
+</section>
+@endsection
 
-    @endsection
+@section('script')
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 
-    @section('script')
-        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script>
+    $(document).ready(function() {
 
-        {{-- <script>
-            $(document).ready(function() {
-                $('#example').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        'pdfHtml5',
-                    ],
-                    "pageLength": 50,
+        // --- 1. Date Logic (Defaults to Last 90 Days) ---
+        var today = new Date();
+        var priorDate = new Date(new Date().setDate(today.getDate() - 90));
 
-                    "aaSorting": [
-                        [0, 'desc']
-                    ],
-                });
-            });
-        </script> --}}
+        // Helper: Format Date to YYYY-MM-DD
+        var formatDate = function(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
+        };
+
+        // Helper: Format Date to DD-MM-YYYY for File Name
+        var strDate = String(today.getDate()).padStart(2, '0') + '-' + 
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                      today.getFullYear();
+
+        // Set Input Values
+        $('#from_date').val(formatDate(priorDate));
+        $('#to_date').val(formatDate(today));
 
 
-        <script>
-            $(document).ready(function() {
+        // --- 2. Initialize DataTable ---
+        var table = $('#booking_table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url()->current() }}",
+                data: function(d) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'created_by', name: 'created_by' },
+                { data: 'booking_no', name: 'booking_no' },
+                
+                // SAFETY: defaultContent prevents crashing if data is missing
+                { data: 'name', name: 'name', defaultContent: "-" }, 
+                { data: 'regnumber', name: 'regnumber', defaultContent: "-" },
+                { data: 'carmodel', name: 'carmodel', defaultContent: "-" },
+                
+                { data: 'booking_person', name: 'booking_person', defaultContent: "-" },
+                { data: 'total_amount', name: 'total_amount' },
+                { data: 'adv_amount', name: 'adv_amount' },
+                { data: 'finance_amount', name: 'finance_amount' },
+                { data: 'due_amount', name: 'due_amount' },
+                { data: 'remarks', name: 'remarks', defaultContent: "" },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            dom: 'Bfrtip',
+            order: [[0, 'desc']], // Sort by ID Descending
+            pageLength: 50,
+            buttons: [
+                'copy', 
+                {
+                    extend: 'excel',
+                    title: 'Booking Report ' + strDate
+                },
+                {
+                    extend: 'csv',
+                    title: 'Booking Report ' + strDate
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Booking Report ' + strDate,
+                    orientation: 'landscape',
+                    exportOptions: { columns: ':not(:last-child)' } // Exclude Action column
+                }
+            ]
+        });
 
-                // 1. Get current date
-                var d = new Date();
+        // --- 3. Filter Event ---
+        $('#filter').click(function() {
+            table.draw();
+        });
 
-                // 2. Format to DD-MM-YYYY
-                var strDate = d.getDate().toString().padStart(2, '0') + "-" +
-                    (d.getMonth() + 1).toString().padStart(2, '0') + "-" +
-                    d.getFullYear();
-
-                // Result example: "25-11-2025"
-
-                $('#example').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5', // Simple button (no custom name)
-                        {
-                            extend: 'excelHtml5',
-                            title: 'Booking Report Car4Sales - ' +
-                            strDate, // Sets filename to "My Custom Report Name.xlsx"
-                            messageTop: 'The data in this file is strictly confidential.' // Optional: Text inside the file
-                        },
-                        {
-                            extend: 'csvHtml5',
-                            title: 'Booking Report Car4Sales - ' +
-                                strDate // Sets filename to "My Custom Report Name.csv"
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            title: 'Booking Report Car4Sales - ' +
-                                strDate // Sets filename to "My Custom Report Name.pdf"
-                        }
-                    ],
-                    "pageLength": 50,
-                    "aaSorting": [
-                        [0, 'desc']
-                    ],
-                });
-            });
-        </script>
-    @endsection
+        // --- 4. Reset Event ---
+        $('#refresh').click(function() {
+            // Restore default 90 days range
+            $('#from_date').val(formatDate(priorDate));
+            $('#to_date').val(formatDate(today));
+            table.draw();
+        });
+    });
+</script>
+@endsection

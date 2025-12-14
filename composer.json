@@ -10,7 +10,9 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "milon/barcode": "^11.0"
+        "livewire/livewire": "^3.7",
+        "milon/barcode": "^11.0",
+        "yajra/laravel-datatables": "^11.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

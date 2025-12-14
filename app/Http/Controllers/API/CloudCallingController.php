@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Stmt\TryCatch;
+use Yajra\DataTables\Facades\DataTables;
 
 class CloudCallingController extends Controller
 {
@@ -99,7 +100,7 @@ class CloudCallingController extends Controller
 
         if ($result)
 
-            $sender = 'CAR4SL';
+        $sender = 'CAR4SL';
         $mob = $data['customer_number'];
         $name = 'Customer';
         $auth = '3HqJI';
@@ -154,7 +155,7 @@ class CloudCallingController extends Controller
             'leadid' => 'required',
             'name' => 'required|string|max:255',
 
-            
+
         ]);
 
         if ($validator->fails()) {
@@ -175,7 +176,7 @@ class CloudCallingController extends Controller
                 'leadid' => $data['leadid'],
                 'leadtype' => $data['leadtype'] ?? null,
                 'prefix' => $data['prefix'] ?? null,
-                'name' => $data['name'], 
+                'name' => $data['name'],
                 'mobile' => $data['mobile'],
                 'phone' => $data['phone'],
                 'email' => $data['email'] ?? null,
@@ -343,16 +344,59 @@ class CloudCallingController extends Controller
             ], 500);
         }
     }
-    public function showqkonnectdata()
+    // public function showqkonnectdata()
+    // {
+    //     $now = Carbon::now();
+    //     $fifteenDaysAgo = $now->copy()->subDays(15);
+
+    //     $data['qkonnect_Data'] = DB::table('qkonnect_data')
+    //         ->whereDate('created_at', '>=', $fifteenDaysAgo)
+    //         ->orderBy('id', 'desc')
+    //         ->get();
+
+    //     return view('admin.cloud-calling.qkonnect-call-data', $data);
+    // }
+
+    public function showqkonnectdata(Request $request)
     {
-        $now = Carbon::now();
-        $fifteenDaysAgo = $now->copy()->subDays(15);
+        if ($request->ajax()) {
 
-        $data['qkonnect_Data'] = DB::table('qkonnect_data')
-            ->whereDate('created_at', '>=', $fifteenDaysAgo)
-            ->orderBy('id', 'desc')
-            ->get();
+            // 1. Start the Query using DB Table
+            $query = DB::table('qkonnect_data');
 
-        return view('admin.cloud-calling.qkonnect-call-data', $data);
+            // 2. Filter Logic
+            if ($request->filled('start_date') && $request->filled('end_date')) {
+                // If user filters, search specific range (ignoring 15-day limit)
+                $query->whereBetween('created_at', [
+                    $request->start_date . ' 00:00:00',
+                    $request->end_date . ' 23:59:59'
+                ]);
+            } else {
+                // Default: Show only last 15 days (Your original optimization)
+                // You can remove this 'else' block if you want to show ALL history by default
+                $fifteenDaysAgo = Carbon::now()->subDays(15);
+                $query->whereDate('created_at', '>=', $fifteenDaysAgo);
+            }
+
+            // 3. Return DataTables Response
+            return DataTables::of($query)
+                ->addIndexColumn() // This enables DT_RowIndex
+                ->editColumn('created_at', function ($row) {
+                    // Format the date for display
+                    return date('d-m-Y h:i:s A', strtotime($row->created_at));
+                })
+                ->editColumn('call_recording', function ($row) {
+                    // Add the logic for the recording link
+                    if (!empty($row->call_recording)) {
+                        return '<a href="' . $row->call_recording . '" target="_blank" class="btn btn-sm btn-outline-primary">Recording</a>';
+                    }
+                    return '<span class="text-muted">N/A</span>';
+                })
+                ->rawColumns(['call_recording']) // Tells DataTables to render the HTML inside this column
+                ->make(true);
+        }
+
+        // 4. Return View (No need to pass $data, the table loads it via AJAX)
+        return view('admin.cloud-calling.qkonnect-call-data');
     }
 }

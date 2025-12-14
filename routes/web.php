@@ -44,7 +44,8 @@ Route::post('admin-login', [AuthController::class, 'authlogin'])->name('admin-lo
 Route::get('admin/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['admin', 'single.session']], function () {
-    Route::get('admin/dashboard', [AuthController::class, 'dashboard']);
+    Route::get('admin/dashboard', [AuthController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('admin/dashboard/live-kpis', [AuthController::class, 'dashboard'])->name('dashboard.live.kpis');
     Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('change.password');
     Route::put('/change-password', [AuthController::class, 'updatePassword'])->name('change.password.update');
     Route::get('admin/add-branch', [AuthController::class, 'branch'])->name('branch');
@@ -74,6 +75,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
     Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
 
+    
     Route::get('admin/delivary/add-delivary/{id}', [StockController::class, 'adddelivary'])->name('adddelivary');
     Route::post('admin/delivary/insert-delivary', [StockController::class, 'insertdelivary'])->name('insertdelivary');
     Route::get('admin/delivary/view-delivary', [DelivaryController::class, 'viewdelivary'])->name('viewdelivary');
@@ -126,8 +128,9 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     /* Cloud Calling Data */
     Route::get('admin/cloud-calling/cloud-calling-data', [CloudCallingController::class, 'showcloudacalldata'])->name('showcloudacalldata');
     Route::get('admin/just-dail/just-dail-data', [CloudCallingController::class, 'showjustdaildata'])->name('showjustdaildata');
-    Route::get('admin/Cloud-Call/Qkonnect-Call-Data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
-    
+    //Route::get('admin/Cloud-Call/Qkonnect-Call-Data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
+   Route::any('admin/cloud-calling/qkonnect-call-data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
+
     /* DTO File  */
     Route::get('admin/dto/add-file', [DtoController::class, 'index'])->name('adddtofile');
     Route::post('admin/dto/store-dto-file', [DtoController::class, 'adddtofile'])->name('storetofile');
@@ -153,7 +156,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
 
     /* Chart Section Section */
     
-    Route::get('/chart-data', [ChartController::class, 'newChartData'])->name('chart.data');
+    Route::get('/chart-data', [ChartController::class, 'chartData'])->name('chart.data');
     /* End Chart Section */
     
 });

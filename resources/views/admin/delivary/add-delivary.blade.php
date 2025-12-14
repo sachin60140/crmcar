@@ -2,24 +2,6 @@
 
 @section('title', 'Update Stock | Car 4 Sale')
 
-
-@section('style')
-
-<style>
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    input:read-only {
-        background-color: rgb(222, 222, 222);
-    }
-</style>
-
-@endsection
-
 @section('content')
 <div class="pagetitle">
     <h1>Dashboard</h1>
@@ -27,284 +9,301 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
             <li class="breadcrumb-item active">Admin</li>
-            <li class="breadcrumb-item active">Add Delivary Details</li>
+            <li class="breadcrumb-item active">Add Delivery Details</li>
         </ol>
     </nav>
-</div><!-- End Page Title -->
+</div>
+
 <section class="section dashboard">
     <div>
         @if ($errors->any())
         <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
-            <ul>
+            <ul class="mb-0">
                 @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
                 @endforeach
             </ul>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
 
         @if (Session::has('success'))
         <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
             {{ Session::get('success') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
 
         @if (Session::has('error'))
         <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
             {{ Session::get('error') }}
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
     </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Add Delivary Details</h5>
 
-            <!-- Multi Columns Form -->
-            <form class="row g-3" action="{{route('insertdelivary')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Booking Number <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="booking_id" value="{{$carbooking['0']['booking_no']}}"
-                        name="booking_id">
-                </div>
+    <form action="{{route('insertdelivary')}}" method="POST" enctype="multipart/form-data">
+        @csrf
 
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Booking Date <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="booking_date" value="{{date('d-M-Y', strtotime($carbooking['0']['created_at'])) }}"
-                        name="booking_date">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="fee" class="form-label">Booking Person <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="booking_person" value="{{$carbooking['0']['booking_person']}}"
-                        name="booking_person">
-                </div>
-                <hr>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Customer Name <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="name" value="{{$carbooking['0']['name']}}"
-                        name="name">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Father's Name <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="father_name" value="{{$carbooking['0']['father']}}"
-                        name="father_name">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Mobile Number <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="mobile" value="{{$carbooking['0']['mobile']}}"
-                        name="mobile">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Aadhar Number <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="aadhar" value="{{$carbooking['0']['aadhar']}}"
-                        name="aadhar">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Pan Card <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="pan_card" value="{{$carbooking['0']['pan']}}"
-                        name="pan_card">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">City<span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="city" value="{{$carbooking['0']['city']}}"
-                        name="city">
-                </div>
-                <div class="col-md-12">
-                    <label for="fee" class="form-label">Address <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="address" value="{{$carbooking['0']['address']}}"
-                        name="address">
-                </div>
+        <div class="card mb-4">
+            <div class="card-header bg-light fw-bold">
+                <i class="bi bi-person-badge me-1"></i> Customer & Vehicle Details
+            </div>
+            <div class="card-body pt-3">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small">Booking Number</label>
+                        <input type="text" readonly class="form-control bg-light" name="booking_id" value="{{$carbooking['0']['booking_no']}}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small">Booking Date</label>
+                        <input type="text" readonly class="form-control bg-light" name="booking_date" value="{{date('d-M-Y', strtotime($carbooking['0']['created_at'])) }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small">Booking Person</label>
+                        <input type="text" readonly class="form-control bg-light" name="booking_person" value="{{$carbooking['0']['booking_person']}}">
+                    </div>
 
-                <div class="col-md-4">
-                    <label for="mobile_number" class="form-label">Registration Number <span
-                            style="color: red;">*</span></label>
-                    <input type="Text" readonly class="form-control" id="reg_number" value="{{$carbooking['0']['regnumber']}}"
-                        name="reg_number" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="mobile_number" class="form-label">Model Name <span
-                            style="color: red;">*</span></label>
-                    <input type="Text" readonly class="form-control" id="model_name" value="{{$carbooking['0']['carmodel']}}"
-                        name="model_name" required>
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Model Year <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="model_year" value="{{$carbooking['0']['model_year']}}"
-                        name="model_year">
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Owner Sl No. <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="owner_sl_no" value="{{$carbooking['0']['owner_sl_no']}}"
-                        name="owner_sl_no">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Colour <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="car_color" value="{{$carbooking['0']['car_color']}}"
-                        name="car_color">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Engine Number <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="eng_number" value="{{$carbooking['0']['engnum']}}"
-                        name="eng_number">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Chassis Number <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="chassis_number" value="{{$carbooking['0']['chassis_number']}}"
-                        name="chassis_number">
-                </div>
-                <hr>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Sell Amount <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="sell_amount" value="{{$carbooking['0']['total_amount']}}"
-                        name="sell_amount">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Advance Booking Amount <span style="color: red;">*</span></label>
-                    <input type="text" readonly class="form-control" id="booking_amount" value="{{$carbooking['0']['adv_amount']}}"
-                        name="booking_amount">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Finance Amount <span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="finance_amount" value="{{$carbooking['0']['finance_amount']}}"
-                        name="finance_amount">
-                </div>
-                <div class="col-md-4">
-                    <label for="fee" class="form-label">Down Payment <span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="dp" value="{{$carbooking['0']['due_amount']}}"
-                        name="dp">
-                </div>
-                <div class="col-md-4">
-                    <label for="paymentMode" class="form-label">Payment Mode</label>
-                    <select class="form-select" name="paymentMode">
-                        <option value="">Select Payment Mode...</option>
-                        <option value="Cash">Cash</option>
-                        <option value="Cash">Cash+UPI</option>
-                        <option value="UPI">UPI</option>
-                        <option value="Neft">NEFT</option>
-                        <option value="RTGS">RTGS</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="paymentMode" class="form-label">Select Financer</label>
-                    <select class="form-select" name="financer">
-                        <option value="">Select Payment Mode...</option>
-                        @foreach ($financer as $item)
-                        <option value="{{$item->financer_name}}">{{$item->financer_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-12">
-                    <label for="total_amount" class="form-label">Delivary Remark's </label>
-                    <input type="text" class="form-control" id="remarks" rows="2" value="{{ old('remarks') }}" name="remarks"></textarea>
-                </div>
-                <hr>
-                <h5 class="card-title text-center">Fill & Upload PDI Report</h5>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Electricle Work <span style="color: red;">*</span></label>
-                    <select class="form-select" name="electricle_work">
-                        <option value="">Select Status...</option>
-                        <option value="All OK">All OK</option>
-                        <option value="Not OK">Not OK</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Ac Work Condition <span style="color: red;">*</span></label>
-                    <select class="form-select" name="ac_work_status">
-                        <option value="">Select Status...</option>
-                        <option value="Working">Working</option>
-                        <option value="Not Working">Not Working</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Suspension Condition <span style="color: red;">*</span></label>
-                    <select class="form-select" name="suspenstion_status">
-                        <option value="">Select Status...</option>
-                        <option value="All OK">All OK</option>
-                        <option value="Not OK">Not OK</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Engine Condition <span style="color: red;">*</span></label>
-                    <select class="form-select" name="engine_status">
-                        <option value="">Select Status...</option>
-                        <option value="Good">Good</option>
-                        <option value="Very Good">Very Good</option>
-                        <option value="Exelent">Exelent</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Starting <span style="color: red;">*</span></label>
-                    <select class="form-select" name="starting_status">
-                        <option value="">Select Status...</option>
-                        <option value="Normal">Normal</option>
-                        <option value="Long Start">Long Start</option>
-                        <option value="Not Starting">Not Starting</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Stepny <span style="color: red;">*</span></label>
-                    <select class="form-select" name="stepny_status">
-                        <option value="">Select Status...</option>
-                        <option value="All OK">Available</option>
-                        <option value="Not OK">Not Available</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Jack, Wrinch, Pana <span style="color: red;">*</span></label>
-                    <select class="form-select" name="tools_kit_status">
-                        <option value="">Select Status...</option>
-                        <option value="All OK">Available</option>
-                        <option value="Not OK">Not Available</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="fee" class="form-label">Inspection By <span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="inspection_by" value="{{old('inspection_by')}}"
-                        name="inspection_by">
-                </div>
-                <div class="col-md-6">
-                    <label for="total_amount" class="form-label">Upload PDI </label>
-                    <input type="file" class="form-control" id="pdi_image" value="{{ old('pdi_image') }}" name="pdi_image" required>
-                </div>
-                <div class="col-md-12">
-                    <label for="pdi_remarks" class="form-label">PDI Remark's </label>
-                    <input type="text" class="form-control" id="pdi_remarks" rows="2" value="{{ old('pdi_remarks') }}" name="pdi_remarks"></textarea>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <hr class="my-3 text-muted">
 
-                </div>
-            </form>
+                    <div class="col-md-4">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" readonly class="form-control bg-light" name="name" value="{{$carbooking['0']['name']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Father's Name</label>
+                        <input type="text" readonly class="form-control bg-light" name="father_name" value="{{$carbooking['0']['father']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" readonly class="form-control bg-light" name="mobile" value="{{$carbooking['0']['mobile']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Aadhar Number</label>
+                        <input type="text" readonly class="form-control bg-light" name="aadhar" value="{{$carbooking['0']['aadhar']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">PAN Card</label>
+                        <input type="text" readonly class="form-control bg-light" name="pan_card" value="{{$carbooking['0']['pan']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">City</label>
+                        <input type="text" readonly class="form-control bg-light" name="city" value="{{$carbooking['0']['city']}}">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Address</label>
+                        <input type="text" readonly class="form-control bg-light" name="address" value="{{$carbooking['0']['address']}}">
+                    </div>
 
+                    <hr class="my-3 text-muted">
+
+                    <div class="col-md-3">
+                        <label class="form-label">Registration No.</label>
+                        <input type="text" readonly class="form-control bg-light fw-bold" name="reg_number" value="{{$carbooking['0']['regnumber']}}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Model Name</label>
+                        <input type="text" readonly class="form-control bg-light" name="model_name" value="{{$carbooking['0']['carmodel']}}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Model Year</label>
+                        <input type="text" readonly class="form-control bg-light" name="model_year" value="{{$carbooking['0']['model_year']}}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Owner Serial No.</label>
+                        <input type="text" readonly class="form-control bg-light" name="owner_sl_no" value="{{$carbooking['0']['owner_sl_no']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Color</label>
+                        <input type="text" readonly class="form-control bg-light" name="car_color" value="{{$carbooking['0']['car_color']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Engine Number</label>
+                        <input type="text" readonly class="form-control bg-light" name="eng_number" value="{{$carbooking['0']['engnum']}}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Chassis Number</label>
+                        <input type="text" readonly class="form-control bg-light" name="chassis_number" value="{{$carbooking['0']['chassis_number']}}">
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    </div>
-    @endsection
+      
 
-    @section('script')
+      <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-currency-rupee me-1"></i> Payment Details
+            </div>
+            <div class="card-body pt-3">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Sell Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" readonly class="form-control bg-light" id="sell_amount" name="sell_amount" 
+                               value="{{ old('sell_amount', $carbooking['0']['total_amount']) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Adv. Booking Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" readonly class="form-control bg-light" id="booking_amount" name="booking_amount" 
+                               value="{{ old('booking_amount', $carbooking['0']['adv_amount']) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Finance Amount <span class="text-danger">*</span></label>
+                        <input type="number"  class="form-control" id="finance_amount" name="finance_amount" 
+                               value="{{ old('finance_amount', $carbooking['0']['finance_amount']) }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Down Payment <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" class="form-control bg-warning bg-opacity-10 fw-bold" id="dp" name="dp" 
+                               value="{{ old('dp', $carbooking['0']['due_amount']) }}" readonly>
+                        <small class="text-muted" style="font-size: 0.75rem;">(Sell - Advance - Finance)</small>
+                    </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+                    <div class="col-md-4">
+                        <label class="form-label">Payment Mode</label>
+                        <select class="form-select" name="paymentMode">
+                            <option value="">Select Mode...</option>
+                            <option value="Cash" {{ old('paymentMode') == 'Cash' ? 'selected' : '' }}>Cash</option>
+                            <option value="Cash+UPI" {{ old('paymentMode') == 'Cash+UPI' ? 'selected' : '' }}>Cash+UPI</option>
+                            <option value="UPI" {{ old('paymentMode') == 'UPI' ? 'selected' : '' }}>UPI</option>
+                            <option value="Neft" {{ old('paymentMode') == 'Neft' ? 'selected' : '' }}>NEFT</option>
+                            <option value="RTGS" {{ old('paymentMode') == 'RTGS' ? 'selected' : '' }}>RTGS</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Select Financer</label>
+                        <select class="form-select" name="financer">
+                            <option value="">Select Financer...</option>
+                            @foreach ($financer as $item)
+                            <option value="{{$item->financer_name}}" {{ old('financer') == $item->financer_name ? 'selected' : '' }}>
+                                {{$item->financer_name}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Delivery Remarks</label>
+                        <textarea class="form-control" id="remarks" rows="2" name="remarks">{{ old('remarks') }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script>
-        $(function() {
-            $('#sell_amount, #booking_amount, #finance_amount').keyup(function() {
-                var value1 = parseFloat($('#sell_amount').val()) || 0;
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <i class="bi bi-clipboard-check me-1"></i> Pre-Delivery Inspection (PDI) Report
+            </div>
+            <div class="card-body pt-3">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Electrical Work <span class="text-danger">*</span></label>
+                        <select class="form-select" name="electricle_work">
+                            <option value="">Select Status...</option>
+                            <option value="All OK" {{ old('electricle_work') == 'All OK' ? 'selected' : '' }}>All OK</option>
+                            <option value="Not OK" {{ old('electricle_work') == 'Not OK' ? 'selected' : '' }}>Not OK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">AC Condition <span class="text-danger">*</span></label>
+                        <select class="form-select" name="ac_work_status">
+                            <option value="">Select Status...</option>
+                            <option value="Working" {{ old('ac_work_status') == 'Working' ? 'selected' : '' }}>Working</option>
+                            <option value="Not Working" {{ old('ac_work_status') == 'Not Working' ? 'selected' : '' }}>Not Working</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Suspension <span class="text-danger">*</span></label>
+                        <select class="form-select" name="suspenstion_status">
+                            <option value="">Select Status...</option>
+                            <option value="All OK" {{ old('suspenstion_status') == 'All OK' ? 'selected' : '' }}>All OK</option>
+                            <option value="Not OK" {{ old('suspenstion_status') == 'Not OK' ? 'selected' : '' }}>Not OK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Engine Condition <span class="text-danger">*</span></label>
+                        <select class="form-select" name="engine_status">
+                            <option value="">Select Status...</option>
+                            <option value="Good" {{ old('engine_status') == 'Good' ? 'selected' : '' }}>Good</option>
+                            <option value="Very Good" {{ old('engine_status') == 'Very Good' ? 'selected' : '' }}>Very Good</option>
+                            <option value="Excellent" {{ old('engine_status') == 'Excellent' ? 'selected' : '' }}>Excellent</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Starting <span class="text-danger">*</span></label>
+                        <select class="form-select" name="starting_status">
+                            <option value="">Select Status...</option>
+                            <option value="Normal" {{ old('starting_status') == 'Normal' ? 'selected' : '' }}>Normal</option>
+                            <option value="Long Start" {{ old('starting_status') == 'Long Start' ? 'selected' : '' }}>Long Start</option>
+                            <option value="Not Starting" {{ old('starting_status') == 'Not Starting' ? 'selected' : '' }}>Not Starting</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Stepny <span class="text-danger">*</span></label>
+                        <select class="form-select" name="stepny_status">
+                            <option value="">Select Status...</option>
+                            <option value="Available" {{ old('stepny_status') == 'Available' ? 'selected' : '' }}>Available</option>
+                            <option value="Not Available" {{ old('stepny_status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Jack, Wrench, Pana <span class="text-danger">*</span></label>
+                        <select class="form-select" name="tools_kit_status">
+                            <option value="">Select Status...</option>
+                            <option value="Available" {{ old('tools_kit_status') == 'Available' ? 'selected' : '' }}>Available</option>
+                            <option value="Not Available" {{ old('tools_kit_status') == 'Not Available' ? 'selected' : '' }}>Not Available</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Inspection By <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="inspection_by" value="{{ old('inspection_by') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Upload PDI Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" name="pdi_image">
+                        </div>
+                    <div class="col-md-6">
+                        <label class="form-label">PDI Remarks</label>
+                        <textarea class="form-control" rows="1" name="pdi_remarks">{{ old('pdi_remarks') }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                var value2 = parseFloat($('#booking_amount').val()) || 0;
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-lg btn-success px-5">
+                <i class="bi bi-check-circle-fill"></i> Submit Delivery Details
+            </button>
+        </div>
 
-                var value3 = parseFloat($('#finance_amount').val()) || 0;
+    </form>
+</section>
+@endsection
 
-                var tot = value1 - value2;
+@section('script')
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
-                $('#dp').val(tot - value3);
-            });
+<script>
+    $(document).ready(function() {
+        // Function to calculate Down Payment
+        function calculateDownPayment() {
+            var sellAmount = parseFloat($('#sell_amount').val()) || 0;
+            var bookingAmount = parseFloat($('#booking_amount').val()) || 0;
+            var financeAmount = parseFloat($('#finance_amount').val()) || 0;
+
+            var remaining = sellAmount - bookingAmount;
+            var downPayment = remaining - financeAmount;
+
+            // Update the Down Payment field
+            $('#dp').val(downPayment.toFixed(2)); // Keeping 2 decimal places
+        }
+
+        // Trigger calculation when any relevant field changes
+        $('#sell_amount, #booking_amount, #finance_amount').on('keyup change', function() {
+            calculateDownPayment();
         });
-    </script>
 
-    @endsection
+        // Run once on page load to set initial values
+        calculateDownPayment();
+    });
+</script>
+@endsection

@@ -2,353 +2,372 @@
 
 @section('title', 'Dashboard | Car 4 Sales')
 
-
 @section('style')
+    <style>
+        body {
+            background: #f5f7fb
+        }
+
+        .modern-card {
+            border: none;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .06);
+            transition: .3s
+        }
+
+        .modern-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .12)
+        }
+
+        .icon-box {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: #fff
+        }
+
+        .icon-blue {
+            background: linear-gradient(135deg, #007bff, #00c6ff)
+        }
+
+        .icon-green {
+            background: linear-gradient(135deg, #22c55e, #16a34a)
+        }
+
+        .icon-purple {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9)
+        }
+
+        .icon-orange {
+            background: linear-gradient(135deg, #f59e0b, #f97316)
+        }
+
+        .metric {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1e293b
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: #64748b;
+            text-transform: uppercase
+        }
+
+        .chart-card {
+            border-radius: 20px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .08)
+        }
+
+        @media(max-width:768px) {
+            .metric {
+                font-size: 24px
+            }
+
+            .icon-box {
+                width: 48px;
+                height: 48px;
+                font-size: 22px
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
+
     <div class="pagetitle">
         <h1>Dashboard</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section dashboard">
-        <div class="row">
 
-            <!-- Left side columns -->
-            <div class="col-lg-12">
-                <div class="row">
-                    <!-- Sales Card -->
-                    <div class="col-xxl-4 col-md-4">
-                        <div class="card info-card sales-card">
+        <!-- KPI ROW 1 -->
+        <div class="row g-4">
 
-                            <div class="card-body">
-                                <h5 class="card-title">Total Stock <span>| Today</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-car-front-fill"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>{{ $totalstock }} </h6>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- TOTAL STOCK -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card modern-card">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="metric-label">Total Stock</div>
+                            <div class="metric live-counter" data-key="total-stock">{{ $totalstock }}</div>
                         </div>
-                    </div><!-- End Sales Card -->
-
-                    <!-- Revenue Card -->
-                    <div class="col-xxl-4 col-md-4">
-                        <div class="card info-card revenue-card">
-                            <div class="card-body">
-                                <h5 class="card-title"> Total Booked Car <span>| {{ $totalbooking }}</span></h5>
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-car-front-fill"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Today</p>
-                                        <h6>{{ $todaybookedcar }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>{{ $currentMonthName }}</p>
-                                        <h6>{{ $currentmonthbooking }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div><!-- End Revenue Card -->
-                    <!-- Delivary Card -->
-                    <div class="col-xxl-4 col-md-4">
-                        <div class="card info-card revenue-card">
-                            <div class="card-body">
-                                <h5 class="card-title"> Total Delivered Car <span>| {{ $totaldelivary }}</span></h5>
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-car-front-fill"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Today</p>
-                                        <h6>{{ $todaydelivary }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>{{ $currentMonthName }}</p>
-                                        <h6>{{ $currentmonthdelivary }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div><!-- End Delivary Card -->
-
-                    <!-- Customers Card -->
-                    <div class="col-xxl-4 col-md-4">
-
-                        <div class="card info-card customers-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">Total <span>| Contacts</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Contact</p>
-                                        <h6>{{ $contacts }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Today</p>
-                                        <h6>{{ $todaycontacts }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>JD Data</p>
-                                        <h6 id="jd_data">loading....</h6>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
-                    <!-- Customers Card -->
-                    <div class="col-xxl-4 col-md-4">
-
-                        <div class="card info-card customers-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">Cloud Call Count</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-cloud-check-fill"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Old Data</p>
-                                        <h6>{{ $cloud_contacts }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>New Total Data</p>
-                                        <h6 id="qkonnectTotalData">Loading...</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Today</p>
-                                        <h6 id="qkonnectTodayData">Loading...</h6>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
-                    <!-- Customers Card -->
-                    <div class="col-xxl-4 col-md-4">
-
-                        <div class="card info-card customers-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">Total <span>| Visitor</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Total Visitor</p>
-                                        <h6>{{ $totalvisitor }}</h6>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Today Visitor</p>
-                                        <h6>{{ $todayvisitor }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
-                    <div class="col-xxl-4 col-md-4">
-
-                        <div class="card info-card customers-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">SMS <span>| Balance</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>SMS Balance</p>
-                                        <h6>{{ $balance }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
-                    <div class="col-xxl-4 col-md-4">
-
-                        <div class="card info-card customers-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">Finance File <span>| Status</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-car-front-fill"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <p>Ready for Deliver</p>
-                                        <h6>{{ $readyfordelivary }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div><!-- End Customers Card -->
-                    <!-- Revenue Card -->
-                    <div class="col-xxl-3 col-md-3">
-                        <div class="card info-card revenue-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Folloup Pending</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-people-fill" style = "color:red;"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>{{ $Pendingtilltoday }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div><!-- End Revenue Card -->
-
+                        <div class="icon-box icon-blue"><i class="bi bi-car-front-fill"></i></div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Deliver Report</h5>
-
-                                <!-- Bar Chart -->
-                                <canvas id="barChart" style="max-height: 400px;"></canvas>
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-
-                                        let barChart; // To store chart instance
-
-                                        function loadBarChart() {
-                                            $.ajax({
-                                                url: "{{ route('chart.data') }}",
-                                                method: "GET",
-                                                dataType: "json",
-                                                success: function(response) {
-                                                    const labels = response.labels;
-                                                    const values = response.values;
-
-                                                    const ctx = document.getElementById('barChart').getContext('2d');
-
-                                                    // Destroy previous chart if exists (for reloads)
-                                                    if (barChart) {
-                                                        barChart.destroy();
-                                                    }
-
-                                                    barChart = new Chart(ctx, {
-                                                        type: 'bar',
-                                                        data: {
-                                                            labels: labels,
-                                                            datasets: [{
-                                                                label: 'Total Sale',
-                                                                data: values,
-                                                                backgroundColor: [
-                                                                    'rgba(255, 99, 132, 0.2)',
-                                                                    'rgba(255, 159, 64, 0.2)',
-                                                                    'rgba(255, 205, 86, 0.2)',
-                                                                    'rgba(75, 192, 192, 0.2)',
-                                                                    'rgba(54, 162, 235, 0.2)',
-                                                                    'rgba(153, 102, 255, 0.2)',
-                                                                    'rgba(201, 203, 207, 0.2)'
-                                                                ],
-                                                                borderColor: [
-                                                                    'rgb(255, 99, 132)',
-                                                                    'rgb(255, 159, 64)',
-                                                                    'rgb(255, 205, 86)',
-                                                                    'rgb(75, 192, 192)',
-                                                                    'rgb(54, 162, 235)',
-                                                                    'rgb(153, 102, 255)',
-                                                                    'rgb(201, 203, 207)'
-                                                                ],
-                                                                borderWidth: 1
-                                                            }]
-                                                        },
-                                                        options: {
-                                                            responsive: true,
-                                                            scales: {
-                                                                y: {
-                                                                    beginAtZero: true
-                                                                }
-                                                            }
-                                                        }
-                                                    });
-                                                },
-                                                error: function(xhr, status, error) {
-                                                    console.error("Error loading chart data:", error);
-                                                }
-                                            });
-                                        }
-
-                                        // Call function on page load
-                                        loadBarChart();
-                                    });
-                                </script>
-                                <!-- End Bar CHart -->
-
+            <!-- TOTAL BOOKED -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="metric-label">Total Booked</div>
+                                <div class="metric live-counter" data-key="total-booked">{{ $totalbooking }}</div>
+                            </div>
+                            <div class="icon-box icon-green"><i class="bi bi-check-circle-fill"></i></div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between text-center">
+                            <div>
+                                <small>Today</small>
+                                <h6>{{ $todaybookedcar }}</h6>
+                            </div>
+                            <div>
+                                <small>{{ $currentMonthName }}</small>
+                                <h6>{{ $currentmonthbooking }}</h6>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+            </div>
+
+            <!-- DELIVERED -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="metric-label">Delivered</div>
+                                <div class="metric live-counter" data-key="delivered-cars">{{ $totaldelivary }}</div>
+                            </div>
+                            <div class="icon-box icon-purple"><i class="bi bi-truck"></i></div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between text-center">
+                            <div>
+                                <small>Today</small>
+                                <h6>{{ $todaydelivary }}</h6>
+                            </div>
+                            <div>
+                                <small>{{ $currentMonthName }}</small>
+                                <h6>{{ $currentmonthdelivary }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- KPI ROW 2 -->
+        <div class="row g-4 mt-1">
+            <!-- CLOUD CALL -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="metric-label">Cloud Calls</div>
+                                <div class="metric live-counter" data-key="cloud-calls">{{ $cloud_contacts }}</div>
+                            </div>
+                            <div class="icon-box icon-blue"><i class="bi bi-cloud-check-fill"></i></div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between text-center">
+                            <div>
+                                <small>Today</small>
+                                <h6>{{ $today_cloud_contacts }}</h6>
+                            </div>
+                            <div>
+                                <small>Qkonnect</small>
+                                <h6>{{ $qkonnect_contacts }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACTS -->
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card modern-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="metric-label">Total Contacts</div>
+                                <div class="metric live-counter" data-key="total-contacts">{{ $contacts }}</div>
+                            </div>
+                            <div class="icon-box icon-orange"><i class="bi bi-people-fill"></i></div>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <small>Today</small>
+                            <h6>{{ $todaycontacts }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CHART ROW -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card chart-card">
+                    <div class="card-body">
+                        <h5 class="fw-bold">📊 Delivery Report</h5>
+                        <div style="height:320px">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 @endsection
 
 @section('script')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-        crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function() {
-            function fetchDashboardData() {
+        function animateValue(el, start, end) {
+            let s = null;
+
+            function step(t) {
+                if (!s) s = t;
+                let p = Math.min((t - s) / 800, 1);
+                el.innerText = Math.floor(p * (end - start) + start);
+                if (p < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function refreshKPIs() {
+            $.get("{{ route('dashboard.live.kpis') }}", function(data) {
+                $('.live-counter').each(function() {
+                    let key = $(this).data('key');
+                    if (data[key] !== undefined) {
+                        let oldVal = parseInt($(this).text());
+                        if (oldVal !== data[key]) {
+                            animateValue(this, oldVal, data[key]);
+                        }
+                    }
+                });
+            });
+        }
+        refreshKPIs();
+        setInterval(refreshKPIs, 60000);
+    </script>
+
+    <script>
+        $(function() {
+
+            let deliveryChart;
+
+            function loadDeliveryChart() {
+
                 $.ajax({
-                    url: "{{ route('dashboard_data') }}",
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        //console.log(response);
-                        $('#qkonnectTotalData').text(response.total_qkonnect_data);
-                        $('#qkonnectTodayData').text(response.today_qkonnect_contacts);
-                        $('#jd_data').text(response.just_dail_contacts);
+                    url: "{{ route('chart.data') }}",
+                    method: "GET",
+                    dataType: "json",
+                    success: function(res) {
+
+                        // 🔴 SAFETY CHECK (VERY IMPORTANT)
+                        if (!res.labels || !res.booking || !res.delivery) {
+                            console.error('Invalid chart data:', res);
+                            return;
+                        }
+
+                        const ctx = document.getElementById('barChart').getContext('2d');
+
+                        if (deliveryChart) {
+                            deliveryChart.destroy();
+                        }
+
+                        // BAR GRADIENT
+                        const barGradient = ctx.createLinearGradient(0, 0, 0, 300);
+                        barGradient.addColorStop(0, '#36a2eb');
+                        barGradient.addColorStop(1, '#9bd0f5');
+
+                        deliveryChart = new Chart(ctx, {
+                            data: {
+                                labels: res.labels,
+                                datasets: [{
+                                        type: 'bar',
+                                        label: 'Delivered Cars',
+                                        data: res.delivery,
+                                        backgroundColor: barGradient,
+                                        borderRadius: 12,
+                                        borderSkipped: false
+                                    },
+                                    {
+                                        type: 'line',
+                                        label: 'Booked Cars',
+                                        data: res.booking,
+                                        borderColor: '#22c55e',
+                                        backgroundColor: 'rgba(34,197,94,0.15)',
+                                        tension: 0.4,
+                                        fill: true,
+                                        pointRadius: 5,
+                                        pointHoverRadius: 7,
+                                        pointBackgroundColor: '#22c55e'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                animation: {
+                                    duration: 1200,
+                                    easing: 'easeOutQuart'
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                        labels: {
+                                            usePointStyle: true,
+                                            padding: 16
+                                        }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: '#1e293b',
+                                        titleColor: '#fff',
+                                        bodyColor: '#fff',
+                                        cornerRadius: 8
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            color: '#e5e7eb'
+                                        },
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching dashboard data:', error);
+                    error: function(xhr) {
+                        console.error('Chart AJAX error:', xhr.responseText);
                     }
                 });
             }
-            // Initial fetch
-            fetchDashboardData();
-            // Set interval to fetch data every 1 minutes (300000 milliseconds)
-            setInterval(fetchDashboardData, 60000);
+
+            // Initial load
+            loadDeliveryChart();
+
+            // OPTIONAL auto refresh
+            // setInterval(loadDeliveryChart, 60000);
         });
     </script>
+
+
 
 @endsection

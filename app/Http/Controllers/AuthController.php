@@ -14,6 +14,7 @@ use App\Models\BranchModel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -131,7 +132,7 @@ class AuthController extends Controller
         return view('admin.change-password');
     }
 
-     public function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
@@ -243,6 +244,46 @@ class AuthController extends Controller
 
         return view('admin.dashboard', $data);
     }
+
+    public function liveDashboardKpis()
+    {
+        return response()->json([
+            'total-stock' => Cache::remember(
+                'kpi_total_stock',
+                60,
+                fn() => DB::table('car_stock')
+                    ->where('stock_status', '!=', '3')
+                    ->count()
+            ),
+
+            'total-booked' => Cache::remember(
+                'kpi_total_booked',
+                60,
+                fn() => DB::table('car_booking')->count()
+            ),
+
+            'delivered-cars' => Cache::remember(
+                'kpi_delivered_cars',
+                60,
+                fn() => DB::table('car_delivary')->count()
+            ),
+
+            'cloud-calls' => Cache::remember(
+                'kpi_cloud_calls',
+                60,
+                fn() => DB::table('cloud_calling_data')
+                    ->distinct()
+                    ->count('customer_number')
+            ),
+
+            'total-contacts' => Cache::remember(
+                'kpi_total_contacts',
+                60,
+                fn() => DB::table('customer_lead')->count()
+            ),
+        ]);
+    }
+
 
     public function branch()
     {

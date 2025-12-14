@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Yajra\DataTables\Facades\DataTables;
 
 class StockController extends Controller
 {
@@ -123,126 +124,327 @@ class StockController extends Controller
         return view('admin.add-booking', $data);
     }
 
+    // public function storebooking(Request $req)
+    // {
+    //     $req->validate([
+    //         'reg_number' => 'required',
+    //         'booking_person' => 'required',
+    //         'customer' => 'required',
+    //         'total_amount' => 'required',
+    //         'adv_amount' => 'required',
+    //         'dp' => 'required',
+    //         'finance_amount' => 'required',
+    //         'remarks' => 'required',
+    //     ]);
+    //     $today = date('dmY');
+    //     $serviceJobNumber = BookingModel::where('booking_no', 'like', $today . '%')->pluck('booking_no');
+    //     do {
+    //         $book_no = $today . rand(111111, 999999);
+    //     } while ($serviceJobNumber->contains($book_no));
+
+    //     $car_no = DB::table('car_stock')
+    //         ->where('id', $req->reg_number)
+    //         ->select('reg_number')
+    //         ->first();
+
+    //     $carreg = $car_no->reg_number;
+
+    //     $car_model_name = DB::table('car_stock')
+    //         ->where('id', $req->reg_number)
+    //         ->select('car_model')
+    //         ->first();
+    //     $carmodel = $car_model_name->car_model;
+
+    //     $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
+
+    //     $customerdetails=DB::table('ledger')
+    //                     ->where('id', $req->customer)
+    //                     ->select('mobile_number','name')
+    //                     ->first(); 
+
+
+    //     $paymentMode = $req->paymentMode;
+
+    //     $BookingModel = new BookingModel();
+
+    //     $BookingModel->car_stock_id = $req->reg_number;
+    //     $BookingModel->booking_no = $book_no;
+    //     $BookingModel->customer_ledger_id = $req->customer;
+    //     $BookingModel->booking_person = $req->booking_person;
+    //     $BookingModel->total_amount = $req->total_amount;
+    //     $BookingModel->adv_amount = $req->adv_amount;
+    //     $BookingModel->due_amount = $req->dp;
+    //     $BookingModel->finance_amount = $req->finance_amount;
+    //     $BookingModel->remarks = $req->remarks;
+    //     $BookingModel->created_by = Auth::user()->name;
+    //     $BookingModel->save();
+    //     $lastid = $BookingModel->id;
+
+    //     if ($lastid) {
+    //         $CustomerStatementModel = new CustomerStatementModel();
+    //         $CustomerStatementModel->customer_id = $req->customer;
+    //         $CustomerStatementModel->payment_type = 0;
+    //         $CustomerStatementModel->amount = -$req->total_amount;
+    //         $CustomerStatementModel->particular = 'Amount Debited for ' . '-' . $carreg . '-' . $carmodel . '-' . $mytime;
+    //         $CustomerStatementModel->created_by = Auth::user()->name;
+    //         $CustomerStatementModel->save();
+    //         $lastid_1 = $BookingModel->id;
+
+    //         if ($lastid_1) {
+    //             $CustomerStatementModel = new CustomerStatementModel();
+    //             $CustomerStatementModel->customer_id = $req->customer;
+    //             $CustomerStatementModel->payment_type = 1;
+    //             $CustomerStatementModel->amount = $req->adv_amount;
+    //             $CustomerStatementModel->particular = 'Amount Credited for Booking Amount for' . '-' . $carreg . '-' . $carmodel . '-' . $paymentMode . '-' . $mytime;
+    //             $CustomerStatementModel->created_by = Auth::user()->name;
+    //             $CustomerStatementModel->save();
+    //             $lastid_1 = $BookingModel->id;
+    //         }
+    //     }
+
+    //     $Stockstatus = StockModel::find($req->reg_number);
+    //     $Stockstatus->stock_status = 1;
+    //     $Stockstatus->update();
+
+    //     $sender = 'CAR4SL';
+    //     $mob = $customerdetails->mobile_number;
+    //     $name = $customerdetails->name;
+    //     $auth = '3HqJI';
+    //     $entid = '1701171869640632437';
+    //     $temid = '1707172716926156370';
+    //     $mob2 = [$mob];
+    //     $mob3 = implode(',', $mob2);
+    //     $msg1 = urlencode('प्रिय '. $name . ",\nCar4Sales को चुनने के लिए धन्यवाद! हम आपकी बुक की गई गाड़ी को जल्द से जल्द डिलीवर करने का प्रयास कर रहे हैं।\nकृपया वित्तीय प्रक्रिया को पूरा करने के लिए अपने आवश्यक दस्तावेज़ शीघ्र उपलब्ध कराएं। \nधन्यवाद,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
+
+    //     $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
+
+    //     //sms from here
+
+    //     function SendSMS($hostUrl)
+    //     {
+    //         $ch = curl_init();
+    //         curl_setopt($ch, CURLOPT_URL, $hostUrl);
+    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    //         curl_setopt($ch, CURLOPT_POST, 0);
+    //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
+    //         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    //         $result = curl_exec($ch);
+    //         return $result;
+    //     }
+
+    //     $raa = SendSMS($url); // call function that return response with code
+
+    //     return back()->with('success', ' Booking  Added Successfully: ' . $lastid);
+    // }
+
     public function storebooking(Request $req)
     {
+        // 1. Validate Inputs
         $req->validate([
-            'reg_number' => 'required',
+            'reg_number'     => 'required',
             'booking_person' => 'required',
-            'customer' => 'required',
-            'total_amount' => 'required',
-            'adv_amount' => 'required',
-            'dp' => 'required',
-            'finance_amount' => 'required',
-            'remarks' => 'required',
+            'customer'       => 'required',
+            'total_amount'   => 'required|numeric',
+            'adv_amount'     => 'required|numeric',
+            'dp'             => 'required|numeric',
+            'finance_amount' => 'required|numeric',
+            'remarks'        => 'required',
         ]);
-        $today = date('dmY');
-        $serviceJobNumber = BookingModel::where('booking_no', 'like', $today . '%')->pluck('booking_no');
-        do {
-            $book_no = $today . rand(111111, 999999);
-        } while ($serviceJobNumber->contains($book_no));
 
-        $car_no = DB::table('car_stock')
-            ->where('id', $req->reg_number)
-            ->select('reg_number')
-            ->first();
+        // =========================================================
+        // DUPLICATE CHECK START
+        // Criteria: Same User, Same Customer, Same Vehicle, Same Amount
+        // =========================================================
 
-        $carreg = $car_no->reg_number;
+        $isDuplicate = BookingModel::where('car_stock_id', $req->reg_number) // Same Vehicle
+            ->where('customer_ledger_id', $req->customer)                    // Same Customer
+            ->where('total_amount', $req->total_amount)                      // Same Amount
+            ->where('created_by', Auth::user()->name)                        // Same User
+            ->exists(); // Returns true if record exists
 
-        $car_model_name = DB::table('car_stock')
-            ->where('id', $req->reg_number)
-            ->select('car_model')
-            ->first();
-        $carmodel = $car_model_name->car_model;
+        if ($isDuplicate) {
+            return back()->with('error', 'DUPLICATE ENTRY DETECTED: You have already created a booking for this Customer, Vehicle, and Amount.');
+        }
 
-        $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
+        // Optional: Check if vehicle is already sold to ANYONE else (Extra Safety)
+        $stockCheck = StockModel::find($req->reg_number);
+        if ($stockCheck && $stockCheck->stock_status == 3) {
+            return back()->with('error', 'VEHICLE ERROR: This vehicle is already marked as Booked/Sold.');
+        }
+        // =========================================================
+        // DUPLICATE CHECK END
+        // =========================================================
 
-        $customerdetails=DB::table('ledger')
-                        ->where('id', $req->customer)
-                        ->select('mobile_number','name')
-                        ->first(); 
+        try {
+            DB::transaction(function () use ($req) {
 
+                // Generate Booking Number
+                $today = date('dmY');
+                do {
+                    $book_no = $today . rand(111111, 999999);
+                } while (BookingModel::where('booking_no', $book_no)->exists());
 
-        $paymentMode = $req->paymentMode;
+                // Fetch Details
+                $car_no = DB::table('car_stock')->where('id', $req->reg_number)->first();
+                $customerdetails = DB::table('ledger')->where('id', $req->customer)->first();
 
-        $BookingModel = new BookingModel();
+                $carreg = $car_no->reg_number;
+                $carmodel = $car_no->car_model;
+                $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
+                $paymentMode = $req->paymentMode;
 
-        $BookingModel->car_stock_id = $req->reg_number;
-        $BookingModel->booking_no = $book_no;
-        $BookingModel->customer_ledger_id = $req->customer;
-        $BookingModel->booking_person = $req->booking_person;
-        $BookingModel->total_amount = $req->total_amount;
-        $BookingModel->adv_amount = $req->adv_amount;
-        $BookingModel->due_amount = $req->dp;
-        $BookingModel->finance_amount = $req->finance_amount;
-        $BookingModel->remarks = $req->remarks;
-        $BookingModel->created_by = Auth::user()->name;
-        $BookingModel->save();
-        $lastid = $BookingModel->id;
+                // Save Booking
+                $BookingModel = new BookingModel();
+                $BookingModel->car_stock_id       = $req->reg_number;
+                $BookingModel->booking_no         = $book_no;
+                $BookingModel->customer_ledger_id = $req->customer;
+                $BookingModel->booking_person     = $req->booking_person;
+                $BookingModel->total_amount       = $req->total_amount;
+                $BookingModel->adv_amount         = $req->adv_amount;
+                $BookingModel->due_amount         = $req->dp;
+                $BookingModel->finance_amount     = $req->finance_amount;
+                $BookingModel->remarks            = $req->remarks;
+                //$BookingModel->payment_mode       = $req->paymentMode;
+                $BookingModel->created_by         = Auth::user()->name;
+                $BookingModel->save();
 
-        if ($lastid) {
-            $CustomerStatementModel = new CustomerStatementModel();
-            $CustomerStatementModel->customer_id = $req->customer;
-            $CustomerStatementModel->payment_type = 0;
-            $CustomerStatementModel->amount = -$req->total_amount;
-            $CustomerStatementModel->particular = 'Amount Debited for ' . '-' . $carreg . '-' . $carmodel . '-' . $mytime;
-            $CustomerStatementModel->created_by = Auth::user()->name;
-            $CustomerStatementModel->save();
-            $lastid_1 = $BookingModel->id;
-
-            if ($lastid_1) {
+                // Save Ledger (Debit)
                 $CustomerStatementModel = new CustomerStatementModel();
-                $CustomerStatementModel->customer_id = $req->customer;
-                $CustomerStatementModel->payment_type = 1;
-                $CustomerStatementModel->amount = $req->adv_amount;
-                $CustomerStatementModel->particular = 'Amount Credited for Booking Amount for' . '-' . $carreg . '-' . $carmodel . '-' . $paymentMode . '-' . $mytime;
-                $CustomerStatementModel->created_by = Auth::user()->name;
+                $CustomerStatementModel->customer_id  = $req->customer;
+                $CustomerStatementModel->payment_type = 0;
+                $CustomerStatementModel->amount       = -$req->total_amount;
+                $CustomerStatementModel->particular   = 'Amount Debited for ' . '-' . $carreg . '-' . $carmodel . '-' . $mytime;
+                $CustomerStatementModel->created_by   = Auth::user()->name;
                 $CustomerStatementModel->save();
-                $lastid_1 = $BookingModel->id;
-            }
+
+                // Save Ledger (Credit)
+                $CustomerStatementModel = new CustomerStatementModel();
+                $CustomerStatementModel->customer_id  = $req->customer;
+                $CustomerStatementModel->payment_type = 1;
+                $CustomerStatementModel->amount       = $req->adv_amount;
+                $CustomerStatementModel->particular   = 'Amount Credited for Booking Amount for' . '-' . $carreg . '-' . $carmodel . '-' . $paymentMode . '-' . $mytime;
+                $CustomerStatementModel->created_by   = Auth::user()->name;
+                $CustomerStatementModel->save();
+
+                // Update Stock
+                $Stockstatus = StockModel::find($req->reg_number);
+                if ($Stockstatus) {
+                    $Stockstatus->stock_status = 1;
+                    $Stockstatus->update();
+                }
+
+                // Send SMS
+                // if ($customerdetails) {
+                //     $this->sendBookingSMS($customerdetails);
+                // }
+            });
+
+            return back()->with('success', 'Booking Added Successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error: ' . $e->getMessage());
         }
-
-        $Stockstatus = StockModel::find($req->reg_number);
-        $Stockstatus->stock_status = 1;
-        $Stockstatus->update();
-
-        $sender = 'CAR4SL';
-        $mob = $customerdetails->mobile_number;
-        $name = $customerdetails->name;
-        $auth = '3HqJI';
-        $entid = '1701171869640632437';
-        $temid = '1707172716926156370';
-        $mob2 = [$mob];
-        $mob3 = implode(',', $mob2);
-        $msg1 = urlencode('प्रिय '. $name . ",\nCar4Sales को चुनने के लिए धन्यवाद! हम आपकी बुक की गई गाड़ी को जल्द से जल्द डिलीवर करने का प्रयास कर रहे हैं।\nकृपया वित्तीय प्रक्रिया को पूरा करने के लिए अपने आवश्यक दस्तावेज़ शीघ्र उपलब्ध कराएं। \nधन्यवाद,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा  \nफोन: 7779995656");
-
-        $url = 'https://pgapi.vispl.in/fe/api/v1/multiSend?username=car4sales.trans&password=3HqJI&unicode=true&from=' . $sender . '&to=' . $mob . '&dltPrincipalEntityId=' . $entid . '&dltContentId=' . $temid . '&text=' . $msg1;
-
-        //sms from here
-
-        function SendSMS($hostUrl)
-        {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $hostUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_POST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // change to 1 to verify cert
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-            $result = curl_exec($ch);
-            return $result;
-        }
-
-        $raa = SendSMS($url); // call function that return response with code
-
-        return back()->with('success', ' Booking  Added Successfully: ' . $lastid);
     }
 
-    public function viewbooking()
+    // Helper function for SMS
+    public function sendBookingSMS($customerdetails)
     {
-        $data['carbooking'] = BookingModel::getRecord();
+        try {
+            $sender = 'CAR4SL';
+            $mob = $customerdetails->mobile_number;
+            $name = $customerdetails->name;
+            $auth = '3HqJI';
+            $entid = '1701171869640632437';
+            $temid = '1707172716926156370';
 
-        return view('admin.booking.view-booking', $data);
+            $msg1 = "प्रिय {$name},\nCar4Sales को चुनने के लिए धन्यवाद! हम आपकी बुक की गई गाड़ी को जल्द से जल्द डिलीवर करने का प्रयास कर रहे हैं।\nकृपया वित्तीय प्रक्रिया को पूरा करने के लिए अपने आवश्यक दस्तावेज़ शीघ्र उपलब्ध कराएं। \nधन्यवाद,\nसादर,\nCar4Sales, \nमुजफ्फरपुर, मोतिहारी, दरभंगा \nफोन: 7779995656";
+
+            Http::get('https://pgapi.vispl.in/fe/api/v1/multiSend', [
+                'username' => 'car4sales.trans',
+                'password' => $auth,
+                'unicode' => 'true',
+                'from' => $sender,
+                'to' => $mob,
+                'dltPrincipalEntityId' => $entid,
+                'dltContentId' => $temid,
+                'text' => $msg1
+            ]);
+        } catch (\Exception $e) {
+        }
     }
+
+    // public function viewbooking()
+    // {
+    //     $data['carbooking'] = BookingModel::getRecord();
+
+    //     return view('admin.booking.view-booking', $data);
+    // }
+
+public function viewbooking(Request $request)
+{
+    if ($request->ajax()) {
+
+        $query = BookingModel::select(
+                    'car_booking.id',
+                    'car_booking.created_by',
+                    'car_booking.booking_no', // Make sure this column exists in your DB
+                    'car_booking.booking_person',
+                    'car_booking.total_amount',
+                    'car_booking.adv_amount',
+                    'car_booking.finance_amount',
+                    'car_booking.due_amount',
+                    'car_booking.remarks',
+                    'car_booking.created_at',
+                    'ledger.name as name', 
+                    'car_stock.car_model as carmodel', 
+                    'car_stock.reg_number as regnumber'
+                )
+                ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
+                ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
+                ->where('car_booking.stock_status', 1);
+
+        // --- DATE FILTER LOGIC ---
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereDate('car_booking.created_at', '>=', $request->from_date)
+                  ->whereDate('car_booking.created_at', '<=', $request->to_date);
+        } else {
+            $query->whereDate('car_booking.created_at', '>=', Carbon::now()->subDays(90));
+        }
+
+        // --- SORTING ---
+        $query->orderBy('car_booking.id', 'desc'); 
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('created_at', function($row){
+                return date('d-M-Y', strtotime($row->created_at));
+            })
+            // Use Safe Null Checks (?? '-')
+            ->addColumn('name', function($row){ return $row->name ?? '-'; })
+            
+            // --- FIX IS HERE: Return booking_no, NOT name ---
+            ->addColumn('booking_no', function($row){ return $row->booking_no ?? '-'; }) 
+            // ------------------------------------------------
+            
+            ->addColumn('regnumber', function($row){ return $row->regnumber ?? '-'; })
+            ->addColumn('carmodel', function($row){ return $row->carmodel ?? '-'; })
+            ->addColumn('action', function($row){
+                $printUrl = url('/admin/print-booking-pdf/'.$row->id);
+                $delUrl = url('/admin/delivary/add-delivary/'.$row->id);
+                return '<div class="d-flex gap-1">
+                            <a href="'.$printUrl.'" class="badge bg-primary">Print</a>
+                            <a href="'.$delUrl.'" class="badge bg-success">Delivery</a>
+                        </div>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    // --- CRITICAL: Return the view for normal page load ---
+    return view('admin.booking.view-booking');
+}
+
+
     public function trafficchallan()
     {
         return view('admin.traffic-challan');
@@ -258,148 +460,265 @@ class StockController extends Controller
         return $pdf->download($regnumber . '.pdf');
     }
 
+
     public function adddelivary(Request $req, $id)
     {
         $data['carbooking'] = BookingModel::getRecordpdf($id);
 
         $regnumber = $data['carbooking'][0]['regnumber'];
-        $data['financer'] = DB::table('financer_details')->orderBy('financer_name','asc')->get();
+        $data['financer'] = DB::table('financer_details')->orderBy('financer_name', 'asc')->get();
 
         return view('admin.delivary.add-delivary', $data);
     }
 
+    // public function insertdelivary(Request $req)
+    // {
+    //     $req->validate([
+    //         'booking_id' => 'required|numeric',
+    //         'booking_date' => 'required|date',
+    //         'booking_person' => 'required',
+    //         'name' => 'required',
+    //         'father_name' => 'required',
+    //         'mobile' => 'required|min_digits:10|max_digits:10',
+    //         'aadhar' => 'required|min_digits:10|max_digits:12',
+    //         'pan_card' => 'required|size:10',
+    //         'city' => 'required',
+    //         'address' => 'required',
+    //         'reg_number' => 'required',
+    //         'owner_sl_no' => 'required',
+    //         'model_name' => 'required',
+    //         'model_year' => 'required',
+    //         'car_color' => 'required',
+    //         'eng_number' => 'required',
+    //         'chassis_number' => 'required',
+    //         'sell_amount' => 'required',
+    //         'booking_amount' => 'required',
+    //         'finance_amount' => 'required',
+    //         'dp' => 'required',
+    //         'financer' => 'required',
+    //         'remarks' => 'required',
+    //         'electricle_work' => 'required',
+    //         'ac_work_status' => 'required',
+    //         'suspenstion_status' => 'required',
+    //         'engine_status' => 'required',
+    //         'starting_status' => 'required',
+    //         'stepny_status' => 'required',
+    //         'tools_kit_status' => 'required',
+    //         'inspection_by' => 'required',
+    //         'pdi_image' => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
+    //         'pdi_remarks' => 'required',
+    //     ]);
+
+    //     $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
+
+    //     $delivered_car = DB::table('car_delivary')
+    //         ->where('reg_number', $req->reg_number)
+    //         ->first();
+
+    //     if ($delivered_car) {
+    //         return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
+    //     } else {
+    //         $user = DB::table('car_booking')
+    //             ->where('booking_no', $req->booking_id)
+    //             ->first();
+    //         $customer_id = $user->customer_ledger_id;
+
+    //         $CarDelivaryModel = new CarDelivaryModel();
+
+    //         $CarDelivaryModel->booking_id = $req->booking_id;
+    //         $CarDelivaryModel->booking_date = $req->booking_date;
+    //         $CarDelivaryModel->booking_person = $req->booking_person;
+    //         $CarDelivaryModel->name = $req->name;
+    //         $CarDelivaryModel->father_name = $req->father_name;
+    //         $CarDelivaryModel->mobile = $req->mobile;
+    //         $CarDelivaryModel->aadhar = $req->aadhar;
+    //         $CarDelivaryModel->pan_card = $req->pan_card;
+    //         $CarDelivaryModel->city = $req->city;
+    //         $CarDelivaryModel->address = $req->address;
+    //         $CarDelivaryModel->reg_number = $req->reg_number;
+    //         $CarDelivaryModel->owner_sl_no = $req->owner_sl_no;
+    //         $CarDelivaryModel->model_name = $req->model_name;
+    //         $CarDelivaryModel->model_year = $req->model_year;
+    //         $CarDelivaryModel->car_color = $req->car_color;
+    //         $CarDelivaryModel->eng_number = $req->eng_number;
+    //         $CarDelivaryModel->chassis_number = $req->chassis_number;
+    //         $CarDelivaryModel->sell_amount = $req->sell_amount;
+    //         $CarDelivaryModel->booking_amount = $req->booking_amount;
+    //         $CarDelivaryModel->finance_amount = $req->finance_amount;
+    //         $CarDelivaryModel->dp = $req->dp;
+    //         $CarDelivaryModel->paymentMode = $req->paymentMode;
+    //         $CarDelivaryModel->financer = $req->financer;
+    //         $CarDelivaryModel->remarks = $req->remarks;
+    //         $CarDelivaryModel->electricle_work = $req->electricle_work;
+    //         $CarDelivaryModel->ac_work_status = $req->ac_work_status;
+    //         $CarDelivaryModel->suspenstion_status = $req->suspenstion_status;
+    //         $CarDelivaryModel->engine_status = $req->engine_status;
+    //         $CarDelivaryModel->starting_status = $req->starting_status;
+    //         $CarDelivaryModel->stepny_status = $req->stepny_status;
+    //         $CarDelivaryModel->tools_kit_status = $req->tools_kit_status;
+    //         $CarDelivaryModel->inspection_by = $req->inspection_by;
+    //         if ($req->hasFile('pdi_image')) {
+    //             $d = new DateTime();
+    //             $nd = $d->format("YmdHisv");
+    //             $regnumber = $req->reg_number;
+    //             $pdfext = $req->file('pdi_image')->getClientOriginalExtension();
+
+    //             $uniqueFileName = uniqid() . '_' . time() . '_' . $regnumber . '.' . $pdfext;
+
+    //             $file = $req->file('pdi_image');
+    //             $file->move('upload/pdi', $uniqueFileName);
+
+    //             $CarDelivaryModel->pdi_image = $uniqueFileName;
+    //         }
+
+    //         $CarDelivaryModel->pdi_remarks = $req->pdi_remarks;
+
+    //         $CarDelivaryModel->added_by = Auth::user()->name;
+    //         $CarDelivaryModel->save();
+    //         $lastid = $CarDelivaryModel->id;
+
+    //         if ($lastid) {
+    //             $CustomerStatementModel = new CustomerStatementModel();
+    //             $CustomerStatementModel->customer_id = $customer_id;
+    //             $CustomerStatementModel->payment_type = 1;
+    //             $CustomerStatementModel->amount = $req->dp;
+    //             $CustomerStatementModel->particular = 'Amount Credited for Down Payment for' . '-' . $req->reg_number . '-' . $req->model_name . '-' . $req->paymentMode . '-' . $mytime;
+    //             $CustomerStatementModel->created_by = Auth::user()->name;
+    //             $CustomerStatementModel->save();
+    //             $lastid_1 = $CustomerStatementModel->id;
+    //         }
+
+    //         if ($lastid_1) {
+    //             DB::table('car_booking')
+    //                 ->where('booking_no', $req->booking_id)
+    //                 ->update(['stock_status' => 3]);
+
+    //             DB::table('car_stock')
+    //                 ->where('reg_number', $req->reg_number)
+    //                 ->update(['stock_status' => 3]);
+    //         }
+
+    //         return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully ' . $lastid);
+    //     }
+    // }
+
     public function insertdelivary(Request $req)
     {
-        $req->validate([
-            'booking_id' => 'required|numeric',
-            'booking_date' => 'required|date',
-            'booking_person' => 'required',
-            'name' => 'required',
-            'father_name' => 'required',
-            'mobile' => 'required|min_digits:10|max_digits:10',
-            'aadhar' => 'required|min_digits:10|max_digits:12',
-            'pan_card' => 'required|size:10',
-            'city' => 'required',
-            'address' => 'required',
-            'reg_number' => 'required',
-            'owner_sl_no' => 'required',
-            'model_name' => 'required',
-            'model_year' => 'required',
-            'car_color' => 'required',
-            'eng_number' => 'required',
-            'chassis_number' => 'required',
-            'sell_amount' => 'required',
-            'booking_amount' => 'required',
-            'finance_amount' => 'required',
-            'dp' => 'required',
-            'financer' => 'required',
-            'remarks' => 'required',
+        // 1. Validation
+        $validatedData = $req->validate([
+            'booking_id'      => 'required|numeric',
+            'booking_date'    => 'required|date',
+            'booking_person'  => 'required',
+            'name'            => 'required',
+            'father_name'     => 'required',
+            'mobile'          => 'required|digits:10', // Optimized from min/max
+            'aadhar'          => 'required|digits_between:10,12',
+            'pan_card'        => 'required|size:10',
+            'city'            => 'required',
+            'address'         => 'required',
+            'reg_number'      => 'required',
+            'owner_sl_no'     => 'required',
+            'model_name'      => 'required',
+            'model_year'      => 'required',
+            'car_color'       => 'required',
+            'eng_number'      => 'required',
+            'chassis_number'  => 'required',
+            'sell_amount'     => 'required|numeric',
+            'booking_amount'  => 'required|numeric',
+            'finance_amount'  => 'required|numeric',
+            'dp'              => 'required|numeric',
+            'financer'        => 'nullable', // Changed to nullable if not always present
+            'remarks'         => 'required',
             'electricle_work' => 'required',
-            'ac_work_status' => 'required',
+            'ac_work_status'  => 'required',
             'suspenstion_status' => 'required',
-            'engine_status' => 'required',
+            'engine_status'   => 'required',
             'starting_status' => 'required',
-            'stepny_status' => 'required',
+            'stepny_status'   => 'required',
             'tools_kit_status' => 'required',
-            'inspection_by' => 'required',
-            'pdi_image' => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
-            'pdi_remarks' => 'required',
+            'inspection_by'   => 'required',
+            'pdi_image'       => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
+            'pdi_remarks'     => 'required',
+            'paymentMode'     => 'required',
         ]);
 
-        $mytime = Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s');
-
-        $delivered_car = DB::table('car_delivary')
+        // 2. Check for Duplicate Delivery
+        // Ideally, add 'unique:car_delivary,reg_number' to validation rules, 
+        // but we keep this manual check to redirect with a specific error message.
+        $isDelivered = DB::table('car_delivary')
             ->where('reg_number', $req->reg_number)
-            ->first();
+            ->exists();
 
-            if($delivered_car)
-            {
-                return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
-            }
-            else
-            {
-                $user = DB::table('car_booking')
+        if ($isDelivered) {
+            return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
+        }
+
+        // 3. Begin Database Transaction
+        try {
+            DB::transaction(function () use ($req, $validatedData) {
+
+                // A. Handle File Upload
+                if ($req->hasFile('pdi_image')) {
+                    $file = $req->file('pdi_image');
+                    $filename = uniqid() . '_' . time() . '_' . $req->reg_number . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('upload/pdi'), $filename);
+
+                    // Add filename to data array
+                    $validatedData['pdi_image'] = $filename;
+                }
+
+                // B. Add Meta Data
+                $validatedData['added_by'] = Auth::user()->name;
+                // Ensure pdi_remarks is set (even if null)
+                $validatedData['pdi_remarks'] = $req->pdi_remarks;
+
+                // C. Create Delivery Record (Mass Assignment)
+                $delivery = CarDelivaryModel::create($validatedData);
+
+                // D. Get Customer Ledger ID
+                $booking = DB::table('car_booking')
+                    ->where('booking_no', $req->booking_id)
+                    ->select('customer_ledger_id')
+                    ->first();
+
+                if ($booking) {
+                    // E. Create Customer Statement
+                    $particulars = sprintf(
+                        'Amount Credited for Down Payment for - %s - %s - %s - %s',
+                        $req->reg_number,
+                        $req->model_name,
+                        $req->paymentMode,
+                        Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s')
+                    );
+
+                    CustomerStatementModel::create([
+                        'customer_id'  => $booking->customer_ledger_id,
+                        'payment_type' => 1, // Credit
+                        'amount'       => $req->dp,
+                        'particular'   => $particulars,
+                        'created_by'   => Auth::user()->name,
+                    ]);
+
+                    // F. Update Stock & Booking Status
+                    // Using 3 as 'Delivered' status
+                    DB::table('car_booking')
                         ->where('booking_no', $req->booking_id)
-                        ->first();
-        $customer_id = $user->customer_ledger_id;
+                        ->update(['stock_status' => 3]);
 
-        $CarDelivaryModel = new CarDelivaryModel();
+                    DB::table('car_stock')
+                        ->where('reg_number', $req->reg_number)
+                        ->update(['stock_status' => 3]);
+                }
+            });
 
-        $CarDelivaryModel->booking_id = $req->booking_id;
-        $CarDelivaryModel->booking_date = $req->booking_date;
-        $CarDelivaryModel->booking_person = $req->booking_person;
-        $CarDelivaryModel->name = $req->name;
-        $CarDelivaryModel->father_name = $req->father_name;
-        $CarDelivaryModel->mobile = $req->mobile;
-        $CarDelivaryModel->aadhar = $req->aadhar;
-        $CarDelivaryModel->pan_card = $req->pan_card;
-        $CarDelivaryModel->city = $req->city;
-        $CarDelivaryModel->address = $req->address;
-        $CarDelivaryModel->reg_number = $req->reg_number;
-        $CarDelivaryModel->owner_sl_no = $req->owner_sl_no;
-        $CarDelivaryModel->model_name = $req->model_name;
-        $CarDelivaryModel->model_year = $req->model_year;
-        $CarDelivaryModel->car_color = $req->car_color;
-        $CarDelivaryModel->eng_number = $req->eng_number;
-        $CarDelivaryModel->chassis_number = $req->chassis_number;
-        $CarDelivaryModel->sell_amount = $req->sell_amount;
-        $CarDelivaryModel->booking_amount = $req->booking_amount;
-        $CarDelivaryModel->finance_amount = $req->finance_amount;
-        $CarDelivaryModel->dp = $req->dp;
-        $CarDelivaryModel->paymentMode = $req->paymentMode;
-        $CarDelivaryModel->financer = $req->financer;
-        $CarDelivaryModel->remarks = $req->remarks;
-        $CarDelivaryModel->electricle_work = $req->electricle_work;
-        $CarDelivaryModel->ac_work_status = $req->ac_work_status;
-        $CarDelivaryModel->suspenstion_status = $req->suspenstion_status;
-        $CarDelivaryModel->engine_status = $req->engine_status;
-        $CarDelivaryModel->starting_status = $req->starting_status;
-        $CarDelivaryModel->stepny_status = $req->stepny_status;
-        $CarDelivaryModel->tools_kit_status = $req->tools_kit_status;
-        $CarDelivaryModel->inspection_by = $req->inspection_by;
-        if ($req->hasFile('pdi_image'))
-        {
-            $d = new DateTime();
-            $nd = $d->format("YmdHisv");
-            $regnumber = $req->reg_number;
-            $pdfext = $req->file('pdi_image')->getClientOriginalExtension();
-
-            $uniqueFileName = uniqid() . '_' . time() . '_'. $regnumber . '.' . $pdfext;
-
-            $file = $req->file('pdi_image');
-            $file->move('upload/pdi', $uniqueFileName); 
-
-            $CarDelivaryModel->pdi_image = $uniqueFileName;
-        }
-
-        $CarDelivaryModel->pdi_remarks = $req->pdi_remarks;
-
-        $CarDelivaryModel->added_by = Auth::user()->name;
-        $CarDelivaryModel->save();
-        $lastid = $CarDelivaryModel->id;
-
-        if ($lastid) {
-            $CustomerStatementModel = new CustomerStatementModel();
-            $CustomerStatementModel->customer_id = $customer_id;
-            $CustomerStatementModel->payment_type = 1;
-            $CustomerStatementModel->amount = $req->dp;
-            $CustomerStatementModel->particular = 'Amount Credited for Down Payment for' . '-' . $req->reg_number . '-' . $req->model_name . '-' . $req->paymentMode . '-' . $mytime;
-            $CustomerStatementModel->created_by = Auth::user()->name;
-            $CustomerStatementModel->save();
-            $lastid_1 = $CustomerStatementModel->id;
-        }
-
-        if ($lastid_1) {
-            DB::table('car_booking')
-                ->where('booking_no', $req->booking_id)
-                ->update(['stock_status' => 3]);
-
-            DB::table('car_stock')
-                ->where('reg_number', $req->reg_number)
-                ->update(['stock_status' => 3]);
-        }
-
-        return redirect('admin/view-booking')->with('success', 'Delivary Added Succesfully ' . $lastid);
+            // 4. Success Response
+            // Since we are outside the transaction scope now, we can't get the ID easily unless we return it from the closure, 
+            // but typically a success message is enough.
+            return redirect('admin/view-booking')->with('success', 'Delivery Details Added Successfully.');
+        } catch (\Exception $e) {
+            // 5. Error Response
+            // If anything fails inside the transaction, it rolls back and comes here.
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
         }
     }
 }
