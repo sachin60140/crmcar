@@ -174,7 +174,7 @@
                         <div class="d-flex justify-content-between text-center">
                             <div>
                                 <small>Today</small>
-                                <h6>{{ $today_cloud_contacts }}</h6>
+                                <h6>{{ $today_qkonnect_contacts }}</h6>
                             </div>
                             <div>
                                 <small>Qkonnect</small>
