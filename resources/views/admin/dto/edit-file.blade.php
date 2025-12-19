@@ -90,9 +90,10 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Purchaser Mobile</label>
-                        <input type="text" class="form-control" name="Purchaser_mobile_number"
-                            value="{{ old('Purchaser_mobile_number', $getRecord->Purchaser_mobile_number) }}"
-                            maxlength="10">
+                        <input type="tel" class="form-control" name="Purchaser_mobile_number" id="Purchaser_mobile_number"
+                            maxlength="10" value="{{ old('Purchaser_mobile_number', $getRecord->Purchaser_mobile_number) }}"
+                            >
+                             <p id="msg"></p>
                     </div>
 
                     <div class="col-md-4">
@@ -248,6 +249,36 @@
             $('#purchaser_name').on('input', function() {
                 $(this).val($(this).val().toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
             });
+        });
+    </script>
+    <script>
+        const mobile = document.getElementById('Purchaser_mobile_number');
+        const msg = document.getElementById('msg');
+        
+        mobile.addEventListener('input', function() {
+            const num = this.value;
+            
+            // Validation logic
+            if (!/^\d*$/.test(num)) {
+                msg.textContent = "Only digits allowed";
+                msg.style.color = "red";
+                return;
+            }
+            
+            if (num.length !== 10) {
+                msg.textContent = "Must be 10 digits";
+                msg.style.color = "red";
+                return;
+            }
+            
+            if (!/^[6-9]/.test(num)) {
+                msg.textContent = "Must start with 6-9";
+                msg.style.color = "red";
+                return;
+            }
+            
+            msg.textContent = "✓ Valid mobile number";
+            msg.style.color = "green";
         });
     </script>
 @endsection

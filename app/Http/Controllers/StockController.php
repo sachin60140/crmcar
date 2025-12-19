@@ -497,67 +497,78 @@ class StockController extends Controller
     //     return view('admin.booking.view-booking');
     // }
 
-  public function viewbooking(Request $request)
-{
-    if ($request->ajax()) {
-        $query = BookingModel::select(
-                    'car_booking.id',
-                    'car_booking.created_by',
-                    'car_booking.booking_no',
-                    'car_booking.booking_person',
-                    'car_booking.total_amount',
-                    'car_booking.adv_amount',
-                    'car_booking.finance_amount',
-                    'car_booking.due_amount',
-                    'car_booking.remarks',
-                    'car_booking.created_at',
-                    'ledger.name as name', 
-                    'car_stock.car_model as carmodel', 
-                    'car_stock.reg_number as regnumber'
-                )
+    public function viewbooking(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = BookingModel::select(
+                'car_booking.id',
+                'car_booking.created_by',
+                'car_booking.booking_no',
+                'car_booking.booking_person',
+                'car_booking.total_amount',
+                'car_booking.adv_amount',
+                'car_booking.finance_amount',
+                'car_booking.due_amount',
+                'car_booking.remarks',
+                'car_booking.created_at',
+                'ledger.name as name',
+                'car_stock.car_model as carmodel',
+                'car_stock.reg_number as regnumber'
+            )
                 ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
                 ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
                 ->where('car_booking.stock_status', 1);
 
-        // --- IMPROVED DATE FILTER LOGIC ---
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            // Filter by user selected dates
-            $query->whereBetween('car_booking.created_at', [
-                $request->from_date . ' 00:00:00', 
-                $request->to_date . ' 23:59:59'
-            ]);
-        } else {
-            // DEFAULT: Last 90 Days if no dates provided
-            $query->where('car_booking.created_at', '>=', now()->subDays(90));
+            // --- IMPROVED DATE FILTER LOGIC ---
+            if ($request->filled('from_date') && $request->filled('to_date')) {
+                // Filter by user selected dates
+                $query->whereBetween('car_booking.created_at', [
+                    $request->from_date . ' 00:00:00',
+                    $request->to_date . ' 23:59:59'
+                ]);
+            } else {
+                // DEFAULT: Last 90 Days if no dates provided
+                $query->where('car_booking.created_at', '>=', now()->subDays(90));
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->filter(function ($instance) use ($request) {
+                    if ($request->has('search') && !empty($request->get('search')['value'])) {
+                        $keyword = $request->get('search')['value'];
+                        $instance->where(function ($q) use ($keyword) {
+                            $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
+                                ->orWhere('ledger.name', 'LIKE', "%$keyword%")
+                                ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
+                        });
+                    }
+                })
+                ->editColumn('created_at', function ($row) {
+                    return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
+                })
+                ->addColumn('action', function ($row) {
+    // Generate the URL for Print and Delivery
+    $printUrl = url('/admin/print-booking-pdf/' . $row->id);
+    $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
+
+    return '<div class="d-flex gap-1">
+            <a href="' . $printUrl . '" class="badge bg-primary text-decoration-none">Print</a>
+            
+            <a href="' . $deliveryUrl . '" class="badge bg-success text-decoration-none">Delivery</a>
+            
+            <button type="button" 
+                class="badge bg-danger border-0 btn-cancel-booking" 
+                data-id="' . $row->id . '">
+                Cancel
+            </button>
+        </div>';
+})
+                ->rawColumns(['action'])
+                ->make(true);
         }
 
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->filter(function ($instance) use ($request) {
-                if ($request->has('search') && !empty($request->get('search')['value'])) {
-                    $keyword = $request->get('search')['value'];
-                    $instance->where(function($q) use ($keyword) {
-                        $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
-                          ->orWhere('ledger.name', 'LIKE', "%$keyword%")
-                          ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
-                    });
-                }
-            })
-            ->editColumn('created_at', function($row){
-                return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
-            })
-            ->addColumn('action', function($row){
-                return '<div class="d-flex gap-1">
-                            <a href="'.url('/admin/print-booking-pdf/'.$row->id).'" class="badge bg-primary">Print</a>
-                            <a href="'.url('/admin/delivary/add-delivary/'.$row->id).'" class="badge bg-success">Delivery</a>
-                        </div>';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+        return view('admin.booking.view-booking');
     }
-
-    return view('admin.booking.view-booking');
-}
 
     public function trafficchallan()
     {
