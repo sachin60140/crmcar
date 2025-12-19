@@ -214,7 +214,7 @@
         language: {
             processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"></div><span class="ms-2">Loading Data...</span>'
         },
-        order: [[0, 'desc']],
+        order: [[12, 'desc']],
         ajax: {
             url: "{{ url()->current() }}",
             data: function(d) {
