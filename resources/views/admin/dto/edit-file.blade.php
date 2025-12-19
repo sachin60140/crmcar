@@ -2,219 +2,252 @@
 
 @section('title', 'Update DTO File | Car 4 Sale')
 
-
 @section('style')
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        /* Chrome, Safari, Edge, Opera */
+        /* Remove spin buttons */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-    </style>
 
+        .bg-readonly {
+            background-color: #e9ecef !important;
+            cursor: not-allowed;
+        }
+
+        /* Optional: Style the datepicker input to look clickable */
+        .date-picker {
+            background-color: #fff !important;
+            /* Force white background */
+            cursor: pointer;
+        }
+    </style>
 @endsection
 
 @section('content')
+
     <div class="pagetitle">
         <h1>Dashboard</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item active">Admin</li>
-                <li class="breadcrumb-item active">Update DTO File Status</li>
+                <li class="breadcrumb-item active">Update DTO File</li>
             </ol>
         </nav>
-    </div><!-- End Page Title -->
+    </div>
+
     <section class="section dashboard">
-        <div>
-            @if ($errors->any())
-                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
-            @if (Session::has('success'))
-                <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
-                    {{ Session::get('success') }}
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                        aria-label="Close"></button>
-                </div>
-            @endif
+        @if ($errors->any())
+            <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+            </div>
+        @endif
 
-            @if (Session::has('error'))
-                <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                    {{ Session::get('error') }}
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                        aria-label="Close"></button>
-                </div>
-            @endif
-        </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body pt-3">
                 <h5 class="card-title">Update DTO File</h5>
 
-                <!-- Multi Columns Form -->
                 <form class="row g-3" action="{{ url('admin/dto/update-dto-file/' . $getRecord->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
+                    {{-- 1. Registration Number (KEPT READONLY) --}}
                     <div class="col-md-4">
-                        <label for="fee" class="form-label">Registration Number <span
-                                style="color: red;">*</span></label>
-                        <input type="text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="reg_number" value="{{ $getRecord->reg_number }}" name="reg_number">
+                        <label class="form-label">Registration Number</label>
+                        <input type="text" class="form-control bg-readonly" value="{{ $getRecord->reg_number }}"
+                            readonly>
                     </div>
 
-
+                    {{-- 2. RTO Location (NOW EDITABLE) --}}
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">RTO Location <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="rto_location" value="{{ $getRecord->rto_location }}" name="rto_location" required>
+                        <label class="form-label">RTO Location <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="rto_location"
+                            value="{{ old('rto_location', $reglocation ?? $getRecord->rto_location) }}" required>
+                        <small class="text-muted">Detected based on Reg. Number prefix</small>
                     </div>
 
+                    {{-- 3. Uploaded By (Kept Readonly as it is System Data) --}}
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">File Uploaded by <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="inputName5" value="{{ $getRecord->created_by }}" name="created_by" required>
-                    </div>
-                    <div class="col-4">
-                        <label for="inputAddress2" class="form-label">Uploaded Date</label>
-                        <input type="text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="address" name="created_at" value="{{ $getRecord->created_at }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Last Updated by <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="inputName5" value="{{ $getRecord->updated_by }}" name="updated_by" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Last Updated date <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" style="background-color: #8d9797;" readonly class="form-control"
-                            id="inputName5" value="{{ $getRecord->updated_at }}" name="updated_at" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="vendor_name" class="form-label">Purchaser Name </label>
-                        <input type="Text" autofocus class="form-control" id="purchaser_name"
-                            value="{{ $getRecord->purchaser_name }}" name="purchaser_name"
-                            placeholder="Enter Purchaser Name">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="vendor_mobile_number" class="form-label">Purchaser Mobile </label>
-                        <input type="Text" class="form-control" id="Purchaser_mobile_number"
-                            value="{{ $getRecord->Purchaser_mobile_number }}" name="Purchaser_mobile_number">
+                        <label class="form-label">Uploaded By</label>
+                        <input type="text" class="form-control bg-readonly" value="{{ $getRecord->created_by }}"
+                            readonly>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Vendor Name <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="vendor_name"
-                            value="{{ $getRecord->vendor_name }}" name="vendor_name" required>
+                        <label class="form-label">Purchaser Name</label>
+                        <input type="text" class="form-control" id="purchaser_name" name="purchaser_name"
+                            value="{{ old('purchaser_name', $getRecord->purchaser_name) }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Vendor Mobile Number <span
-                                style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="vendor_mobile_number"
-                            value="{{ $getRecord->vendor_mobile_number }}" name="vendor_mobile_number" maxlength="10"
+                        <label class="form-label">Purchaser Mobile</label>
+                        <input type="text" class="form-control" name="Purchaser_mobile_number"
+                            value="{{ old('Purchaser_mobile_number', $getRecord->Purchaser_mobile_number) }}"
+                            maxlength="10">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Vendor Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="vendor_name"
+                            value="{{ old('vendor_name', $getRecord->vendor_name) }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Vendor Mobile <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="vendor_mobile_number"
+                            value="{{ old('vendor_mobile_number', $getRecord->vendor_mobile_number) }}" maxlength="10"
                             required>
                     </div>
-                    <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Dispatch Date <span
-                                style="color: red;">*</span></label>
-                        <input type="date" class="form-control" id="dispatch_date"
-                            value="{{ $getRecord->dispatch_date }}" name="dispatch_date" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">File Status <span
-                                style="color: red;">*</span></label>
-                        <select id="status" class="form-select" name="status">
-                            <option {{ old('status', $getRecord->status) == 'Ready to Dispatch' ? 'selected' : '' }}
-                                value="Ready to Dispatch">Ready to Dispatch</option>
-                            <option {{ old('status', $getRecord->status) == 'Dispatched' ? 'selected' : '' }}
-                                value="Dispatched">Dispatched</option>
-                            <option {{ old('status', $getRecord->status) == 'Online' ? 'selected' : '' }} value="Online">
-                                Online</option>
-                            <option {{ old('status', $getRecord->status) == 'Hold' ? 'selected' : '' }} value="Hold">
-                                Hold</option>
 
+                    {{-- New Fields: Financer & Challan Date --}}
+                    <div class="col-md-4">
+                        <label class="form-label">Financer</label>
+                        <select class="form-select" name="financer">
+                            <option value="">Select Financer...</option>
+                            @if (isset($financers))
+                                @foreach ($financers as $item)
+                                    {{-- 
+                    $item->financer_name : The name from the 'financer_details' list.
+                    $getRecord->financer : The value saved in your main 'dto_dispatch' table.
+                --}}
+                                    <option value="{{ $item->financer_name }}"
+                                        {{ isset($getRecord->financer) && $getRecord->financer == $item->financer_name ? 'selected' : '' }}>
+                                        {{ $item->financer_name }}
+                                    </option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
-                    <div class="col-md-4" id="online_div" style="display: none;">
-                        <label for="online_date" class="form-label">Online Date <span
-                                style="color: red;">*</span></label>
-                        <input type="date" class="form-control" id="online_date" value="{{ old('online_date') }}"
-                            name="online_date">
-                    </div>
-                    <div class="col-4" id="mparivahan" style="display: none;">
-                        <label for="upload_mparivahan" class="form-label">Upload M-Parivahan <span
-                                style="color: red;">*</span></label>
-                        <input type="file" class="form-control" id="upload_mparivahan"
-                            value="{{ old('upload_mparivahan') }}" name="upload_mparivahan">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="mobile_number" class="form-label">Remarks <span style="color: red;">*</span></label>
-                        <input type="Text" class="form-control" id="remarks" value="{{ $getRecord->remarks }}"
-                            name="remarks" required>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Update</button>
 
+                    <div class="col-md-4">
+                        <label class="form-label">Challan Date</label>
+                        <input type="text" class="form-control date-picker" name="challan_date"
+                            value="{{ $getRecord->challan_date ? date('Y-m-d', strtotime($getRecord->challan_date)) : '' }}"
+                            placeholder="Select Date">
+                    </div>
+
+                    
+                    <div class="col-md-4">
+                        <label class="form-label">File Status <span class="text-danger">*</span></label>
+                        <select id="status" class="form-select" name="status" required>
+                            <option value="Ready to Dispatch"
+                                {{ $getRecord->status == 'Ready to Dispatch' ? 'selected' : '' }}>Ready to Dispatch
+                            </option>
+                            <option value="Dispatched" {{ $getRecord->status == 'Dispatched' ? 'selected' : '' }}>
+                                Dispatched</option>
+                            <option value="Online" {{ $getRecord->status == 'Online' ? 'selected' : '' }}>Online</option>
+                            <option value="Hold" {{ $getRecord->status == 'Hold' ? 'selected' : '' }}>Hold</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" id="dispatch_date_div">
+                        <label class="form-label">Dispatch Date <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control date-picker" id="dispatch_date" name="dispatch_date"
+                            value="{{ $getRecord->dispatch_date ? date('Y-m-d', strtotime($getRecord->dispatch_date)) : '' }}"
+                            placeholder="Select Date" required>
+                    </div>
+
+
+                    <div class="col-md-4 online-field" style="display: none;">
+                        <label class="form-label">Online Date <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control date-picker" id="online_date" name="online_date"
+                            value="{{ $getRecord->online_date ? date('Y-m-d', strtotime($getRecord->online_date)) : '' }}"
+                            placeholder="Select Date">
+                    </div>
+
+                    <div class="col-md-4 online-field" style="display: none;">
+                        <label class="form-label">Upload M-Parivahan</label>
+                        <input type="file" class="form-control" name="upload_mparivahan">
+                        @if ($getRecord->upload_mparivahan)
+                            <small><a href="{{ asset('files/' . $getRecord->upload_mparivahan) }}" target="_blank">View
+                                    Current M-Parivahan</a></small>
+                        @endif
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Update Main PDF File <small>(Optional)</small></label>
+                        <input type="file" class="form-control" name="upload_pdf" accept="application/pdf">
+                        @if ($getRecord->upload_pdf)
+                            <small class="text-success"><a href="{{ asset('files/' . $getRecord->upload_pdf) }}"
+                                    target="_blank">View Current PDF</a></small>
+                        @endif
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Remarks <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="remarks"
+                            value="{{ old('remarks', $getRecord->remarks) }}" required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary px-5">Update</button>
                     </div>
                 </form>
 
             </div>
         </div>
+    </section>
 
+@endsection
 
+@section('script')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-        </div>
-    @endsection
+    <script>
+        $(document).ready(function() {
 
-    @section('script')
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous"></script>
+            // 1. Initialize Flatpickr (The JS Calendar)
+            $(".date-picker").flatpickr({
+                dateFormat: "Y-m-d", // Database format
+                allowInput: true, // Allow manual typing if needed
+                altInput: true, // Show human readable format
+                altFormat: "F j, Y", // e.g. October 25, 2023
+                maxDate: "today", // Disables all dates greater than today
+        locale: {
+            firstDayOfWeek: 1 // Optional: Starts week on Monday
+        }
+            });
 
-        <script type="text/javascript">
-            $('#status').on('change', function() {
-                if (this.value == 'Online') {
-                    $('#mparivahan').show().find(':input').attr('required', true);
-                    $('#online_div').show();
+            // 2. Logic to Show/Hide Online Fields
+            function toggleOnline() {
+                var status = $('#status').val();
+
+                // Handle Online Fields
+                if (status === 'Online') {
+                    $('.online-field').show();
+                    $('#online_date').prop('required', true);
                 } else {
-                    $('#mparivahan').hide().find(':input').attr('required', false);
-                    $('#online_div').hide();
+                    $('.online-field').hide();
+                    $('#online_date').prop('required', false);
                 }
 
+                // Handle Dispatch Date Visibility (Hide on 'Hold' or 'Ready to Dispatch')
+                if (status === 'Ready to Dispatch' || status === 'Hold' || status === '') {
+                    $('#dispatch_date_div').hide();
+                    $('#dispatch_date').prop('required', false);
+                } else {
+                    $('#dispatch_date_div').show();
+                    // We keep the value if it exists, but make it required
+                    $('#dispatch_date').prop('required', true);
+                }
+            }
+
+            // Run on load and on change
+            toggleOnline();
+            $('#status').change(toggleOnline);
+
+            // 3. Auto Capitalize Name
+            $('#purchaser_name').on('input', function() {
+                $(this).val($(this).val().toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
             });
-        </script>
-
-
-        <script>
-            $(document).ready(function() {
-                // Convert to uppercase as user types
-                $('#purchaser_name').on('input', function() {
-                    var currentValue = $(this).val();
-                    var cursorPosition = this.selectionStart;
-
-                    // Capitalize first letter of each word
-                    var capitalizedText = currentValue.toLowerCase().replace(/\b\w/g, function(letter) {
-                        return letter.toUpperCase();
-                    });
-
-                    $(this).val(capitalizedText);
-
-                    // Restore cursor position
-                    this.setSelectionRange(cursorPosition, cursorPosition);
-                });
-            });
-        </script>
-    @endsection
+        });
+    </script>
+@endsection

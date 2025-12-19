@@ -138,7 +138,9 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/dto/edit-dto-file/{id}', [DtoController::class, 'editdtofile'])->name('editdtofile');
     Route::put('admin/dto/update-dto-file/{id}', [DtoController::class, 'updatedtofile'])->name('updatedtofile');
     Route::get('admin/dto/view-online-dto-file', [DtoController::class, 'viewonlinedtofile'])->name('viewonlinedtofile');
-    
+    Route::get('admin/dto/get-history/{id}', [DtoController::class, 'getHistory']);
+    Route::post('admin/dto/bulk-update', [DtoController::class, 'bulkUpdate']);
+    Route::post('admin/dto/get-dto-location', [DtoController::class, 'getdtolocation'])->name('getdtolocation');
     /* Inspection  */
     Route::get('admin/workshop/inspection', [CarInspectionController::class, 'index'])->name('inspection');
     Route::post('admin/workshop/store-inspection', [CarInspectionController::class, 'storeinspection'])->name('storeinspection');

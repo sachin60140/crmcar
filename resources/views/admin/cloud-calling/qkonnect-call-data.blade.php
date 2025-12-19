@@ -207,6 +207,10 @@
             processing: true,
             serverSide: true,
             responsive: true,
+            lengthMenu: [
+                    [50, 100, 250, -1], 
+                    [50, 100, 250, "All"]
+                ],
             pageLength: 50,
 
             // AJAX Setup
@@ -232,8 +236,9 @@
             ],
 
             order: [[8, 'desc']],
+            
 
-            dom: 'Bfrtip',
+            dom: 'lBfrtip',
             
             // 2. Updated Buttons Configuration
             buttons: [
