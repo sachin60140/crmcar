@@ -59,52 +59,58 @@
     <script src="{{ url('assets/js/main.js') }}"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get session lifetime from Laravel (in seconds)
-            let secondsRemaining = {{ config('session.lifetime') * 60 }};
-            
-            const displayElement = document.getElementById('session-timer-display');
+    document.addEventListener('DOMContentLoaded', function() {
+        const displayElement = document.getElementById('session-timer-display');
 
-            const timerInterval = setInterval(function() {
-                secondsRemaining--;
+        // 1. Get session lifetime from Laravel and calculate absolute expiration time
+        // Note: We use Date.now() to ensure accuracy even if the tab sleeps
+        const lifetimeSeconds = {{ config('session.lifetime') * 60 }};
+        const expiresAt = Date.now() + (lifetimeSeconds * 1000);
 
-                // Calculate minutes and seconds
-                const minutes = Math.floor(secondsRemaining / 60);
-                const seconds = secondsRemaining % 60;
-                
-                // Add leading zero if seconds is less than 10 (e.g., 5 becomes 05)
-                const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        function updateTimer() {
+            const now = Date.now();
+            const secondsRemaining = Math.max(0, Math.floor((expiresAt - now) / 1000));
 
-                // Update the H3 tag text
-                if (displayElement) {
-                    displayElement.innerText = `Session expires in: ${formattedTime}`;
+            // 2. Format Minutes and Seconds
+            const minutes = Math.floor(secondsRemaining / 60);
+            const seconds = secondsRemaining % 60;
+            const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            // 3. Update the display text
+            if (displayElement) {
+                displayElement.innerText = `Session expires in: ${formattedTime}`;
+
+                // Optional: Turn text red when less than 1 minute remains
+                if (secondsRemaining < 60) {
+                    displayElement.style.color = 'red';
                 }
+            }
 
-                // Optional: Still show in console for debugging
-                // console.log(`Time left: ${formattedTime}`);
+            // 4. Handle Expiration
+            if (secondsRemaining <= 0) {
+                // Stop the timer logic
+                if (timerInterval) clearInterval(timerInterval);
 
-                // When time runs out
-                if (secondsRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    if (displayElement) displayElement.innerText = "Session Expired. Redirecting...";
-                    
-                    window.location.href = "{{ route('logout') }}";
-                }
-            }, 1000);
-        });
-    </script>
+                if (displayElement) displayElement.innerText = "Session Expired. Redirecting...";
 
-    <script>
-    // Check session status every 10 seconds
-    setInterval(function() {
-        $.get("{{ url('admin/dashboard') }}") // Pings the server
-        .fail(function(xhr) {
-            // If server returns 401 (Unauthenticated) or redirects to login
-            if (xhr.status === 401 || xhr.status === 302 || xhr.responseText.includes('login')) {
-                window.location.href = "{{ route('login') }}"; // Force redirect
+                // Redirect to logout
+                window.location.href = "{{ route('logout') }}";
+            }
+        }
+
+        // Run the timer update every second
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        // 5. Intelligent Sync: Force an update immediately if user switches tabs back
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === 'visible') {
+                updateTimer();
             }
         });
-    }, 10000); 
+
+        // Run once immediately to avoid 1-second delay on load
+        updateTimer();
+    });
 </script>
     @yield('script')
 

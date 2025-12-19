@@ -136,15 +136,17 @@ class DtoController extends Controller
     {
         // 1. Validation
         $req->validate([
-            'reg_number'             => 'required|string|max:50',
-            'rto_location'           => 'required|string',
-            'status'                 => 'required|string',
+            'reg_number'                => 'required|string|max:50',
+            'rto_location'              => 'required|string',
+            'status'                    => 'required|string',
             // Removed spaces after commas in required_unless
-            'dispatch_date'          => 'required_unless:status,Ready to Dispatch,Hold|nullable|date|before_or_equal:today',
-            'remarks'                => 'required|string|min:3',
-            'upload_pdf'             => 'required|mimes:pdf|max:10240',
-            'financer'               => 'nullable|string|max:255',
-            'challan_date'           => 'nullable|date|before_or_equal:today',
+            'dispatch_date'             => 'required_unless:status,Ready to Dispatch,Hold|nullable|date|before_or_equal:today',
+            'remarks'                   => 'required|string|min:3',
+            'upload_pdf'                => 'required|mimes:pdf|max:10240',
+            'financer'                  => 'nullable|string|max:255',
+            'challan_date'              => 'nullable|date|before_or_equal:today',
+            'Purchaser_mobile_number'   => 'required|digits:10|regex:/^[6-9]\d{9}$/',
+            'purchaser_name'            => 'required|string|max:150',
         ]);
 
         // Use Database Transaction to ensure both Main Entry and History are saved, or neither.
@@ -344,28 +346,21 @@ class DtoController extends Controller
     {
         // 1. Validation
         $req->validate([
-            'Purchaser_mobile_number' => 'required|numeric|digits_between:9,12',
-            'vendor_name'             => 'required',
-            'vendor_mobile_number'    => 'required|numeric|digits:10',
-            'rto_location'            => 'required|string', // Now Editable
-
-            // Dispatch Date is only required if status is NOT 'Ready' or 'Hold'
+            'Purchaser_mobile_number' => 'required|digits:10|regex:/^[6-9]\d{9}$/',
+            'vendor_name'             => 'required|string|max:150',
+            'vendor_mobile_number'    => 'required|digits:10|regex:/^[6-9]\d{9}$/', // Fixed
+            'rto_location'            => 'required|string', 
             'dispatch_date'           => 'required_unless:status,Ready to Dispatch,Hold|nullable|date',
-
             'status'                  => 'required',
             'remarks'                 => 'required',
             'upload_mparivahan'       => 'nullable|mimes:png,jpg,jpeg,pdf|max:5120',
             'upload_pdf'              => 'nullable|mimes:pdf|max:10240',
-
-            // New Fields
+            'purchaser_name'          => 'required|string|max:150',
             'financer'                => 'nullable|string',
             'challan_date'            => 'nullable|date',
         ]);
-
         $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
         $DtoModel = DtoModel::findOrFail($id);
-
-
 
         // ======================================================
         // 2. HISTORY TRACKING (Archive Old State)
