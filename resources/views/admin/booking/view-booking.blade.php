@@ -208,6 +208,7 @@
     const nf = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
 
     var table = $('#booking_table').DataTable({
+        pageLength: 50,
         processing: true,
         serverSide: true,
         language: {
