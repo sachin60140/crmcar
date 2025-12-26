@@ -74,6 +74,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::post('admin/add-booking', [StockController::class, 'storebooking'])->name('storebooking');
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
     Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
+    Route::get('/admin/export-bookings', [StockController::class, 'exportBookings']);
 
     
     Route::get('admin/delivary/add-delivary/{id}', [StockController::class, 'adddelivary'])->name('adddelivary');

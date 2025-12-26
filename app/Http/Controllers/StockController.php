@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DtoModel;
 use App\Models\DtoFileHistoryModel;
+use Illuminate\Support\Str;
 
 class StockController extends Controller
 {
@@ -547,11 +548,11 @@ class StockController extends Controller
                     return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
                 })
                 ->addColumn('action', function ($row) {
-    // Generate the URL for Print and Delivery
-    $printUrl = url('/admin/print-booking-pdf/' . $row->id);
-    $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
+                    // Generate the URL for Print and Delivery
+                    $printUrl = url('/admin/print-booking-pdf/' . $row->id);
+                    $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
 
-    return '<div class="d-flex gap-1">
+                    return '<div class="d-flex gap-1">
             <a href="' . $printUrl . '" class="badge bg-primary text-decoration-none">Print</a>
             
             <a href="' . $deliveryUrl . '" class="badge bg-success text-decoration-none">Delivery</a>
@@ -562,7 +563,7 @@ class StockController extends Controller
                 Cancel
             </button>
         </div>';
-})
+                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -570,6 +571,100 @@ class StockController extends Controller
         return view('admin.booking.view-booking');
     }
 
+    public function exportBookings(Request $request)
+    {
+        // 1. REUSE QUERY LOGIC (Same as viewbooking)
+        $query = BookingModel::select(
+            'car_booking.created_by',
+            'car_booking.booking_no',
+            'ledger.name as customer_name',
+            'car_stock.reg_number',
+            'car_stock.car_model',
+            'car_booking.booking_person',
+            'car_booking.total_amount',
+            'car_booking.adv_amount',
+            'car_booking.finance_amount',
+            'car_booking.due_amount',
+            'car_booking.remarks',
+            'car_booking.created_at'
+        )
+            ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
+            ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
+            ->where('car_booking.stock_status', 1);
+
+        // 2. APPLY DATE FILTERS
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('car_booking.created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
+            ]);
+        } else {
+            $query->where('car_booking.created_at', '>=', now()->subDays(90));
+        }
+
+        // 3. APPLY SEARCH FILTER
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
+                    ->orWhere('ledger.name', 'LIKE', "%$keyword%")
+                    ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
+            });
+        }
+
+        // Get ALL data (no pagination)
+        $bookings = $query->orderBy('car_booking.id', 'desc')->get();
+
+        // 4. STREAM DOWNLOAD
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=All_Bookings_" . date('Y-m-d_H-i') . ".csv",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $callback = function () use ($bookings) {
+            $file = fopen('php://output', 'w');
+
+            // CSV Headers
+            fputcsv($file, [
+                'Created By',
+                'Booking No',
+                'Customer Name',
+                'Reg No',
+                'Model',
+                'Booking Person',
+                'Total Amount',
+                'Adv Amount',
+                'Finance',
+                'Due Amount',
+                'Remarks',
+                'Date'
+            ]);
+
+            // CSV Rows
+            foreach ($bookings as $row) {
+                fputcsv($file, [
+                    $row->created_by,
+                    $row->booking_no,
+                    $row->customer_name,
+                    $row->reg_number,
+                    $row->car_model,
+                    $row->booking_person,
+                    $row->total_amount,
+                    $row->adv_amount,
+                    $row->finance_amount,
+                    $row->due_amount,
+                    $row->remarks,
+                    $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : ''
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
     public function trafficchallan()
     {
         return view('admin.traffic-challan');
@@ -577,13 +672,71 @@ class StockController extends Controller
 
     public function bookinpdf($id)
     {
-        $data['carbooking'] = BookingModel::getRecordpdf($id);
+        // 1. Fetch the data
+        $carBooking = BookingModel::getRecordpdf($id);
 
-        $regnumber = $data['carbooking'][0]['regnumber'];
+        // 2. Safety Check: If no record is found, redirect back or show error
+        // This prevents "Undefined array key 0" errors
+        if (empty($carBooking) || count($carBooking) == 0) {
+            return redirect()->back()->with('error', 'Booking record not found.');
+        }
 
+        // 3. Extract Registration Number safely for the filename
+        // We check if it's an Object (->) or Array ([]) just in case
+        $firstRecord = $carBooking[0];
+        $rawRegNumber = is_object($firstRecord) ? $firstRecord->regnumber : $firstRecord['regnumber'];
+
+        // 4. Clean the filename
+        // Converts "BR 06 PB 1234" to "br-06-pb-1234.pdf" (prevents browser download errors)
+        $fileName = Str::slug($rawRegNumber) . '.pdf';
+
+        // 5. Prepare data for the view
+        $data['carbooking'] = $carBooking;
+
+        // 6. Generate PDF
+        // Note: Ensure your view file name matches exactly (case-sensitive on Linux servers)
+        // I corrected 'bookinPdf' to 'bookingPdf' assuming that is the correct spelling
         $pdf = Pdf::loadView('admin.booking.bookinPdf', $data);
-        return $pdf->download($regnumber . '.pdf');
+
+        // Optional: Explicitly set paper size (matches the design provided earlier)
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download($fileName);
     }
+//     public function bookinpdf($id)
+// {
+//     $data['carbooking'] = BookingModel::getRecordpdf($id);
+    
+//     if (empty($data['carbooking'])) {
+//         abort(404, 'Booking not found');
+//     }
+    
+//     $regnumber = $data['carbooking'][0]->regnumber ?? 'booking';
+    
+//     // Configure DomPDF for single page
+//     $pdf = Pdf::loadView('admin.booking.bookinPdf', $data);
+    
+//     // Set paper size and orientation
+//     $pdf->setPaper('A4', 'portrait');
+    
+//     // Set options for single page output
+//     $pdf->setOptions([
+//         'defaultFont' => 'dejavu sans',
+//         'isHtml5ParserEnabled' => true,
+//         'isRemoteEnabled' => false, // Set to true if using external images
+//         'isPhpEnabled' => true,
+//         'dpi' => 96,
+//         'defaultPaperSize' => 'a4',
+//         'defaultPaperOrientation' => 'portrait',
+//         'fontHeightRatio' => 0.8,
+//         'margin_top' => 15,
+//         'margin_right' => 15,
+//         'margin_bottom' => 15,
+//         'margin_left' => 15,
+//     ]);
+    
+//     return $pdf->download($regnumber . '.pdf');
+// }
 
 
     public function adddelivary(Request $req, $id)

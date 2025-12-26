@@ -17,7 +17,6 @@
             font-size: 13px; 
             vertical-align: middle; 
         }
-        
         /* Filter Box Design */
         .filter-box { 
             background: #ffffff; 
@@ -27,7 +26,6 @@
             border: 1px solid #efecec;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
         }
-
         /* Column Search Inputs */
         thead input { 
             width: 100%; 
@@ -37,31 +35,13 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-
-        /* Custom Loading Spinner */
+        /* Spinner */
         .dataTables_processing {
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%);
-            z-index: 11000 !important;
-            background: rgba(255, 255, 255, 0.95) !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #eee !important;
-            border-radius: 8px;
-            height: auto !important;
-            padding: 15px 30px;
-            font-weight: bold;
-            color: #0d6efd;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        /* Spinner Animation */
-        .spinner-border-sm {
-            width: 1.5rem;
-            height: 1.5rem;
-            border-width: 0.2em;
+            top: 50% !important; left: 50% !important; transform: translate(-50%, -50%);
+            z-index: 11000 !important; background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eee !important;
+            border-radius: 8px; height: auto !important; padding: 15px 30px;
+            font-weight: bold; color: #0d6efd; display: flex; align-items: center; gap: 10px;
         }
     </style>
 @endsection
@@ -69,12 +49,6 @@
 @section('content')
 <div class="pagetitle mb-4">
     <h1>View Booking</h1>
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">View Booking</li>
-        </ol>
-    </nav>
 </div>
 
 <section class="section">
@@ -126,7 +100,6 @@
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
-                        {{-- SEARCH-WISE ROW --}}
                         <tr class="search-row">
                             <th></th>
                             <th><input type="text" placeholder="User"></th>
@@ -157,11 +130,11 @@
                 <div class="modal-body">
                     <input type="hidden" id="cancel_booking_id" name="id">
                     <div class="alert alert-warning small">
-                        <strong>Warning:</strong> This will reverse the ledger entry and release the car stock.
+                        <strong>Warning:</strong> This will reverse the ledger entry.
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Reason for Cancellation <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="cancel_reason" required rows="3" placeholder="E.g. Customer requested refund due to..."></textarea>
+                        <textarea class="form-control" name="cancel_reason" required rows="3" placeholder="Enter reason..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -192,29 +165,27 @@
         var mm = String(today.getMonth() + 1).padStart(2, '0');
         var yyyy = today.getFullYear();
         var currentDate = yyyy + '-' + mm + '-' + dd;
-
         var priorDate = new Date(new Date().setDate(today.getDate() - 90));
         var p_dd = String(priorDate.getDate()).padStart(2, '0');
         var p_mm = String(priorDate.getMonth() + 1).padStart(2, '0');
         var p_yyyy = priorDate.getFullYear();
-        var defaultFromDate = p_yyyy + '-' + p_mm + '-' + p_dd;
-
-        $('#from_date').val(defaultFromDate);
+        $('#from_date').val(p_yyyy + '-' + p_mm + '-' + p_dd);
         $('#to_date').val(currentDate);
     };
-    setDateDefaults(); // Run on load
+    setDateDefaults();
 
     // 2. INITIALIZE DATATABLE
     const nf = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
 
     var table = $('#booking_table').DataTable({
-        pageLength: 50,
+        pageLength: 50, // --- SET DEFAULT TO 50 ROWS ---
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         processing: true,
         serverSide: true,
         language: {
             processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"></div><span class="ms-2">Loading Data...</span>'
         },
-        order: [[12, 'desc']],
+        order: [[0, 'desc']],
         ajax: {
             url: "{{ url()->current() }}",
             data: function(d) {
@@ -230,39 +201,36 @@
             { data: 'regnumber', name: 'car_stock.reg_number' },
             { data: 'carmodel', name: 'car_stock.car_model' },
             { data: 'booking_person', name: 'car_booking.booking_person' },
-            { 
-                data: 'total_amount', 
-                render: function(data) { return data ? nf.format(data) : '0'; } 
-            },
-            { 
-                data: 'adv_amount', 
-                render: function(data) { return data ? '<span class="text-success fw-bold">' + nf.format(data) + '</span>' : '0'; } 
-            },
-            { 
-                data: 'finance_amount', 
-                render: function(data) { return data ? nf.format(data) : '0'; } 
-            },
-            { 
-                data: 'due_amount', 
-                render: function(data) { return data ? '<span class="text-danger">' + nf.format(data) + '</span>' : '0'; } 
-            },
+            { data: 'total_amount', render: function(data) { return data ? nf.format(data) : '0'; }},
+            { data: 'adv_amount', render: function(data) { return data ? '<span class="text-success fw-bold">' + nf.format(data) + '</span>' : '0'; }},
+            { data: 'finance_amount', render: function(data) { return data ? nf.format(data) : '0'; }},
+            { data: 'due_amount', render: function(data) { return data ? '<span class="text-danger">' + nf.format(data) + '</span>' : '0'; }},
             { data: 'remarks', name: 'car_booking.remarks' },
             { data: 'created_at', name: 'car_booking.created_at' },
             { data: 'action', orderable: false, searchable: false }
         ],
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'excel', className: 'btn btn-success btn-sm', text: '<i class="bi bi-file-earmark-excel"></i> Excel' },
+            {
+                // --- CUSTOM EXPORT LOGIC FOR SERVER SIDE ---
+                text: '<i class="bi bi-file-earmark-excel"></i> Export All (Excel)',
+                className: 'btn btn-success btn-sm',
+                action: function (e, dt, node, config) {
+                    var from = $('#from_date').val();
+                    var to = $('#to_date').val();
+                    var search = dt.search();
+                    var url = "{{ url('/admin/export-bookings') }}";
+                    window.location.href = url + "?from_date=" + from + "&to_date=" + to + "&search=" + search;
+                }
+            },
             { extend: 'pdf', className: 'btn btn-danger btn-sm', text: '<i class="bi bi-file-earmark-pdf"></i> PDF' }
         ]
     });
 
-    // Apply styles to DataTables buttons manually after init
     table.buttons().container().appendTo( '#booking_table_wrapper .col-md-6:eq(0)' );
 
     // 3. SEARCH INPUT LOGIC
     $('#booking_table thead .search-row th').each(function (i) {
-        var title = $(this).text();
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
                 table.column(i).search(this.value).draw();
@@ -274,37 +242,30 @@
     $('#filter').click(function() { table.draw(); });
     $('#refresh').click(function() { setDateDefaults(); table.draw(); });
 
-    // ===========================================
     // 5. CANCEL BOOKING LOGIC
-    // ===========================================
-    
-    // A. Open Modal & Pass ID
     $(document).on('click', '.btn-cancel-booking', function() {
-        var id = $(this).data('id'); // Get ID from button data-attribute
-        $('#cancel_booking_id').val(id); // Set ID in Hidden Input
-        $('#cancelBookingForm')[0].reset(); // Clear previous text
-        $('#cancelModal').modal('show'); // Show Modal
+        var id = $(this).data('id'); 
+        $('#cancel_booking_id').val(id); 
+        $('#cancelBookingForm')[0].reset();
+        $('#cancelModal').modal('show');
     });
 
-    // B. Submit Form via AJAX
     $('#cancelBookingForm').submit(function(e) {
         e.preventDefault();
-        
         var submitBtn = $('#btnConfirmCancel');
         var originalText = submitBtn.text();
         submitBtn.prop('disabled', true).text('Processing...');
 
         $.ajax({
-            url: "{{ url('/admin/insert-cancel-booking') }}", // Ensure this route matches your web.php
+            url: "{{ url('/admin/insert-cancel-booking') }}", 
             type: "POST",
             data: $(this).serialize(),
             success: function(response) {
                 $('#cancelModal').modal('hide');
                 submitBtn.prop('disabled', false).text(originalText);
-                
                 if (response.status == 'success') {
-                    alert(response.message); // Or use Toast/SweetAlert if available
-                    table.ajax.reload(null, false); // Reload Table
+                    alert(response.message);
+                    table.ajax.reload(null, false); 
                 } else {
                     alert('Error: ' + response.message);
                 }
@@ -312,11 +273,9 @@
             error: function(xhr) {
                 submitBtn.prop('disabled', false).text(originalText);
                 alert('Something went wrong. Please check console.');
-                console.log(xhr.responseText);
             }
         });
     });
-
 });
 </script>
 @endsection
