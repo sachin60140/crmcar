@@ -131,4 +131,43 @@ class ChartController extends Controller
             'delivery' => $delivery,
         ]);
     }
+
+    public function getOnlineReportData()
+    {
+        // 1. Define the time range (Last 6 months)
+        $startDate = Carbon::now()->subMonths(5)->startOfMonth(); // Go back 5 months + current month
+        $endDate   = Carbon::now()->endOfMonth();
+
+        // 2. Query Database: Group by Year-Month and Count
+        $queryData = DB::table('dto_dispatch')
+            ->select(
+                DB::raw("DATE_FORMAT(online_date, '%Y-%m') as month_key"),
+                DB::raw("COUNT(*) as total")
+            )
+            ->where('status', 'Online')
+            ->whereBetween('online_date', [$startDate, $endDate])
+            ->groupBy('month_key')
+            ->orderBy('month_key', 'ASC')
+            ->pluck('total', 'month_key'); // Creates an array like ['2025-09' => 5, '2025-10' => 12]
+
+        // 3. Prepare Final Arrays (Filling in missing months with 0)
+        $labels = [];
+        $data   = [];
+
+        // Loop through the last 6 months to create the structure
+        for ($i = 5; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $monthKey = $date->format('Y-m'); // Key to match DB result (e.g., "2025-09")
+            $monthName = $date->format('M Y'); // Label for Chart (e.g., "Sep 2025")
+
+            $labels[] = $monthName;
+            // If data exists for this month, use it; otherwise, use 0
+            $data[] = isset($queryData[$monthKey]) ? $queryData[$monthKey] : 0;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data'   => $data,
+        ]);
+    }
 }

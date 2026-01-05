@@ -65,11 +65,22 @@ class CustomerLeadController extends Controller
   
         return back()->with('success', ' Lead Added Successfully: ' .$lastid);
     }
+    // public function viewleaddata()
+    // {
+    //     $data = DB::table('customer_lead')->get();
+       
+    //     return view('admin.Data.view-data',compact('data'));
+    // }
+
     public function viewleaddata()
     {
-        $data = DB::table('customer_lead')->get();
-       
-        return view('admin.Data.view-data',compact('data'));
+        // Use paginate instead of get. 
+        // orderBy is important so you see the latest leads first.
+        $data = DB::table('customer_lead')
+                    ->orderBy('id', 'desc')
+                    ->paginate(100);
+    
+        return view('admin.Data.view-data', compact('data'));
     }
 
     public function hotleaddata()

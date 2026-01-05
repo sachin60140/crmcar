@@ -219,6 +219,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <div class="card chart-card">
+                    <div class="card-body">
+                        <h5 class="fw-bold">📊 Paper Online Report</h5>
+                        <div style="height:320px">
+                            <canvas id="OnlinebarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </section>
@@ -367,7 +377,175 @@
             // setInterval(loadDeliveryChart, 60000);
         });
     </script>
+{{-- <script>
+$(document).ready(function() {
+    
+    // URL to the controller method we created above
+    var chartUrl = "{{ route('get.online.chart.data') }}"; 
 
+    $.ajax({
+        url: chartUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            renderOnlineChart(response.labels, response.data);
+        },
+        error: function(xhr) {
+            console.log('Error:', xhr);
+        }
+    });
+
+    function renderOnlineChart(labels, data) {
+        var ctx = document.getElementById('OnlinebarChart').getContext('2d');
+        
+        // Destroy existing chart if it exists (prevents duplication on reload)
+        if (window.onlineChart instanceof Chart) {
+            window.onlineChart.destroy();
+        }
+
+        window.onlineChart = new Chart(ctx, {
+            type: 'bar', // 'bar' is best for monthly comparison
+            data: {
+                labels: labels, // e.g. ["Aug 2025", "Sep 2025"...]
+                datasets: [{
+                    label: 'Total Online',
+                    data: data, // e.g. [0, 5, 12, 8, 20, 15]
+                    backgroundColor: '#198754', // Bootstrap Success Green
+                    borderColor: '#157347',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    barPercentage: 0.6, // Makes bars slightly thinner
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1 // Ensures y-axis shows whole numbers (1, 2, 3) not decimals
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }, // Hides legend if you only have one dataset
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + ' Files Online';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script> --}}
+
+<script>
+$(document).ready(function() {
+    
+    var chartUrl = "{{ route('get.online.chart.data') }}"; 
+
+    $.ajax({
+        url: chartUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            renderOnlineChart(response.labels, response.data);
+        },
+        error: function(xhr) {
+            console.log('Error:', xhr);
+        }
+    });
+
+    function renderOnlineChart(labels, data) {
+        var ctx = document.getElementById('OnlinebarChart').getContext('2d');
+
+        if (window.onlineChart instanceof Chart) {
+            window.onlineChart.destroy();
+        }
+
+        // Define distinct colors for up to 6 months
+        var barColors = [
+            '#FF6384', // Red
+            '#36A2EB', // Blue
+            '#FFCE56', // Yellow
+            '#4BC0C0', // Teal
+            '#9966FF', // Purple
+            '#FF9F40'  // Orange
+        ];
+
+        // Optional: Matching borders (slightly darker)
+        var borderColors = [
+            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+        ];
+
+        window.onlineChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Online',
+                    data: data,
+                    // Pass the Array of colors here
+                    backgroundColor: barColors,
+                    borderColor: borderColors,
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    barPercentage: 0.6,
+                }]
+            },
+            
+            // Plugin to show numbers on top of bars
+            plugins: [{
+                id: 'displayNumbersOnBars',
+                afterDatasetsDraw(chart, args, options) {
+                    const { ctx } = chart;
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach((bar, index) => {
+                            const value = dataset.data[index];
+                            if(value > 0) {
+                                ctx.save();
+                                ctx.font = 'bold 12px sans-serif';
+                                ctx.fillStyle = '#000'; 
+                                ctx.textAlign = 'center';
+                                ctx.fillText(value, bar.x, bar.y - 5); 
+                                ctx.restore();
+                            }
+                        });
+                    });
+                }
+            }],
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grace: '10%', 
+                        ticks: { stepSize: 1 }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }, // Legend is usually hidden for multicolor bars
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    }
+});
+</script>
 
 
 @endsection
