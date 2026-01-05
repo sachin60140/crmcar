@@ -342,120 +342,252 @@ class DtoController extends Controller
     //     return redirect('admin/dto/view-dto-file')->with('success', 'DTO File  Updated Succesfully');
     // }
 
+    // public function updatedtofile(Request $req, $id)
+    // {
+    //     // 1. Validation
+    //     $req->validate([
+    //         'Purchaser_mobile_number' => 'required|digits:10|regex:/^[6-9]\d{9}$/',
+    //         'vendor_name'             => 'required|string|max:150',
+    //         'vendor_mobile_number'    => 'required|digits:10|regex:/^[6-9]\d{9}$/', // Fixed
+    //         'rto_location'            => 'required|string', 
+    //         'dispatch_date'           => 'required_unless:status,Ready to Dispatch,Hold|nullable|date',
+    //         'status'                  => 'required',
+    //         'remarks'                 => 'required',
+    //         'upload_mparivahan'       => 'nullable|mimes:png,jpg,jpeg,pdf|max:5120',
+    //         'upload_pdf'              => 'nullable|mimes:pdf|max:10240',
+    //         'purchaser_name'          => 'required|string|max:150',
+    //         'financer'                => 'nullable|string',
+    //         'challan_date'            => 'nullable|date',
+    //     ]);
+    //     $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+    //     $DtoModel = DtoModel::findOrFail($id);
+
+    //     // ======================================================
+    //     // 2. HISTORY TRACKING (Archive Old State)
+    //     // ======================================================
+    //     $history = new DtoFileHistoryModel;
+    //     $history->dto_file_id = $DtoModel->id;
+    //     $history->status      = $DtoModel->status;       // OLD Status
+    //     $history->remarks     = $DtoModel->remarks;      // OLD Remarks
+
+    //     // Only save the filename to history if the user is uploading a NEW file.
+    //     if ($req->hasFile('upload_pdf')) {
+    //         $history->file_name = $DtoModel->upload_pdf; // Save the file being replaced
+    //     } else {
+    //         $history->file_name = null; // No file change
+    //     }
+
+    //     $history->created_by  = Auth::user()->name;
+    //     $history->created_at  = $mytime;
+    //     $history->updated_at  = $mytime;
+    //     $history->save();
+    //     // ======================================================
+
+    //     // 3. Update Fields
+    //     $DtoModel->rto_location            = $req->rto_location; // Now Editable
+    //     $DtoModel->purchaser_name          = $req->purchaser_name;
+    //     $DtoModel->Purchaser_mobile_number = $req->Purchaser_mobile_number;
+    //     $DtoModel->vendor_name             = $req->vendor_name;
+    //     $DtoModel->vendor_mobile_number    = $req->vendor_mobile_number;
+
+    //     // --- NEW FIELDS ---
+    //     $DtoModel->financer                = $req->financer;
+    //     $DtoModel->challan_date            = $req->challan_date;
+    //     // ------------------
+
+    //     $DtoModel->status                  = $req->status;
+
+    //     // Logic: If status is 'Ready' or 'Hold', clear the dispatch date, otherwise save it
+    //     if ($req->status === 'Ready to Dispatch' || $req->status === 'Hold') {
+    //         $DtoModel->dispatch_date = null;
+    //     } else {
+    //         $DtoModel->dispatch_date = $req->dispatch_date;
+    //     }
+
+    //     $DtoModel->remarks                 = $req->remarks; // NEW Remarks
+    //     $DtoModel->updated_by              = Auth::user()->name;
+    //     $DtoModel->updated_at              = $mytime;
+
+    //     // 4. Handle Main PDF Update (If user uploads new file)
+    //     if ($req->hasFile('upload_pdf')) {
+    //         $file = $req->file('upload_pdf');
+
+    //         // Generate Unique Name
+    //         $regNumber = Str::upper($DtoModel->reg_number);
+    //         $timestamp = now()->format('YmdHis');
+    //         $pdfFileName = $regNumber . '_' . $timestamp . '_dto.' . $file->getClientOriginalExtension();
+
+    //         // Move to folder
+    //         $file->move(public_path('files'), $pdfFileName);
+
+    //         // Update DB with NEW filename
+    //         $DtoModel->upload_pdf = $pdfFileName;
+    //     }
+
+    //     // 5. Handle M-Parivahan Update (Optional)
+    //     if ($req->status == 'Online') {
+    //         $DtoModel->online_date = $req->online_date;
+
+    //         if ($req->hasFile('upload_mparivahan')) {
+    //             $file = $req->file('upload_mparivahan');
+    //             $regNumber = Str::upper($DtoModel->reg_number);
+    //             $mpariFileName = $regNumber . '_' . now()->format("YmdHis") . '_mpari.' . $file->getClientOriginalExtension();
+
+    //             $file->move(public_path('files'), $mpariFileName);
+    //             $DtoModel->upload_mparivahan = $mpariFileName;
+    //         }
+    //     }
+
+    //     $DtoModel->save();
+
+    //     // 6. SMS Logic
+    //     if ($req->status == 'Online') {
+    //         try {
+    //             $this->smsService->sendCarTransferNotification(
+    //                 $DtoModel->purchaser_name,
+    //                 $DtoModel->Purchaser_mobile_number,
+    //                 $DtoModel->reg_number,
+    //                 $DtoModel->online_date
+    //             );
+    //         } catch (\Exception $e) {
+    //             // Log error silently
+    //         }
+    //     }
+
+    //     return redirect('admin/dto/view-dto-file')->with('success', 'File Updated Successfully & Old Version Archived.');
+    // }
+
     public function updatedtofile(Request $req, $id)
-    {
-        // 1. Validation
-        $req->validate([
-            'Purchaser_mobile_number' => 'required|digits:10|regex:/^[6-9]\d{9}$/',
-            'vendor_name'             => 'required|string|max:150',
-            'vendor_mobile_number'    => 'required|digits:10|regex:/^[6-9]\d{9}$/', // Fixed
-            'rto_location'            => 'required|string', 
-            'dispatch_date'           => 'required_unless:status,Ready to Dispatch,Hold|nullable|date',
-            'status'                  => 'required',
-            'remarks'                 => 'required',
-            'upload_mparivahan'       => 'nullable|mimes:png,jpg,jpeg,pdf|max:5120',
-            'upload_pdf'              => 'nullable|mimes:pdf|max:10240',
-            'purchaser_name'          => 'required|string|max:150',
-            'financer'                => 'nullable|string',
-            'challan_date'            => 'nullable|date',
-        ]);
-        $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
-        $DtoModel = DtoModel::findOrFail($id);
+{
+    // 1. Fetch Model FIRST (Needed to check if file already exists)
+    $DtoModel = DtoModel::findOrFail($id);
 
-        // ======================================================
-        // 2. HISTORY TRACKING (Archive Old State)
-        // ======================================================
-        $history = new DtoFileHistoryModel;
-        $history->dto_file_id = $DtoModel->id;
-        $history->status      = $DtoModel->status;       // OLD Status
-        $history->remarks     = $DtoModel->remarks;      // OLD Remarks
-
-        // Only save the filename to history if the user is uploading a NEW file.
-        if ($req->hasFile('upload_pdf')) {
-            $history->file_name = $DtoModel->upload_pdf; // Save the file being replaced
-        } else {
-            $history->file_name = null; // No file change
-        }
-
-        $history->created_by  = Auth::user()->name;
-        $history->created_at  = $mytime;
-        $history->updated_at  = $mytime;
-        $history->save();
-        // ======================================================
-
-        // 3. Update Fields
-        $DtoModel->rto_location            = $req->rto_location; // Now Editable
-        $DtoModel->purchaser_name          = $req->purchaser_name;
-        $DtoModel->Purchaser_mobile_number = $req->Purchaser_mobile_number;
-        $DtoModel->vendor_name             = $req->vendor_name;
-        $DtoModel->vendor_mobile_number    = $req->vendor_mobile_number;
-
-        // --- NEW FIELDS ---
-        $DtoModel->financer                = $req->financer;
-        $DtoModel->challan_date            = $req->challan_date;
-        // ------------------
-
-        $DtoModel->status                  = $req->status;
-
-        // Logic: If status is 'Ready' or 'Hold', clear the dispatch date, otherwise save it
-        if ($req->status === 'Ready to Dispatch' || $req->status === 'Hold') {
-            $DtoModel->dispatch_date = null;
-        } else {
-            $DtoModel->dispatch_date = $req->dispatch_date;
-        }
-
-        $DtoModel->remarks                 = $req->remarks; // NEW Remarks
-        $DtoModel->updated_by              = Auth::user()->name;
-        $DtoModel->updated_at              = $mytime;
-
-        // 4. Handle Main PDF Update (If user uploads new file)
-        if ($req->hasFile('upload_pdf')) {
-            $file = $req->file('upload_pdf');
-
-            // Generate Unique Name
-            $regNumber = Str::upper($DtoModel->reg_number);
-            $timestamp = now()->format('YmdHis');
-            $pdfFileName = $regNumber . '_' . $timestamp . '_dto.' . $file->getClientOriginalExtension();
-
-            // Move to folder
-            $file->move(public_path('files'), $pdfFileName);
-
-            // Update DB with NEW filename
-            $DtoModel->upload_pdf = $pdfFileName;
-        }
-
-        // 5. Handle M-Parivahan Update (Optional)
-        if ($req->status == 'Online') {
-            $DtoModel->online_date = $req->online_date;
-
-            if ($req->hasFile('upload_mparivahan')) {
-                $file = $req->file('upload_mparivahan');
-                $regNumber = Str::upper($DtoModel->reg_number);
-                $mpariFileName = $regNumber . '_' . now()->format("YmdHis") . '_mpari.' . $file->getClientOriginalExtension();
-
-                $file->move(public_path('files'), $mpariFileName);
-                $DtoModel->upload_mparivahan = $mpariFileName;
-            }
-        }
-
-        $DtoModel->save();
-
-        // 6. SMS Logic
-        if ($req->status == 'Online') {
-            try {
-                $this->smsService->sendCarTransferNotification(
-                    $DtoModel->purchaser_name,
-                    $DtoModel->Purchaser_mobile_number,
-                    $DtoModel->reg_number,
-                    $DtoModel->online_date
-                );
-            } catch (\Exception $e) {
-                // Log error silently
-            }
-        }
-
-        return redirect('admin/dto/view-dto-file')->with('success', 'File Updated Successfully & Old Version Archived.');
+    // 2. Dynamic Rule Logic
+    // If Status is Online AND there is NO existing file in DB => Required
+    // Otherwise => Nullable (Optional)
+    $mParivahanRule = 'nullable';
+    if ($req->status == 'Online' && empty($DtoModel->upload_mparivahan)) {
+        $mParivahanRule = 'required';
     }
+
+    // 3. Validation
+    $req->validate([
+        'Purchaser_mobile_number' => 'required|digits:10|regex:/^[6-9]\d{9}$/',
+        'vendor_name'             => 'required|string|max:150',
+        'vendor_mobile_number'    => 'required|digits:10|regex:/^[6-9]\d{9}$/',
+        'rto_location'            => 'required|string',
+        'dispatch_date'           => 'required_unless:status,Ready to Dispatch,Hold|nullable|date',
+        'status'                  => 'required',
+        'remarks'                 => 'required',
+        // USE THE DYNAMIC RULE HERE:
+        'upload_mparivahan'       => $mParivahanRule . '|mimes:png,jpg,jpeg,pdf|max:5120',
+        'upload_pdf'              => 'nullable|mimes:pdf|max:10240',
+        'purchaser_name'          => 'required|string|max:150',
+        'financer'                => 'nullable|string',
+        'challan_date'            => 'nullable|date',
+        // Good practice: Ensure online_date is required if Online
+        'online_date'             => 'required_if:status,Online|nullable|date', 
+    ], [
+        // Custom error message for better UX
+        'upload_mparivahan.required' => 'You must upload the M-Parivahan file when status is Online.',
+    ]);
+
+    $mytime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s');
+
+    // ======================================================
+    // 4. HISTORY TRACKING (Archive Old State)
+    // ======================================================
+    $history = new DtoFileHistoryModel;
+    $history->dto_file_id = $DtoModel->id;
+    $history->status      = $DtoModel->status;       // OLD Status
+    $history->remarks     = $DtoModel->remarks;      // OLD Remarks
+
+    // Only save the filename to history if the user is uploading a NEW file.
+    if ($req->hasFile('upload_pdf')) {
+        $history->file_name = $DtoModel->upload_pdf; // Save the file being replaced
+    } else {
+        $history->file_name = null; // No file change
+    }
+
+    $history->created_by  = Auth::user()->name;
+    $history->created_at  = $mytime;
+    $history->updated_at  = $mytime;
+    $history->save();
+    // ======================================================
+
+    // 5. Update Fields
+    $DtoModel->rto_location            = $req->rto_location;
+    $DtoModel->purchaser_name          = $req->purchaser_name;
+    $DtoModel->Purchaser_mobile_number = $req->Purchaser_mobile_number;
+    $DtoModel->vendor_name             = $req->vendor_name;
+    $DtoModel->vendor_mobile_number    = $req->vendor_mobile_number;
+
+    // --- NEW FIELDS ---
+    $DtoModel->financer                = $req->financer;
+    $DtoModel->challan_date            = $req->challan_date;
+    // ------------------
+
+    $DtoModel->status                  = $req->status;
+
+    // Logic: If status is 'Ready' or 'Hold', clear the dispatch date, otherwise save it
+    if ($req->status === 'Ready to Dispatch' || $req->status === 'Hold') {
+        $DtoModel->dispatch_date = null;
+    } else {
+        $DtoModel->dispatch_date = $req->dispatch_date;
+    }
+
+    $DtoModel->remarks                 = $req->remarks;
+    $DtoModel->updated_by              = Auth::user()->name;
+    $DtoModel->updated_at              = $mytime;
+
+    // 6. Handle Main PDF Update (If user uploads new file)
+    if ($req->hasFile('upload_pdf')) {
+        $file = $req->file('upload_pdf');
+
+        // Generate Unique Name
+        $regNumber = Str::upper($DtoModel->reg_number);
+        $timestamp = now()->format('YmdHis');
+        $pdfFileName = $regNumber . '_' . $timestamp . '_dto.' . $file->getClientOriginalExtension();
+
+        // Move to folder
+        $file->move(public_path('files'), $pdfFileName);
+
+        // Update DB with NEW filename
+        $DtoModel->upload_pdf = $pdfFileName;
+    }
+
+    // 7. Handle M-Parivahan Update
+    if ($req->status == 'Online') {
+        $DtoModel->online_date = $req->online_date;
+
+        if ($req->hasFile('upload_mparivahan')) {
+            $file = $req->file('upload_mparivahan');
+            $regNumber = Str::upper($DtoModel->reg_number);
+            $mpariFileName = $regNumber . '_' . now()->format("YmdHis") . '_mpari.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('files'), $mpariFileName);
+            $DtoModel->upload_mparivahan = $mpariFileName;
+        }
+    }
+
+    $DtoModel->save();
+
+    // 8. SMS Logic
+    if ($req->status == 'Online') {
+        try {
+            $this->smsService->sendCarTransferNotification(
+                $DtoModel->purchaser_name,
+                $DtoModel->Purchaser_mobile_number,
+                $DtoModel->reg_number,
+                $DtoModel->online_date
+            );
+        } catch (\Exception $e) {
+            // Log error silently
+        }
+    }
+
+    return redirect('admin/dto/view-dto-file')->with('success', 'File Updated Successfully & Old Version Archived.');
+}
 
     public function bulkUpdate(Request $req)
     {

@@ -16,6 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Models\DtoModel;
 use App\Models\DtoFileHistoryModel;
 use Illuminate\Support\Str;
+use App\Models\CancelledBookingModel;
 
 class StockController extends Controller
 {
@@ -498,78 +499,158 @@ class StockController extends Controller
     //     return view('admin.booking.view-booking');
     // }
 
+    // public function viewbooking(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $query = BookingModel::select(
+    //             'car_booking.id',
+    //             'car_booking.created_by',
+    //             'car_booking.booking_no',
+    //             'car_booking.booking_person',
+    //             'car_booking.total_amount',
+    //             'car_booking.adv_amount',
+    //             'car_booking.finance_amount',
+    //             'car_booking.due_amount',
+    //             'car_booking.remarks',
+    //             'car_booking.created_at',
+    //             'ledger.name as name',
+    //             'car_stock.car_model as carmodel',
+    //             'car_stock.reg_number as regnumber'
+    //         )
+    //             ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
+    //             ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
+    //             ->where('car_booking.stock_status', 1);
+
+    //         // --- IMPROVED DATE FILTER LOGIC ---
+    //         if ($request->filled('from_date') && $request->filled('to_date')) {
+    //             // Filter by user selected dates
+    //             $query->whereBetween('car_booking.created_at', [
+    //                 $request->from_date . ' 00:00:00',
+    //                 $request->to_date . ' 23:59:59'
+    //             ]);
+    //         } else {
+    //             // DEFAULT: Last 90 Days if no dates provided
+    //             $query->where('car_booking.created_at', '>=', now()->subDays(90));
+    //         }
+
+    //         return DataTables::of($query)
+    //             ->addIndexColumn()
+    //             ->filter(function ($instance) use ($request) {
+    //                 if ($request->has('search') && !empty($request->get('search')['value'])) {
+    //                     $keyword = $request->get('search')['value'];
+    //                     $instance->where(function ($q) use ($keyword) {
+    //                         $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
+    //                             ->orWhere('ledger.name', 'LIKE', "%$keyword%")
+    //                             ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
+    //                     });
+    //                 }
+    //             })
+    //             ->editColumn('created_at', function ($row) {
+    //                 return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
+    //             })
+    //             ->addColumn('action', function ($row) {
+    //                 // Generate the URL for Print and Delivery
+    //                 $printUrl = url('/admin/print-booking-pdf/' . $row->id);
+    //                 $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
+
+    //                 return '<div class="d-flex gap-1">
+    //         <a href="' . $printUrl . '" class="badge bg-primary text-decoration-none">Print</a>
+            
+    //         <a href="' . $deliveryUrl . '" class="badge bg-success text-decoration-none">Delivery</a>
+            
+    //         <button type="button" 
+    //             class="badge bg-danger border-0 btn-cancel-booking" 
+    //             data-id="' . $row->id . '">
+    //             Cancel
+    //         </button>
+    //     </div>';
+    //             })
+    //             ->rawColumns(['action'])
+    //             ->make(true);
+    //     }
+
+    //     return view('admin.booking.view-booking');
+    // }
     public function viewbooking(Request $request)
-    {
-        if ($request->ajax()) {
-            $query = BookingModel::select(
-                'car_booking.id',
-                'car_booking.created_by',
-                'car_booking.booking_no',
-                'car_booking.booking_person',
-                'car_booking.total_amount',
-                'car_booking.adv_amount',
-                'car_booking.finance_amount',
-                'car_booking.due_amount',
-                'car_booking.remarks',
-                'car_booking.created_at',
-                'ledger.name as name',
-                'car_stock.car_model as carmodel',
-                'car_stock.reg_number as regnumber'
-            )
-                ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
-                ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
-                ->where('car_booking.stock_status', 1);
+{
+    if ($request->ajax()) {
+        $query = BookingModel::select(
+            'car_booking.id',
+            'car_booking.created_by',
+            'car_booking.booking_no',
+            'car_booking.booking_person',
+            'car_booking.total_amount',
+            'car_booking.adv_amount',
+            'car_booking.finance_amount',
+            'car_booking.due_amount',
+            'car_booking.remarks',
+            'car_booking.created_at',
+            'ledger.name as name',
+            'car_stock.car_model as carmodel',
+            'car_stock.reg_number as regnumber'
+        )
+            ->leftJoin('car_stock', 'car_stock.id', '=', 'car_booking.car_stock_id')
+            ->leftJoin('ledger', 'ledger.id', '=', 'car_booking.customer_ledger_id')
+            ->where('car_booking.stock_status', 1);
 
-            // --- IMPROVED DATE FILTER LOGIC ---
-            if ($request->filled('from_date') && $request->filled('to_date')) {
-                // Filter by user selected dates
-                $query->whereBetween('car_booking.created_at', [
-                    $request->from_date . ' 00:00:00',
-                    $request->to_date . ' 23:59:59'
-                ]);
-            } else {
-                // DEFAULT: Last 90 Days if no dates provided
-                $query->where('car_booking.created_at', '>=', now()->subDays(90));
-            }
-
-            return DataTables::of($query)
-                ->addIndexColumn()
-                ->filter(function ($instance) use ($request) {
-                    if ($request->has('search') && !empty($request->get('search')['value'])) {
-                        $keyword = $request->get('search')['value'];
-                        $instance->where(function ($q) use ($keyword) {
-                            $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
-                                ->orWhere('ledger.name', 'LIKE', "%$keyword%")
-                                ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
-                        });
-                    }
-                })
-                ->editColumn('created_at', function ($row) {
-                    return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
-                })
-                ->addColumn('action', function ($row) {
-                    // Generate the URL for Print and Delivery
-                    $printUrl = url('/admin/print-booking-pdf/' . $row->id);
-                    $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
-
-                    return '<div class="d-flex gap-1">
-            <a href="' . $printUrl . '" class="badge bg-primary text-decoration-none">Print</a>
-            
-            <a href="' . $deliveryUrl . '" class="badge bg-success text-decoration-none">Delivery</a>
-            
-            <button type="button" 
-                class="badge bg-danger border-0 btn-cancel-booking" 
-                data-id="' . $row->id . '">
-                Cancel
-            </button>
-        </div>';
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        // --- DATE FILTERS ---
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('car_booking.created_at', [
+                $request->from_date . ' 00:00:00',
+                $request->to_date . ' 23:59:59'
+            ]);
+        } else {
+            $query->where('car_booking.created_at', '>=', now()->subDays(90));
         }
 
-        return view('admin.booking.view-booking');
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                if ($request->has('search') && !empty($request->get('search')['value'])) {
+                    $keyword = $request->get('search')['value'];
+                    $instance->where(function ($q) use ($keyword) {
+                        $q->where('car_booking.booking_no', 'LIKE', "%$keyword%")
+                            ->orWhere('ledger.name', 'LIKE', "%$keyword%")
+                            ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
+                    });
+                }
+            })
+            ->editColumn('created_at', function ($row) {
+                return $row->created_at ? date('d-M-Y', strtotime($row->created_at)) : '';
+            })
+            ->addColumn('action', function ($row) {
+                // URLs
+                $printUrl = url('/admin/print-booking-pdf/' . $row->id);
+                $deliveryUrl = url('/admin/delivary/add-delivary/' . $row->id);
+                
+                // Data for Modal (Handle nulls to avoid errors)
+                $customerName = $row->name ?? '';
+                $regNumber = $row->regnumber ?? '';
+                $totalAmount = $row->total_amount ?? 0;
+                $advAmount = $row->adv_amount ?? 0;
+
+                return '<div class="d-flex gap-1">
+                        <a href="' . $printUrl . '" class="badge bg-primary text-decoration-none">Print</a>
+                        
+                        <a href="' . $deliveryUrl . '" class="badge bg-success text-decoration-none">Delivery</a>
+                        
+                        <button type="button" 
+                            class="badge bg-danger border-0 btn-cancel-booking" 
+                            data-id="' . $row->id . '" 
+                            data-customer="' . htmlspecialchars($customerName) . '"
+                            data-reg="' . htmlspecialchars($regNumber) . '"
+                            data-sell="' . $totalAmount . '"
+                            data-booking="' . $advAmount . '">
+                            Cancel
+                        </button>
+                    </div>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
+
+    return view('admin.booking.view-booking');
+}
 
     public function exportBookings(Request $request)
     {
@@ -1136,4 +1217,93 @@ class StockController extends Controller
             return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
         }
     }
+    public function insertCancelBooking(Request $request)
+{
+    // 1. Validate
+    $request->validate([
+        'id' => 'required',
+        'cancel_reason' => 'required|string'
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // 2. Find the Booking
+        $booking = BookingModel::find($request->id);
+
+        if (!$booking) {
+            return response()->json(['status' => 'error', 'message' => 'Booking not found.']);
+        }
+
+        $carStockId = $booking->car_stock_id;
+        $customerId = $booking->customer_ledger_id;
+
+        // ---------------------------------------------------------
+        // STOCK LOGIC: Check count BEFORE cancelling the booking
+        // ---------------------------------------------------------
+        $totalActiveBookings = BookingModel::where('car_stock_id', $carStockId)
+            ->where('stock_status', 1) 
+            ->count();
+
+        // If this is the ONLY booking, release the stock to '2' (IN-Stock)
+        if ($totalActiveBookings == 1) {
+            DB::table('car_stock')
+                ->where('id', $carStockId)
+                ->update(['stock_status' => 2]); 
+        } 
+
+        // ---------------------------------------------------------
+        // LEDGER REVERSAL (Credit/Debit Adjustments)
+        // ---------------------------------------------------------
+        $carDetails = DB::table('car_stock')->where('id', $carStockId)->first();
+        $carInfo = $carDetails ? ($carDetails->reg_number . '-' . $carDetails->car_model) : 'Unknown Car';
+
+        // 1. Reverse "Total Amount"
+        $ledger1 = new CustomerStatementModel();
+        $ledger1->customer_id  = $customerId;
+        $ledger1->payment_type = 1; // Credit
+        $ledger1->amount       = $booking->total_amount; 
+        $ledger1->particular   = 'Booking Cancelled - Reversal of Total Amount for ' . $carInfo . ' | ' . $request->cancel_reason;
+        $ledger1->created_by   = Auth::user()->name;
+        $ledger1->save();
+
+        // 2. Reverse "Advance Amount"
+        $ledger2 = new CustomerStatementModel();
+        $ledger2->customer_id  = $customerId;
+        $ledger2->payment_type = 0; // Debit
+        $ledger2->amount       = -$booking->adv_amount; 
+        $ledger2->particular   = 'Booking Cancelled - Refund/Reversal of Advance for ' . $carInfo . ' | ' . $request->cancel_reason;
+        $ledger2->created_by   = Auth::user()->name;
+        $ledger2->save();
+
+        // ---------------------------------------------------------
+        // NEW: SAVE TO CANCELLED BOOKINGS TABLE
+        // ---------------------------------------------------------
+        $cancelRecord = new CancelledBookingModel();
+        $cancelRecord->booking_id    = $booking->id;
+        $cancelRecord->booking_no    = $booking->booking_no;
+        $cancelRecord->customer_id   = $customerId;
+        $cancelRecord->car_stock_id  = $carStockId;
+        $cancelRecord->total_amount  = $booking->total_amount;
+        $cancelRecord->refund_amount = $booking->adv_amount; // Amount refunded to customer
+        $cancelRecord->cancel_reason = $request->cancel_reason;
+        $cancelRecord->cancelled_by  = Auth::user()->name;
+        $cancelRecord->save();
+
+        // ---------------------------------------------------------
+        // UPDATE ORIGINAL BOOKING STATUS
+        // ---------------------------------------------------------
+        $booking->stock_status = 2; 
+        $booking->remarks = $booking->remarks . " | Cancelled: " . $request->cancel_reason;
+        $booking->updated_by = Auth::user()->name;
+        $booking->save();
+
+        DB::commit();
+        return response()->json(['status' => 'success', 'message' => 'Booking Cancelled, Ledger Reversed, and Record Archived successfully.']);
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+    }
+}
 }

@@ -75,6 +75,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/view-booking', [StockController::class, 'viewbooking'])->name('viewbooking');
     Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
     Route::get('/admin/export-bookings', [StockController::class, 'exportBookings']);
+    Route::post('/admin/insert-cancel-booking', [StockController::class, 'insertCancelBooking'])->name('insertCancelBooking');
 
     
     Route::get('admin/delivary/add-delivary/{id}', [StockController::class, 'adddelivary'])->name('adddelivary');
@@ -160,6 +161,9 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     /* Chart Section Section */
     
     Route::get('/chart-data', [ChartController::class, 'chartData'])->name('chart.data');
+    Route::get('/get-online-chart-data', [ChartController::class, 'getOnlineReportData'])->name('get.online.chart.data');
+
+
     /* End Chart Section */
     
 });

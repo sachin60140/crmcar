@@ -125,13 +125,35 @@
                 <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Cancel Booking</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <form id="cancelBookingForm">
                 @csrf 
                 <div class="modal-body">
                     <input type="hidden" id="cancel_booking_id" name="id">
-                    <div class="alert alert-warning small">
-                        <strong>Warning:</strong> This will reverse the ledger entry.
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Customer Name</label>
+                            <input type="text" id="view_customer" class="form-control form-control-sm bg-light" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Reg Number</label>
+                            <input type="text" id="view_reg" class="form-control form-control-sm bg-light" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Sell Price</label>
+                            <input type="text" id="view_sell" class="form-control form-control-sm bg-light" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Booking Amount</label>
+                            <input type="text" id="view_booking" class="form-control form-control-sm bg-light" readonly>
+                        </div>
                     </div>
+
+                    <div class="alert alert-warning small">
+                        <strong>Warning:</strong> This will reverse the ledger entry and release the stock.
+                    </div>
+                    
                     <div class="mb-3">
                         <label class="form-label fw-bold">Reason for Cancellation <span class="text-danger">*</span></label>
                         <textarea class="form-control" name="cancel_reason" required rows="3" placeholder="Enter reason..."></textarea>
@@ -178,14 +200,14 @@
     const nf = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
 
     var table = $('#booking_table').DataTable({
-        pageLength: 50, // --- SET DEFAULT TO 50 ROWS ---
+        pageLength: 50, 
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         processing: true,
         serverSide: true,
         language: {
             processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"></div><span class="ms-2">Loading Data...</span>'
         },
-        order: [[0, 'desc']],
+        order: [[12, 'desc']], // Order by Date Column
         ajax: {
             url: "{{ url()->current() }}",
             data: function(d) {
@@ -212,7 +234,6 @@
         dom: 'Bfrtip',
         buttons: [
             {
-                // --- CUSTOM EXPORT LOGIC FOR SERVER SIDE ---
                 text: '<i class="bi bi-file-earmark-excel"></i> Export All (Excel)',
                 className: 'btn btn-success btn-sm',
                 action: function (e, dt, node, config) {
@@ -244,12 +265,29 @@
 
     // 5. CANCEL BOOKING LOGIC
     $(document).on('click', '.btn-cancel-booking', function() {
-        var id = $(this).data('id'); 
-        $('#cancel_booking_id').val(id); 
-        $('#cancelBookingForm')[0].reset();
+        // A. GET DATA from Button Attributes
+        var id = $(this).data('id');
+        var customer = $(this).data('customer');
+        var reg = $(this).data('reg');
+        // Format money to show cleanly (optional, removes extra decimals if any)
+        var sell = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format($(this).data('sell') || 0);
+        var booking = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format($(this).data('booking') || 0);
+
+        // B. SET DATA into Modal Inputs
+        $('#cancel_booking_id').val(id);
+        $('#view_customer').val(customer);
+        $('#view_reg').val(reg);
+        $('#view_sell').val(sell);
+        $('#view_booking').val(booking);
+
+        // C. Clear ONLY the Reason field (keep the other inputs we just set)
+        $('textarea[name="cancel_reason"]').val('');
+        
+        // D. Show Modal
         $('#cancelModal').modal('show');
     });
 
+    // 6. SUBMIT CANCELLATION
     $('#cancelBookingForm').submit(function(e) {
         e.preventDefault();
         var submitBtn = $('#btnConfirmCancel');

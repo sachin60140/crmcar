@@ -2,13 +2,12 @@
 
 @section('title', 'View Lead Data | Car 4 Sales')
 
-
 @section('style')
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-
+    <style>
+        .pagination { float: right; }
+    </style>
 @endsection
 
 @section('content')
@@ -18,20 +17,17 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
                 <li class="breadcrumb-item">View Branch</li>
-                
             </ol>
         </nav>
-    </div><!-- End Page Title -->
+    </div>
+
     <section class="section dashboard">
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">View Branch </h5>
-                        {{-- <h5 class="card-title"><a href="{{url("admin/employee/generate-pdf")}}" target="_blank" > click me to pdf </a></h5> --}}
 
-                        <!-- Table with stripped rows -->
                         <table class="table display" style="font-size: 13px;" id="example">
                             <thead>
                                 <tr>
@@ -56,17 +52,17 @@
                                         <td>{{ $items->created_at }}</td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
-                        <!-- End Table with stripped rows -->
+                        
+                        <div class="d-flex justify-content-end mt-3">
+                            {{ $data->links('pagination::bootstrap-5') }}
+                        </div>
 
                     </div>
                 </div>
-
             </div>
         </div>
-
     @endsection
 
     @section('script')
@@ -88,11 +84,12 @@
                         'csvHtml5',
                         'pdfHtml5',
                     ],
-                    "pageLength": 50,
-
-                    "aaSorting": [
-                        [0, 'desc']
-                    ],
+                    // DISABLE JS Paging because we are using Laravel Paging
+                    "paging": false, 
+                    "info": false,
+                    
+                    // Remove default sorting so it follows your Controller's order
+                    "aaSorting": [], 
                 });
             });
         </script>

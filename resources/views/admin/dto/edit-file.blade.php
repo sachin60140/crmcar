@@ -17,10 +17,9 @@
             cursor: not-allowed;
         }
 
-        /* Optional: Style the datepicker input to look clickable */
+        /* Style the datepicker input to look clickable */
         .date-picker {
             background-color: #fff !important;
-            /* Force white background */
             cursor: pointer;
         }
     </style>
@@ -90,10 +89,10 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Purchaser Mobile</label>
-                        <input type="tel" class="form-control" name="Purchaser_mobile_number" id="Purchaser_mobile_number"
-                            maxlength="10" value="{{ old('Purchaser_mobile_number', $getRecord->Purchaser_mobile_number) }}"
-                            >
-                             <p id="msg"></p>
+                        <input type="tel" class="form-control" name="Purchaser_mobile_number"
+                            id="Purchaser_mobile_number" maxlength="10"
+                            value="{{ old('Purchaser_mobile_number', $getRecord->Purchaser_mobile_number) }}">
+                        <p id="msg"></p>
                     </div>
 
                     <div class="col-md-4">
@@ -115,10 +114,6 @@
                             <option value="">Select Financer...</option>
                             @if (isset($financers))
                                 @foreach ($financers as $item)
-                                    {{-- 
-                    $item->financer_name : The name from the 'financer_details' list.
-                    $getRecord->financer : The value saved in your main 'dto_dispatch' table.
-                --}}
                                     <option value="{{ $item->financer_name }}"
                                         {{ isset($getRecord->financer) && $getRecord->financer == $item->financer_name ? 'selected' : '' }}>
                                         {{ $item->financer_name }}
@@ -135,7 +130,7 @@
                             placeholder="Select Date">
                     </div>
 
-                    
+
                     <div class="col-md-4">
                         <label class="form-label">File Status <span class="text-danger">*</span></label>
                         <select id="status" class="form-select" name="status" required>
@@ -148,11 +143,13 @@
                             <option value="Hold" {{ $getRecord->status == 'Hold' ? 'selected' : '' }}>Hold</option>
                         </select>
                     </div>
+
+                    {{-- REMOVED 'required' from HTML here. It is handled by JS toggleOnline() --}}
                     <div class="col-md-4" id="dispatch_date_div">
                         <label class="form-label">Dispatch Date <span class="text-danger">*</span></label>
                         <input type="text" class="form-control date-picker" id="dispatch_date" name="dispatch_date"
                             value="{{ $getRecord->dispatch_date ? date('Y-m-d', strtotime($getRecord->dispatch_date)) : '' }}"
-                            placeholder="Select Date" required>
+                            placeholder="Select Date">
                     </div>
 
 
@@ -205,16 +202,16 @@
     <script>
         $(document).ready(function() {
 
-            // 1. Initialize Flatpickr (The JS Calendar)
+            // 1. Initialize Flatpickr (FIXED: altInput set to false)
             $(".date-picker").flatpickr({
                 dateFormat: "Y-m-d", // Database format
                 allowInput: true, // Allow manual typing if needed
-                altInput: true, // Show human readable format
-                altFormat: "F j, Y", // e.g. October 25, 2023
-                maxDate: "today", // Disables all dates greater than today
-        locale: {
-            firstDayOfWeek: 1 // Optional: Starts week on Monday
-        }
+                altInput: false, // <--- DISABLED to fix "invalid form control" error
+                // altFormat: "F j, Y", // <--- Commented out as altInput is false
+                maxDate: "today",
+                locale: {
+                    firstDayOfWeek: 1
+                }
             });
 
             // 2. Logic to Show/Hide Online Fields
@@ -231,12 +228,14 @@
                 }
 
                 // Handle Dispatch Date Visibility (Hide on 'Hold' or 'Ready to Dispatch')
+                // Adjust logic: If 'Ready to Dispatch' OR 'Hold', we usually HIDE the date? 
+                // Based on your original code, it was hidden for 'Ready to Dispatch'.
                 if (status === 'Ready to Dispatch' || status === 'Hold' || status === '') {
                     $('#dispatch_date_div').hide();
                     $('#dispatch_date').prop('required', false);
                 } else {
                     $('#dispatch_date_div').show();
-                    // We keep the value if it exists, but make it required
+                    // We make it required when it is visible
                     $('#dispatch_date').prop('required', true);
                 }
             }
@@ -254,31 +253,37 @@
     <script>
         const mobile = document.getElementById('Purchaser_mobile_number');
         const msg = document.getElementById('msg');
-        
-        mobile.addEventListener('input', function() {
-            const num = this.value;
-            
-            // Validation logic
-            if (!/^\d*$/.test(num)) {
-                msg.textContent = "Only digits allowed";
-                msg.style.color = "red";
-                return;
-            }
-            
-            if (num.length !== 10) {
-                msg.textContent = "Must be 10 digits";
-                msg.style.color = "red";
-                return;
-            }
-            
-            if (!/^[6-9]/.test(num)) {
-                msg.textContent = "Must start with 6-9";
-                msg.style.color = "red";
-                return;
-            }
-            
-            msg.textContent = "✓ Valid mobile number";
-            msg.style.color = "green";
-        });
+
+        if (mobile) { // Add check to prevent errors if element doesn't exist
+            mobile.addEventListener('input', function() {
+                const num = this.value;
+
+                // Validation logic
+                if (!/^\d*$/.test(num)) {
+                    msg.textContent = "Only digits allowed";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                if (num.length > 0 && num.length !== 10) {
+                    msg.textContent = "Must be 10 digits";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                if (num.length === 10 && !/^[6-9]/.test(num)) {
+                    msg.textContent = "Must start with 6-9";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                if (num.length === 10) {
+                    msg.textContent = "✓ Valid mobile number";
+                    msg.style.color = "green";
+                } else {
+                    msg.textContent = "";
+                }
+            });
+        }
     </script>
 @endsection
