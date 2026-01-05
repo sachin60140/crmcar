@@ -70,6 +70,7 @@
                                 <th>Reg No.</th>
                                 <th>Preview</th>
                                 <th>Doc Type</th>
+                                <th>Added By</th>
 
                                 <th>Uploaded At</th>
                                 <th class="text-center">Action</th>
@@ -103,6 +104,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $file->doc_type }}</td>
+                                    <td>{{ $file->created_by }}</td>
 
                                     <td>{{ $file->created_at->format('d M Y, h:i A') }}</td>
                                     <td class="text-center">
