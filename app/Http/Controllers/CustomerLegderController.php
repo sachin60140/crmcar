@@ -7,6 +7,8 @@ use App\Models\CustomerLedgerModel;
 use App\Models\CustomerStatementModel;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
 
 class CustomerLegderController extends Controller
 {
@@ -14,16 +16,66 @@ class CustomerLegderController extends Controller
     {
         return view('admin.ledger.add-ledger');
     }
+    public function getLedgerDetails(Request $request)
+    {
+        $mobile = $request->mobile_number;
 
+        // Search for the customer
+        $customer = CustomerLedgerModel::where('mobile_number', $mobile)->first();
+
+        if ($customer) {
+            return response()->json([
+                'found' => true,
+                'data' => $customer
+            ]);
+        } else {
+            return response()->json(['found' => false]);
+        }
+    }
+    public function checkDuplicate(Request $request)
+    {
+        // 1. Map HTML input names to Database column names
+        $columnMapping = [
+            'aadhar'   => 'aadhar',   // Input 'aadhar' checks Column 'aadhar'
+            'pan_card' => 'pan',      // Input 'pan_card' checks Column 'pan'
+        ];
+
+        $fieldName = $request->field_name;
+        $value = $request->value;
+
+        // 2. Check if the field is valid for checking
+        if (array_key_exists($fieldName, $columnMapping)) {
+            $dbColumn = $columnMapping[$fieldName];
+            
+            // 3. Query the database
+            $exists = CustomerLedgerModel::where($dbColumn, $value)->exists();
+
+            return response()->json(['exists' => $exists]);
+        }
+
+        return response()->json(['exists' => false]);
+    }
     public function storeledger(Request $req)
     {
         $req->validate([
                 
             'name' => 'required',
             'f_name' => 'required',
-            'aadhar' => 'required|numeric',
+            'aadhar' => [
+                        'required',
+                        'numeric',
+                        Rule::unique('ledger', 'aadhar'),
+                        ],
+            'pan_card' => [
+                        'nullable',
+                        Rule::unique('ledger', 'pan'),
+                        ],
             'city' => 'required',
-            'mobile_number' => 'required|numeric',
+            'mobile_number' => [
+                        'required',
+                        'numeric',
+                        Rule::unique('ledger', 'mobile_number'),
+                        ],
             'address' => 'required',
         ]);
         $CustomerLedgerModel = new CustomerLedgerModel;
@@ -43,11 +95,26 @@ class CustomerLegderController extends Controller
         return back()->with('success', ' Customer Ledger Added Successfully: ' .$lastid);
     }
 
+    // public function viewledger()
+    // {
+    //     $data = DB::table('ledger')->get();
+       
+    //     return view('admin.ledger.view-ledger',compact('data'));
+    // }
     public function viewledger()
     {
-        $data = DB::table('ledger')->get();
-       
-        return view('admin.ledger.view-ledger',compact('data'));
+        // Optimized Query: Selects customer info AND calculates the sum in one go.
+        // We assume your main customer table is named 'ledger' based on your previous code.
+        $data = DB::table('ledger')
+            ->addSelect([
+                'total_amount' => DB::table('customer_ledger')
+                    ->selectRaw('sum(amount)')
+                    ->whereColumn('customer_id', 'ledger.id')
+            ])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('admin.ledger.view-ledger', compact('data'));
     }
 
     public function viewledgerstatement($id)

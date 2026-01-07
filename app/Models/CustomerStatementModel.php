@@ -18,14 +18,36 @@ class CustomerStatementModel extends Model
         'created_by',
         // Add any other columns you are saving here
     ];
-
-    static function getRecord($id)
+     public static function getRecord($customerId)
     {
-        $return = CustomerStatementModel::select('customer_ledger.*', 'ledger.name as name')
-                    ->join('ledger','ledger.id', 'customer_ledger.customer_id')
-                    ->where('customer_id', $id)
-                    ->orderBy('id', 'asc')
+        // Fetch oldest → newest (required for correct balance)
+        $records = self::select(
+                        'customer_ledger.*',
+                        'ledger.name as name'
+                    )
+                    ->join('ledger', 'ledger.id', '=', 'customer_ledger.customer_id')
+                    ->where('customer_ledger.customer_id', $customerId)
+                    ->orderBy('customer_ledger.id', 'asc')
                     ->get();
-                    return $return;
+
+        // Calculate running balance
+        $balance = 0;
+        foreach ($records as $row) {
+            $balance += $row->amount;
+            $row->running_balance = $balance;
+        }
+
+        // Reverse collection for latest-first display
+        return $records->reverse()->values();
     }
+
+    // static function getRecord($id)
+    // {
+    //     $return = CustomerStatementModel::select('customer_ledger.*', 'ledger.name as name')
+    //                 ->join('ledger','ledger.id', 'customer_ledger.customer_id')
+    //                 ->where('customer_id', $id)
+    //                 ->orderBy('id', 'asc')
+    //                 ->get();
+    //                 return $return;
+    // }
 }

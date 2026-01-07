@@ -132,42 +132,78 @@ class ChartController extends Controller
         ]);
     }
 
+    // public function getOnlineReportData()
+    // {
+    //     // 1. Define the time range (Last 6 months)
+    //     $startDate = Carbon::now()->subMonths(5)->startOfMonth(); // Go back 5 months + current month
+    //     $endDate   = Carbon::now()->endOfMonth();
+
+    //     // 2. Query Database: Group by Year-Month and Count
+    //     $queryData = DB::table('dto_dispatch')
+    //         ->select(
+    //             DB::raw("DATE_FORMAT(online_date, '%Y-%m') as month_key"),
+    //             DB::raw("COUNT(*) as total")
+    //         )
+    //         ->where('status', 'Online')
+    //         ->whereBetween('online_date', [$startDate, $endDate])
+    //         ->groupBy('month_key')
+    //         ->orderBy('month_key', 'ASC')
+    //         ->pluck('total', 'month_key'); // Creates an array like ['2025-09' => 5, '2025-10' => 12]
+
+    //     // 3. Prepare Final Arrays (Filling in missing months with 0)
+    //     $labels = [];
+    //     $data   = [];
+
+    //     // Loop through the last 6 months to create the structure
+    //     for ($i = 5; $i >= 0; $i--) {
+    //         $date = Carbon::now()->subMonths($i);
+    //         $monthKey = $date->format('Y-m'); // Key to match DB result (e.g., "2025-09")
+    //         $monthName = $date->format('M Y'); // Label for Chart (e.g., "Sep 2025")
+
+    //         $labels[] = $monthName;
+    //         // If data exists for this month, use it; otherwise, use 0
+    //         $data[] = isset($queryData[$monthKey]) ? $queryData[$monthKey] : 0;
+    //     }
+
+    //     return response()->json([
+    //         'labels' => $labels,
+    //         'data'   => $data,
+    //     ]);
+    // }
     public function getOnlineReportData()
-    {
-        // 1. Define the time range (Last 6 months)
-        $startDate = Carbon::now()->subMonths(5)->startOfMonth(); // Go back 5 months + current month
-        $endDate   = Carbon::now()->endOfMonth();
+{
+    // 1. Time range: Last 9 months (subMonths(8))
+    $startDate = \Carbon\Carbon::now()->subMonths(8)->startOfMonth(); 
+    $endDate   = \Carbon\Carbon::now()->endOfMonth();
 
-        // 2. Query Database: Group by Year-Month and Count
-        $queryData = DB::table('dto_dispatch')
-            ->select(
-                DB::raw("DATE_FORMAT(online_date, '%Y-%m') as month_key"),
-                DB::raw("COUNT(*) as total")
-            )
-            ->where('status', 'Online')
-            ->whereBetween('online_date', [$startDate, $endDate])
-            ->groupBy('month_key')
-            ->orderBy('month_key', 'ASC')
-            ->pluck('total', 'month_key'); // Creates an array like ['2025-09' => 5, '2025-10' => 12]
+    $queryData = DB::table('dto_dispatch')
+                ->select(
+                    DB::raw("DATE_FORMAT(online_date, '%Y-%m') as month_key"),
+                    DB::raw("COUNT(*) as total")
+                )
+                ->where('status', 'Online')
+                ->whereBetween('online_date', [$startDate, $endDate])
+                ->groupBy('month_key')
+                ->orderBy('month_key', 'ASC')
+                ->pluck('total', 'month_key');
 
-        // 3. Prepare Final Arrays (Filling in missing months with 0)
-        $labels = [];
-        $data   = [];
+    $labels = [];
+    $data   = [];
 
-        // Loop through the last 6 months to create the structure
-        for ($i = 5; $i >= 0; $i--) {
-            $date = Carbon::now()->subMonths($i);
-            $monthKey = $date->format('Y-m'); // Key to match DB result (e.g., "2025-09")
-            $monthName = $date->format('M Y'); // Label for Chart (e.g., "Sep 2025")
+    // 2. Loop 8 times back (Total 9 iterations including 0)
+    for ($i = 8; $i >= 0; $i--) {
+        $date = \Carbon\Carbon::now()->subMonths($i);
+        $monthKey = $date->format('Y-m');
+        $monthName = $date->format('M Y');
 
-            $labels[] = $monthName;
-            // If data exists for this month, use it; otherwise, use 0
-            $data[] = isset($queryData[$monthKey]) ? $queryData[$monthKey] : 0;
-        }
-
-        return response()->json([
-            'labels' => $labels,
-            'data'   => $data,
-        ]);
+        $labels[] = $monthName;
+        $data[] = isset($queryData[$monthKey]) ? $queryData[$monthKey] : 0;
     }
+    $average = count($data) > 0 ? round(array_sum($data) / count($data), 1) : 0;
+    return response()->json([
+        'labels' => $labels,
+        'data'   => $data,
+        'average' => $average
+    ]);
+}
 }

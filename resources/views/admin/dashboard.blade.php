@@ -447,7 +447,7 @@ $(document).ready(function() {
 });
 </script> --}}
 
-<script>
+{{-- <script>
 $(document).ready(function() {
     
     var chartUrl = "{{ route('get.online.chart.data') }}"; 
@@ -545,7 +545,232 @@ $(document).ready(function() {
         });
     }
 });
+</script> --}}
+
+{{-- <script>
+$(document).ready(function() {
+    
+    var chartUrl = "{{ route('get.online.chart.data') }}"; 
+
+    $.ajax({
+        url: chartUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            renderOnlineChart(response.labels, response.data);
+        },
+        error: function(xhr) {
+            console.log('Error:', xhr);
+        }
+    });
+
+    function renderOnlineChart(labels, data) {
+        var ctx = document.getElementById('OnlinebarChart').getContext('2d');
+
+        if (window.onlineChart instanceof Chart) {
+            window.onlineChart.destroy();
+        }
+
+        // 1. Defined 9 distinct colors for the 9 months
+        var barColors = [
+            '#FF6384', // Red
+            '#36A2EB', // Blue
+            '#FFCE56', // Yellow
+            '#4BC0C0', // Teal
+            '#9966FF', // Purple
+            '#FF9F40', // Orange
+            '#C9CBCF', // Grey
+            '#20c997', // Greenish
+            '#e83e8c'  // Pink
+        ];
+
+        window.onlineChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    // DATASET 1: THE BARS (Multi-color)
+                    {
+                        type: 'bar',
+                        label: 'Total Online',
+                        data: data,
+                        backgroundColor: barColors,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                        order: 2 // Render this behind the line
+                    },
+                    // DATASET 2: THE LINE (Trend)
+                    {
+                        type: 'line',
+                        label: 'Trend',
+                        data: data, // Uses the same data to show trend
+                        borderColor: '#333333', // Dark Line color
+                        borderWidth: 2,
+                        tension: 0.4, // Makes the line curved (smooth)
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#333333',
+                        pointRadius: 4,
+                        fill: false,
+                        order: 1 // Render this on top
+                    }
+                ]
+            },
+            
+            // Plugin to show numbers on top of bars
+            plugins: [{
+                id: 'displayNumbersOnBars',
+                afterDatasetsDraw(chart, args, options) {
+                    const { ctx } = chart;
+                    // We only want to draw numbers for the BAR dataset (index 0)
+                    const meta = chart.getDatasetMeta(0); 
+                    
+                    meta.data.forEach((bar, index) => {
+                        // Access data from the first dataset
+                        const value = chart.data.datasets[0].data[index];
+                        if(value > 0) {
+                            ctx.save();
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.fillStyle = '#000'; 
+                            ctx.textAlign = 'center';
+                            // Adjust Y position slightly to not hit the line
+                            ctx.fillText(value, bar.x, bar.y - 8); 
+                            ctx.restore();
+                        }
+                    });
+                }
+            }],
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grace: '15%', // Added extra space at top for the Line curves
+                        ticks: { stepSize: 1 }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { 
+                        display: true, // Show legend so user knows which is line vs bar
+                        position: 'top' 
+                    }, 
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+    }
+});
+</script> --}}
+
+<script>
+$(document).ready(function() {
+    
+    var chartUrl = "{{ route('get.online.chart.data') }}"; 
+
+    $.ajax({
+        url: chartUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            renderOnlineChart(response.labels, response.data, response.average);
+        },
+        error: function(xhr) { console.log('Error:', xhr); }
+    });
+
+    function renderOnlineChart(labels, data, averageVal) {
+        var ctx = document.getElementById('OnlinebarChart').getContext('2d');
+
+        if (window.onlineChart instanceof Chart) { window.onlineChart.destroy(); }
+
+        // Create an array filled with the average value (e.g. [12, 12, 12...])
+        // matching the length of the labels array
+        var averageData = new Array(labels.length).fill(averageVal);
+
+        var barColors = [
+            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', 
+            '#FF9F40', '#C9CBCF', '#20c997', '#e83e8c'
+        ];
+
+        window.onlineChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    // DATASET 1: AVERAGE LINE (Dashed Red)
+                    {
+                        type: 'line',
+                        label: 'Average: ' + averageVal, // Show value in legend
+                        data: averageData,
+                        borderColor: '#050000', // Bright Red
+                        borderWidth: 2,
+                        borderDash: [5, 5], // Makes the line dashed
+                        pointRadius: 0, // No dots, just a clean line
+                        fill: false,
+                        order: 0 // Draw on very top
+                    },
+                    // DATASET 2: TREND LINE (Solid Dark)
+                    {
+                        type: 'line',
+                        label: 'Trend',
+                        data: data,
+                        borderColor: '#0715db',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#333333',
+                        pointRadius: 4,
+                        fill: false,
+                        order: 1
+                    },
+                    // DATASET 3: BARS (Multi Color)
+                    {
+                        type: 'bar',
+                        label: 'Online',
+                        data: data,
+                        backgroundColor: barColors,
+                        borderRadius: 4,
+                        order: 2
+                    }
+                ]
+            },
+            
+            plugins: [{
+                id: 'displayNumbers',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+                    // Draw numbers only for the BAR dataset (Index 2 in datasets array)
+                    const meta = chart.getDatasetMeta(2); 
+                    
+                    meta.data.forEach((bar, index) => {
+                        const value = chart.data.datasets[2].data[index];
+                        if(value > 0) {
+                            ctx.save();
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.fillStyle = '#000'; 
+                            ctx.textAlign = 'center';
+                            ctx.fillText(value, bar.x, bar.y - 8); 
+                            ctx.restore();
+                        }
+                    });
+                }
+            }],
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grace: '15%',
+                        ticks: { stepSize: 1 }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+});
 </script>
-
-
 @endsection

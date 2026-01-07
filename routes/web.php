@@ -92,6 +92,8 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/data/lead-allotment', [VisitorController::class, 'leadallotment'])->name('leadallotment');
     Route::post('admin/data/store-lead-allotment', [VisitorController::class, 'storeleadallotment'])->name('storeleadallotment');
 
+    Route::post('/get-ledger-details', [CustomerLegderController::class, 'getLedgerDetails'])->name('get.ledger.details');
+    Route::post('/check-duplicate', [CustomerLegderController::class, 'checkDuplicate'])->name('check.duplicate');
     Route::get('admin/customer/add-ledger', [CustomerLegderController::class, 'addledger'])->name('addledger');
     Route::post('admin/customer/add-ledger', [CustomerLegderController::class, 'storeledger'])->name('storeledger');
     Route::get('admin/customer/view-ledger', [CustomerLegderController::class, 'viewledger'])->name('viewledger');

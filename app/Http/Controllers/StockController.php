@@ -1293,7 +1293,7 @@ class StockController extends Controller
         // ---------------------------------------------------------
         // UPDATE ORIGINAL BOOKING STATUS
         // ---------------------------------------------------------
-        $booking->stock_status = 2; 
+        $booking->stock_status = 4; // Cancelled
         $booking->remarks = $booking->remarks . " | Cancelled: " . $request->cancel_reason;
         $booking->updated_by = Auth::user()->name;
         $booking->save();
