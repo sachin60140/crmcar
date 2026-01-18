@@ -76,7 +76,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/print-booking-pdf/{id}', [StockController::class, 'bookinpdf'])->name('bookinpdf');
     Route::get('/admin/export-bookings', [StockController::class, 'exportBookings']);
     Route::post('/admin/insert-cancel-booking', [StockController::class, 'insertCancelBooking'])->name('insertCancelBooking');
-
+    Route::get('/admin/view-cancelled-bookings', [StockController::class, 'viewCancelledBookings'])->name('view-cancelled-bookings');
     
     Route::get('admin/delivary/add-delivary/{id}', [StockController::class, 'adddelivary'])->name('adddelivary');
     Route::post('admin/delivary/insert-delivary', [StockController::class, 'insertdelivary'])->name('insertdelivary');
@@ -133,8 +133,8 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/cloud-calling/cloud-calling-data', [CloudCallingController::class, 'showcloudacalldata'])->name('showcloudacalldata');
     Route::get('admin/just-dail/just-dail-data', [CloudCallingController::class, 'showjustdaildata'])->name('showjustdaildata');
     //Route::get('admin/Cloud-Call/Qkonnect-Call-Data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
-   Route::any('admin/cloud-calling/qkonnect-call-data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
-
+    Route::any('admin/cloud-calling/qkonnect-call-data', [CloudCallingController::class, 'showqkonnectdata'])->name('qkonnectcalldata');
+    
     /* DTO File  */
     Route::get('admin/dto/add-file', [DtoController::class, 'index'])->name('adddtofile');
     Route::post('admin/dto/store-dto-file', [DtoController::class, 'adddtofile'])->name('storetofile');
@@ -145,6 +145,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::get('admin/dto/get-history/{id}', [DtoController::class, 'getHistory']);
     Route::post('admin/dto/bulk-update', [DtoController::class, 'bulkUpdate']);
     Route::post('admin/dto/get-dto-location', [DtoController::class, 'getdtolocation'])->name('getdtolocation');
+    Route::get('admin/dto/delete-dto-file/{id}', [DtoController::class, 'softDeleteFunction']);
     /* Inspection  */
     Route::get('admin/workshop/inspection', [CarInspectionController::class, 'index'])->name('inspection');
     Route::post('admin/workshop/store-inspection', [CarInspectionController::class, 'storeinspection'])->name('storeinspection');

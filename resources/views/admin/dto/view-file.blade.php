@@ -5,6 +5,8 @@
 @section('style')
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    {{-- SweetAlert2 CSS --}}
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         /* Optional: Style the history modal table */
         #historyTable th {
@@ -46,6 +48,10 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    {{-- NEW: Action Column visible only to User 1 --}}
+                                    @if(auth()->id() == 1)
+                                        <th scope="col">Action</th>
+                                    @endif
                                     <th scope="col">History</th>
                                     <th scope="col">Registration</th>
                                     <th scope="col">RTO</th>
@@ -68,6 +74,17 @@
                                 @foreach ($dtofiledata as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
+
+                                        {{-- NEW: Delete Button visible only to User 1 --}}
+                                        @if(auth()->id() == 1)
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger delete-item-btn" 
+                                                    data-id="{{ $items->id }}" 
+                                                    data-url="{{ url('admin/dto/delete-dto-file') }}/{{ $items->id }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        @endif
 
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info text-white view-history-btn"
@@ -168,6 +185,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    {{-- SweetAlert2 JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 
    <script>
     $(document).ready(function() {
@@ -177,20 +196,43 @@
             dom: 'Bfrtip',
             buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
             "pageLength": 50,
-            "aaSorting": [[8, 'desc'], [7, 'desc']],
+            "aaSorting": [[9, 'desc'], [8, 'desc']], // Check if column index changes due to new Action column
             scrollX: true
         });
 
+        // ==========================================
+        // NEW: Handle Soft Delete with SweetAlert
+        // ==========================================
+        $('body').on('click', '.delete-item-btn', function(e) {
+            e.preventDefault();
+            var deleteUrl = $(this).data('url');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to soft delete this record!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to the delete URL
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+
+
         // 2. Handle History Button Click
-        // Use 'body' delegate because DataTables might redraw rows, removing events
         $('body').on('click', '.view-history-btn', function() {
             var dtoId = $(this).data('id');
             var regNum = $(this).data('reg');
 
             // Set Title & Open Modal
             $('#modalRegNumber').text(regNum);
-            $('#historyTableBody').html(''); // Clear previous data
-            $('#loadingSpinner').show();     // Show Loader
+            $('#historyTableBody').html(''); 
+            $('#loadingSpinner').show();     
 
             // Initialize and Show Modal
             var myModal = new bootstrap.Modal(document.getElementById('historyModal'));
