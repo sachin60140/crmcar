@@ -188,9 +188,7 @@
                     'pdfHtml5',
                 ],
                 "pageLength": 50,
-                "aaSorting": [
-                    [0, 'desc']
-                ],
+                
             });
         });
     </script>
