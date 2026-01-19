@@ -86,13 +86,13 @@
                             <div class="form-group">
                                 <label for="start_date">Start Date:</label>
                                 <input type="date" name="start_date" class="form-control form-control-sm" 
-                                       value="{{ request('start_date') }}">
+                                    value="{{ $start_date }}">
                             </div>
                             
                             <div class="form-group">
                                 <label for="end_date">End Date:</label>
                                 <input type="date" name="end_date" class="form-control form-control-sm" 
-                                       value="{{ request('end_date') }}">
+                                    value="{{ $end_date }}">
                             </div>
                             
                             <div class="form-group" style="flex-direction: row; gap: 5px;">
