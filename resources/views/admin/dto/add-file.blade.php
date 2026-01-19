@@ -10,8 +10,6 @@
             background-color: #fff !important;
         }
 
-        /* Keeps it white even if readonly */
-        /* Preview Container */
         #pdf_preview_container {
             display: none;
             border: 1px solid #ddd;
@@ -26,17 +24,22 @@
             height: 100%;
         }
 
-        /* Progress Bar */
         .progress {
             height: 25px;
             display: none;
-            /* Hidden by default */
             margin-top: 10px;
         }
 
         .progress-bar {
             font-weight: bold;
             line-height: 25px;
+        }
+        
+        /* Helper class for validation messages */
+        #msg {
+            font-size: 0.875em;
+            margin-top: 5px;
+            font-weight: 500;
         }
     </style>
 @endsection
@@ -76,15 +79,17 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label">Purchaser Name</label>
-                            <input type="text" class="form-control" name="purchaser_name">
+                            {{-- Added ID for script targeting --}}
+                            <input type="text" class="form-control" id="purchaser_name" name="purchaser_name">
                         </div>
                         <div class="col-md-3">
-                        <label class="form-label">Purchaser Mobile</label>
-                        <input type="tel" class="form-control" name="Purchaser_mobile_number" id="Purchaser_mobile_number"
-                             value="{{ old('Purchaser_mobile_number') }}"
-                            maxlength="10">
-                             <p id="msg"></p>
-                    </div>
+                            <label class="form-label">Purchaser Mobile</label>
+                            {{-- Maxlength 10 prevents > 10 --}}
+                            <input type="tel" class="form-control" name="Purchaser_mobile_number" id="Purchaser_mobile_number"
+                                value="{{ old('Purchaser_mobile_number') }}"
+                                maxlength="10">
+                            <p id="msg"></p>
+                        </div>
 
                         <div class="col-md-3">
                             <label class="form-label">Vendor Name</label>
@@ -103,12 +108,9 @@
                             <label class="form-label">Financer</label>
                             <select class="form-select" name="financer">
                                 <option value="">Select Financer...</option>
-
                                 @foreach ($financers as $item)
-                                    {{-- Replace 'name' with your actual DB column name (e.g., financer_name) --}}
                                     <option value="{{ $item->financer_name }}">{{ $item->financer_name }}</option>
                                 @endforeach
-
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -183,24 +185,62 @@
                 dateFormat: "Y-m-d",
                 allowInput: true,
                 altInput: true,
-                altFormat: "F j, Y", // Shows "December 19, 2025" but sends "2025-12-19"
-                maxDate: "today", // Disables all dates greater than today
+                altFormat: "F j, Y",
+                maxDate: "today",
                 locale: {
-                    firstDayOfWeek: 1 // Optional: Starts week on Monday
+                    firstDayOfWeek: 1
                 }
             });
         });
     </script>
     <script>
         $(document).ready(function() {
+            
+            // ==========================================
+            // NEW: Purchaser Name Auto Capitalize Words
+            // ==========================================
+            $('#purchaser_name').on('input', function() {
+                $(this).val($(this).val().toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
+            });
+
+            // ==========================================
+            // NEW: Mobile Number Validation (Digits Only, Max 10, Min 10 Warning)
+            // ==========================================
+            $('#Purchaser_mobile_number').on('input', function() {
+                var $input = $(this);
+                var val = $input.val();
+                var $msg = $('#msg');
+
+                // 1. Strictly allow only digits (Remove anything that is not 0-9)
+                var cleanVal = val.replace(/\D/g, '');
+
+                // 2. If the cleaned value is different (e.g. user typed "a"), update the field
+                if (val !== cleanVal) {
+                    $input.val(cleanVal);
+                    val = cleanVal;
+                }
+
+                // 3. Validation Logic
+                if (val.length === 0) {
+                    $msg.text('').removeClass('text-danger text-success');
+                } 
+                else if (val.length < 10) {
+                    // Error if less than 10
+                    $msg.text('Minimum 10 digits required').css('color', 'red');
+                } 
+                else if (val.length === 10) {
+                    // Success if exactly 10
+                    $msg.text('✓ Valid Number').css('color', 'green');
+                }
+                // Note: Maxlength="10" in HTML prevents typing more than 10.
+            });
+
 
             // --- 1. Reg Number Prefix Auto-fill (Triggered at 4 Characters) ---
             $('input[name="reg_number"]').on('input', function() {
-                // Remove spaces/hyphens and convert to uppercase for consistency
                 var regNo = $(this).val().replace(/[\s-]/g, '').toUpperCase();
                 var $rtoLocationField = $('input[name="rto_location"]');
 
-                // Trigger lookup only when exactly 4 characters are reached
                 if (regNo.length === 4) {
                     $.ajax({
                         url: "{{ url('admin/dto/get-dto-location') }}",
@@ -215,12 +255,10 @@
                             }
                         },
                         error: function() {
-                            // Optional: Clear field if no match is found
                             $rtoLocationField.val('');
                         }
                     });
                 } else if (regNo.length < 4) {
-                    // Clear the location if the user deletes characters
                     $rtoLocationField.val('');
                 }
             });
@@ -240,6 +278,7 @@
             });
 
             // --- 3. Datepicker & UI Logic ---
+            // Note: You are using flatpickr above, but keeping this for fallback/logic as per your code
             $("#dispatch_date").datepicker({
                 dateFormat: "yy-mm-dd"
             });
@@ -301,6 +340,9 @@
                             'Completed');
                         $msg.html(`<div class="alert alert-success">${response.message}</div>`);
                         $('#dtoForm')[0].reset();
+                        // Clear mobile message
+                        $('#msg').text('');
+                        
                         $('#pdf_preview_container').hide();
                         toggleDate();
                         $("html, body").animate({
@@ -333,36 +375,6 @@
                     }
                 });
             });
-        });
-    </script>
-    <script>
-        const mobile = document.getElementById('Purchaser_mobile_number');
-        const msg = document.getElementById('msg');
-        
-        mobile.addEventListener('input', function() {
-            const num = this.value;
-            
-            // Validation logic
-            if (!/^\d*$/.test(num)) {
-                msg.textContent = "Only digits allowed";
-                msg.style.color = "red";
-                return;
-            }
-            
-            if (num.length !== 10) {
-                msg.textContent = "Must be 10 digits";
-                msg.style.color = "red";
-                return;
-            }
-            
-            if (!/^[6-9]/.test(num)) {
-                msg.textContent = "Must start with 6-9";
-                msg.style.color = "red";
-                return;
-            }
-            
-            msg.textContent = "✓ Valid mobile number";
-            msg.style.color = "green";
         });
     </script>
 @endsection
