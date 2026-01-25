@@ -114,9 +114,9 @@
                                     <th scope="col">Registration</th>
                                     <th scope="col">Model</th>
                                     <th scope="col">Year</th>
-                                    <th scope="col">Sell Amount</th>
-                                    
+                                    <th scope="col">Sell Amount</th>                                    
                                     <th scope="col">Financer</th>
+                                    <th scope="col">F Amount</th>
                                     <th scope="col">PDI Image</th>
                                 </tr>
                             </thead>
@@ -140,6 +140,7 @@
                                         <td>{{ $items->sell_amount }}</td>
                                         
                                         <td>{{ $items->financer }}</td>
+                                        <td>{{ $items->finance_amount }}</td>
                                         <td>
                                             @if(!empty($items->pdi_image))
                                                 <a href="{{ asset('upload/pdi/'.$items->pdi_image) }}" target="_blank">

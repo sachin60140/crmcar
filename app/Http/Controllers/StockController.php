@@ -26,14 +26,50 @@ class StockController extends Controller
 
         return view('admin.add-stock', compact('data'));
     }
+    // public function insertstock(Request $req)
+    // {
+    //     $req->validate([
+    //         'branch' => 'required',
+    //         'car_model' => 'required',
+    //         'eng_number' => 'required|min:5|max:10',
+    //         'chassis_number' => 'required|min:5|max:10',
+    //         'reg_number' => 'required',
+    //         'car_model_year' => 'required|numeric',
+    //         'color' => 'required',
+    //         'fuel_type' => 'required',
+    //         'owner_sl_no' => 'required|numeric',
+    //         'price' => 'required',
+    //         'lastprice' => 'required',
+    //     ]);
+
+    //     $StockModel = new StockModel();
+
+    //     $StockModel->branch = $req->branch;
+    //     $StockModel->car_model = $req->car_model;
+    //     $StockModel->reg_number = $req->reg_number;
+    //     $StockModel->eng_number = $req->eng_number;
+    //     $StockModel->chassis_number = $req->chassis_number;
+    //     $StockModel->car_model_year = $req->car_model_year;
+    //     $StockModel->color = $req->color;
+    //     $StockModel->fuel_type = $req->fuel_type;
+    //     $StockModel->owner_sl_no = $req->owner_sl_no;
+    //     $StockModel->price = $req->price;
+    //     $StockModel->lastprice = $req->lastprice;
+    //     $StockModel->added_by = Auth::user()->name;
+    //     $StockModel->save();
+    //     $lastid = $StockModel->id;
+
+    //     return back()->with('success', ' Stock Added Successfully: ' . $lastid);
+    // }
     public function insertstock(Request $req)
     {
+        // 1. Validation (Keep outside try-catch for automatic redirection)
         $req->validate([
             'branch' => 'required',
             'car_model' => 'required',
             'eng_number' => 'required|min:5|max:10',
             'chassis_number' => 'required|min:5|max:10',
-            'reg_number' => 'required',
+            'reg_number' => 'required|unique:car_stock,reg_number', // Unique rule applied here
             'car_model_year' => 'required|numeric',
             'color' => 'required',
             'fuel_type' => 'required',
@@ -42,26 +78,37 @@ class StockController extends Controller
             'lastprice' => 'required',
         ]);
 
-        $StockModel = new StockModel();
+        try {
+            // 2. Attempt to save data
+            $StockModel = new StockModel();
 
-        $StockModel->branch = $req->branch;
-        $StockModel->car_model = $req->car_model;
-        $StockModel->reg_number = $req->reg_number;
-        $StockModel->eng_number = $req->eng_number;
-        $StockModel->chassis_number = $req->chassis_number;
-        $StockModel->car_model_year = $req->car_model_year;
-        $StockModel->color = $req->color;
-        $StockModel->fuel_type = $req->fuel_type;
-        $StockModel->owner_sl_no = $req->owner_sl_no;
-        $StockModel->price = $req->price;
-        $StockModel->lastprice = $req->lastprice;
-        $StockModel->added_by = Auth::user()->name;
-        $StockModel->save();
-        $lastid = $StockModel->id;
+            $StockModel->branch = $req->branch;
+            $StockModel->car_model = $req->car_model;
+            $StockModel->reg_number = $req->reg_number;
+            $StockModel->eng_number = $req->eng_number;
+            $StockModel->chassis_number = $req->chassis_number;
+            $StockModel->car_model_year = $req->car_model_year;
+            $StockModel->color = $req->color;
+            $StockModel->fuel_type = $req->fuel_type;
+            $StockModel->owner_sl_no = $req->owner_sl_no;
+            $StockModel->price = $req->price;
+            $StockModel->lastprice = $req->lastprice;
+            $StockModel->added_by = Auth::user()->name;
+            
+            $StockModel->save();
+            $lastid = $StockModel->id;
 
-        return back()->with('success', ' Stock Added Successfully: ' . $lastid);
+            return back()->with('success', 'Stock Added Successfully: ' . $lastid);
+
+        } catch (\Exception $e) {
+            // 3. Catch any errors (Database connection, SQL errors, etc.)
+            // Log the error for debugging (optional but recommended)
+            // \Log::error($e->getMessage()); 
+            
+            // Return back with an error message and keep the input data
+            return back()->with('fail', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
     }
-
     public function viewstock()
     {
         $data['getRecord'] = StockModel::getrecord();
