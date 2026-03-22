@@ -51,6 +51,44 @@
     <h1>View Booking</h1>
 </div>
 
+{{-- ========================================== --}}
+{{-- ALERTS: Validations, Sessions, and AJAX    --}}
+{{-- ========================================== --}}
+
+{{-- Container for dynamic AJAX alerts --}}
+<div id="ajax-alert-container"></div>
+
+{{-- Catch Form Validation Errors --}}
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <strong><i class="bi bi-exclamation-octagon me-1"></i> Please check the form for errors:</strong>
+        <ul class="mb-0 mt-1">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+{{-- Catch Session Success Messages --}}
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <strong><i class="bi bi-check-circle me-1"></i> Success!</strong> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+{{-- Catch Session Error Messages --}}
+@if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <strong><i class="bi bi-x-circle me-1"></i> Error!</strong> {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+{{-- ========================================== --}}
+
 <section class="section">
     <div class="card shadow-sm border-0">
         <div class="card-body">
@@ -265,29 +303,23 @@
 
     // 5. CANCEL BOOKING LOGIC
     $(document).on('click', '.btn-cancel-booking', function() {
-        // A. GET DATA from Button Attributes
         var id = $(this).data('id');
         var customer = $(this).data('customer');
         var reg = $(this).data('reg');
-        // Format money to show cleanly (optional, removes extra decimals if any)
         var sell = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format($(this).data('sell') || 0);
         var booking = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format($(this).data('booking') || 0);
 
-        // B. SET DATA into Modal Inputs
         $('#cancel_booking_id').val(id);
         $('#view_customer').val(customer);
         $('#view_reg').val(reg);
         $('#view_sell').val(sell);
         $('#view_booking').val(booking);
 
-        // C. Clear ONLY the Reason field (keep the other inputs we just set)
         $('textarea[name="cancel_reason"]').val('');
-        
-        // D. Show Modal
         $('#cancelModal').modal('show');
     });
 
-    // 6. SUBMIT CANCELLATION
+    // 6. SUBMIT CANCELLATION (Updated with Bootstrap Alerts)
     $('#cancelBookingForm').submit(function(e) {
         e.preventDefault();
         var submitBtn = $('#btnConfirmCancel');
@@ -301,16 +333,36 @@
             success: function(response) {
                 $('#cancelModal').modal('hide');
                 submitBtn.prop('disabled', false).text(originalText);
-                if (response.status == 'success') {
-                    alert(response.message);
+                
+                // Construct Bootstrap Alert
+                let alertClass = response.status === 'success' ? 'alert-success' : 'alert-danger';
+                let iconClass = response.status === 'success' ? 'bi-check-circle' : 'bi-x-circle';
+                let title = response.status === 'success' ? 'Success!' : 'Error!';
+                
+                let alertHtml = `
+                    <div class="alert ${alertClass} alert-dismissible fade show shadow-sm" role="alert">
+                        <strong><i class="bi ${iconClass} me-1"></i> ${title}</strong> ${response.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                
+                // Inject the alert at the top of the page
+                $('#ajax-alert-container').html(alertHtml);
+
+                if (response.status === 'success') {
                     table.ajax.reload(null, false); 
-                } else {
-                    alert('Error: ' + response.message);
                 }
             },
             error: function(xhr) {
                 submitBtn.prop('disabled', false).text(originalText);
-                alert('Something went wrong. Please check console.');
+                $('#cancelModal').modal('hide');
+                
+                let alertHtml = `
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                        <strong><i class="bi bi-x-circle me-1"></i> Error!</strong> Something went wrong. Please check your connection or console.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                
+                $('#ajax-alert-container').html(alertHtml);
             }
         });
     });

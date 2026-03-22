@@ -11,14 +11,14 @@ class CarDelivaryModel extends Model
     use HasFactory;
 
     protected $fillable = [
-        'booking_id','customer_id','booking_date','branch', 'booking_person', 'name', 'father_name',
-        'mobile', 'aadhar', 'pan_card', 'city', 'address', 'reg_number',
-        'owner_sl_no', 'model_name', 'model_year', 'car_color', 'eng_number',
-        'chassis_number', 'sell_amount', 'booking_amount', 'finance_amount',
-        'dp', 'paymentMode', 'financer', 'remarks', 'electricle_work',
-        'ac_work_status', 'suspenstion_status', 'engine_status',
-        'starting_status', 'stepny_status', 'tools_kit_status',
-        'inspection_by', 'pdi_image', 'pdi_remarks', 'added_by'
+        'booking_id', 'booking_date', 'branch', 'booking_person', 'name', 
+    'father_name', 'mobile', 'aadhar', 'pan_card', 'city', 'address', 
+    'reg_number', 'owner_sl_no', 'model_name', 'model_year', 'car_color', 
+    'eng_number', 'chassis_number', 'sell_amount', 'booking_amount', 
+    'finance_amount', 'dp', 'financer', 'remarks', 'electricle_work', 
+    'ac_work_status', 'suspenstion_status', 'engine_status', 
+    'starting_status', 'stepny_status', 'tools_kit_status', 
+    'inspection_by', 'pdi_image', 'pdi_remarks', 'paymentMode', 'added_by'
     ];
 
     static function getpdfRecord($id)

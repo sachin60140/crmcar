@@ -95,17 +95,16 @@ class StockController extends Controller
             $StockModel->price = $req->price;
             $StockModel->lastprice = $req->lastprice;
             $StockModel->added_by = Auth::user()->name;
-            
+
             $StockModel->save();
             $lastid = $StockModel->id;
 
             return back()->with('success', 'Stock Added Successfully: ' . $lastid);
-
         } catch (\Exception $e) {
             // 3. Catch any errors (Database connection, SQL errors, etc.)
             // Log the error for debugging (optional but recommended)
             // \Log::error($e->getMessage()); 
-            
+
             // Return back with an error message and keep the input data
             return back()->with('fail', 'Something went wrong: ' . $e->getMessage())->withInput();
         }
@@ -173,9 +172,9 @@ class StockController extends Controller
 
         $data['ledger'] = DB::table('ledger')->orderBy('id', 'desc')->get();
         $data['sales_person'] = User::where('user_type', 2)
-                                ->where('status', 1)
-                                ->orderBy('name', 'asc')
-                                ->get();
+            ->where('status', 1)
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('admin.add-booking', $data);
     }
@@ -296,7 +295,7 @@ class StockController extends Controller
 
     public function storebooking(Request $req)
     {
-       
+
         // 1. Validate Inputs
         $req->validate([
             'reg_number'     => 'required',
@@ -1138,60 +1137,199 @@ class StockController extends Controller
     //     }
     // }
 
+    // public function insertdelivary(Request $req)
+    // {
+    //     // 1. Validation
+    //     $validatedData = $req->validate([
+    //         'booking_id'      => 'required|numeric',
+    //         'booking_date'    => 'required|date',
+    //         'branch'          => 'nullable|string',
+    //         'booking_person'  => 'required',
+    //         'name'            => 'required',
+    //         'father_name'     => 'required',
+    //         'mobile'          => 'required|digits:10',
+    //         'aadhar'          => 'required|digits_between:10,12',
+    //         'pan_card'        => 'required|size:10',
+    //         'city'            => 'required',
+    //         'address'         => 'required',
+    //         'reg_number'      => 'required',
+    //         'owner_sl_no'     => 'required',
+    //         'model_name'      => 'required',
+    //         'model_year'      => 'required',
+    //         'car_color'       => 'required',
+    //         'eng_number'      => 'required',
+    //         'chassis_number'  => 'required',
+    //         'sell_amount'     => 'required|numeric',
+    //         'booking_amount'  => 'required|numeric',
+    //         'finance_amount'  => 'required|numeric',
+    //         'dp'              => 'required|numeric',
+    //         'financer'        => 'nullable',
+    //         'remarks'         => 'required',
+    //         'electricle_work' => 'required',
+    //         'ac_work_status'  => 'required',
+    //         'suspenstion_status' => 'required',
+    //         'engine_status'   => 'required',
+    //         'starting_status' => 'required',
+    //         'stepny_status'   => 'required',
+    //         'tools_kit_status' => 'required',
+    //         'inspection_by'   => 'required',
+    //         'pdi_image'       => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
+    //         'pdi_remarks'     => 'required',
+    //         'paymentMode'     => 'required',
+    //     ]);
+
+    //     // 2. Check for Duplicate Delivery
+    //     $isDelivered = DB::table('car_delivary')
+    //         ->where('reg_number', $req->reg_number)
+    //         ->exists();
+
+    //     if ($isDelivered) {
+    //         return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
+    //     }
+
+    //     // 3. Begin Database Transaction
+    //     try {
+    //         DB::transaction(function () use ($req, $validatedData) {
+
+    //             // A. Handle File Upload
+    //             if ($req->hasFile('pdi_image')) {
+    //                 $file = $req->file('pdi_image');
+    //                 $filename = uniqid() . '_' . time() . '_' . $req->reg_number . '.' . $file->getClientOriginalExtension();
+    //                 $file->move(public_path('upload/pdi'), $filename);
+    //                 $validatedData['pdi_image'] = $filename;
+    //             }
+
+    //             // B. Add Meta Data
+    //             $validatedData['added_by'] = Auth::user()->name;
+    //             $validatedData['pdi_remarks'] = $req->pdi_remarks;
+
+    //             // C. Create Delivery Record
+    //             $delivery = CarDelivaryModel::create($validatedData);
+
+    //             // ==========================================================
+    //             // D. AUTO INSERT INTO DTO DISPATCH TABLE
+    //             // ==========================================================
+    //             $dto = new DtoModel;
+    //             $dto->reg_number              = $req->reg_number;
+    //             $dto->purchaser_name          = $req->name;        // Mapped from Delivery Name
+    //             $dto->Purchaser_mobile_number = $req->mobile;      // Mapped from Delivery Mobile
+    //             $dto->financer                = $req->financer;    // Mapped from Delivery Financer
+
+    //             // Status explicitly requested
+    //             $dto->status                  = 'Work Not Started';
+
+    //             // Setting defaults for fields that might be required in DB but not available yet
+    //             $dto->vendor_name             = 'Pending';
+    //             $dto->vendor_mobile_number    = '0000000000';
+    //             $dto->remarks                 = 'Auto Generated from Delivery';
+    //             $dto->created_by              = Auth::user()->name;
+    //             $dto->save();
+
+    //             // Create Initial History for DTO
+    //             $dtoHistory = new DtoFileHistoryModel;
+    //             $dtoHistory->dto_file_id = $dto->id;
+    //             $dtoHistory->status      = 'Work Not Started';
+    //             $dtoHistory->remarks     = 'Auto Generated from Delivery';
+    //             $dtoHistory->created_by  = Auth::user()->name;
+    //             $dtoHistory->save();
+    //             // ==========================================================
+
+    //             // E. Get Customer Ledger ID
+    //             $booking = DB::table('car_booking')
+    //                 ->where('booking_no', $req->booking_id)
+    //                 ->select('customer_ledger_id')
+    //                 ->first();
+
+    //             if ($booking) {
+    //                 // F. Create Customer Statement
+    //                 $particulars = sprintf(
+    //                     'Amount Credited for Down Payment for - %s - %s - %s - %s',
+    //                     $req->reg_number,
+    //                     $req->model_name,
+    //                     $req->paymentMode,
+    //                     Carbon::now('Asia/Kolkata')->format('d-m-Y H:i:s')
+    //                 );
+
+    //                 CustomerStatementModel::create([
+    //                     'customer_id'  => $booking->customer_ledger_id,
+    //                     'payment_type' => 1, // Credit
+    //                     'amount'       => $req->dp,
+    //                     'particular'   => $particulars,
+    //                     'created_by'   => Auth::user()->name,
+    //                 ]);
+
+    //                 // G. Update Stock & Booking Status
+    //                 DB::table('car_booking')
+    //                     ->where('booking_no', $req->booking_id)
+    //                     ->update(['stock_status' => 3]);
+
+    //                 DB::table('car_stock')
+    //                     ->where('reg_number', $req->reg_number)
+    //                     ->update(['stock_status' => 3]);
+    //             }
+    //         });
+
+    //         return redirect('admin/view-booking')->with('success', 'Delivery Details Added & DTO File Initiated Successfully.');
+    //     } catch (\Exception $e) {
+    //         return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+    //     }
+    // }
     public function insertdelivary(Request $req)
     {
-        // 1. Validation
-        $validatedData = $req->validate([
-            'booking_id'      => 'required|numeric',
-            'booking_date'    => 'required|date',
-            'branch'          => 'required',
-            'booking_person'  => 'required',
-            'name'            => 'required',
-            'father_name'     => 'required',
-            'mobile'          => 'required|digits:10',
-            'aadhar'          => 'required|digits_between:10,12',
-            'pan_card'        => 'required|size:10',
-            'city'            => 'required',
-            'address'         => 'required',
-            'reg_number'      => 'required',
-            'owner_sl_no'     => 'required',
-            'model_name'      => 'required',
-            'model_year'      => 'required',
-            'car_color'       => 'required',
-            'eng_number'      => 'required',
-            'chassis_number'  => 'required',
-            'sell_amount'     => 'required|numeric',
-            'booking_amount'  => 'required|numeric',
-            'finance_amount'  => 'required|numeric',
-            'dp'              => 'required|numeric',
-            'financer'        => 'nullable',
-            'remarks'         => 'required',
-            'electricle_work' => 'required',
-            'ac_work_status'  => 'required',
-            'suspenstion_status' => 'required',
-            'engine_status'   => 'required',
-            'starting_status' => 'required',
-            'stepny_status'   => 'required',
-            'tools_kit_status' => 'required',
-            'inspection_by'   => 'required',
-            'pdi_image'       => 'required|image|mimes:jpg,png,jpeg,pdf|max:10240',
-            'pdi_remarks'     => 'required',
-            'paymentMode'     => 'required',
-        ]);
-
-        // 2. Check for Duplicate Delivery
-        $isDelivered = DB::table('car_delivary')
-            ->where('reg_number', $req->reg_number)
-            ->exists();
-
-        if ($isDelivered) {
-            return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
-        }
-
-        // 3. Begin Database Transaction
         try {
-            DB::transaction(function () use ($req, $validatedData) {
+            // 1. Validation
+            $validatedData = $req->validate([
+                'booking_id'      => 'required|numeric',
+                'booking_date'    => 'required|date',
+                'branch'          => 'nullable|string',
+                'booking_person'  => 'required|string',
+                'name'            => 'required|string',
+                'father_name'     => 'required|string',
+                'mobile'          => 'required|digits:10',
+                'aadhar'          => 'required|digits_between:10,12',
+                'pan_card'        => 'required|size:10',
+                'city'            => 'required|string',
+                'address'         => 'required|string',
+                'reg_number'      => 'required|string',
+                'owner_sl_no'     => 'required|string',
+                'model_name'      => 'required|string',
+                'model_year'      => 'required|string',
+                'car_color'       => 'required|string',
+                'eng_number'      => 'required|string',
+                'chassis_number'  => 'required|string',
+                'sell_amount'     => 'required|numeric',
+                'booking_amount'  => 'required|numeric',
+                'finance_amount'  => 'required|numeric',
+                'dp'              => 'required|numeric',
+                'financer'        => 'nullable|string',
+                'remarks'         => 'required|string',
+                'electricle_work' => 'required|string',
+                'ac_work_status'  => 'required|string',
+                'suspenstion_status' => 'required|string',
+                'engine_status'   => 'required|string',
+                'starting_status' => 'required|string',
+                'stepny_status'   => 'required|string',
+                'tools_kit_status' => 'required|string',
+                'inspection_by'   => 'required|string',
+                'pdi_image'       => 'required|file|mimes:jpg,png,jpeg,pdf|max:10240', // Changed to file for PDF support
+                'pdi_remarks'     => 'required|string',
+                'paymentMode'     => 'required|string',
+            ]);
 
+        
+            // 2. Check for Duplicate Delivery
+            $isDelivered = DB::table('car_delivary')
+                ->where('reg_number', $req->reg_number)
+                ->exists();
+
+            if ($isDelivered) {
+                return redirect('admin/view-booking')->with('error', 'Selected Car Already Delivered');
+            }
+
+            // 3. Begin Database Transaction
+            DB::beginTransaction();
+
+            try {
                 // A. Handle File Upload
                 if ($req->hasFile('pdi_image')) {
                     $file = $req->file('pdi_image');
@@ -1202,29 +1340,31 @@ class StockController extends Controller
 
                 // B. Add Meta Data
                 $validatedData['added_by'] = Auth::user()->name;
-                $validatedData['pdi_remarks'] = $req->pdi_remarks;
+                // pdi_remarks is already in validatedData from validation, no need to override
 
                 // C. Create Delivery Record
                 $delivery = CarDelivaryModel::create($validatedData);
 
-                // ==========================================================
+                if (!$delivery) {
+                    throw new \Exception('Failed to create delivery record');
+                }
+
                 // D. AUTO INSERT INTO DTO DISPATCH TABLE
-                // ==========================================================
                 $dto = new DtoModel;
                 $dto->reg_number              = $req->reg_number;
-                $dto->purchaser_name          = $req->name;        // Mapped from Delivery Name
-                $dto->Purchaser_mobile_number = $req->mobile;      // Mapped from Delivery Mobile
-                $dto->financer                = $req->financer;    // Mapped from Delivery Financer
-
-                // Status explicitly requested
+                $dto->purchaser_name          = $req->name;
+                $dto->Purchaser_mobile_number = $req->mobile;
+                $dto->financer                = $req->financer;
                 $dto->status                  = 'Work Not Started';
-
-                // Setting defaults for fields that might be required in DB but not available yet
                 $dto->vendor_name             = 'Pending';
                 $dto->vendor_mobile_number    = '0000000000';
                 $dto->remarks                 = 'Auto Generated from Delivery';
                 $dto->created_by              = Auth::user()->name;
                 $dto->save();
+
+                if (!$dto->id) {
+                    throw new \Exception('Failed to create DTO record');
+                }
 
                 // Create Initial History for DTO
                 $dtoHistory = new DtoFileHistoryModel;
@@ -1233,7 +1373,6 @@ class StockController extends Controller
                 $dtoHistory->remarks     = 'Auto Generated from Delivery';
                 $dtoHistory->created_by  = Auth::user()->name;
                 $dtoHistory->save();
-                // ==========================================================
 
                 // E. Get Customer Ledger ID
                 $booking = DB::table('car_booking')
@@ -1241,7 +1380,7 @@ class StockController extends Controller
                     ->select('customer_ledger_id')
                     ->first();
 
-                if ($booking) {
+                if ($booking && $booking->customer_ledger_id) {
                     // F. Create Customer Statement
                     $particulars = sprintf(
                         'Amount Credited for Down Payment for - %s - %s - %s - %s',
@@ -1253,7 +1392,7 @@ class StockController extends Controller
 
                     CustomerStatementModel::create([
                         'customer_id'  => $booking->customer_ledger_id,
-                        'payment_type' => 1, // Credit
+                        'payment_type' => 1,
                         'amount'       => $req->dp,
                         'particular'   => $particulars,
                         'created_by'   => Auth::user()->name,
@@ -1267,12 +1406,26 @@ class StockController extends Controller
                     DB::table('car_stock')
                         ->where('reg_number', $req->reg_number)
                         ->update(['stock_status' => 3]);
+                } else {
+                    // Log warning but don't fail the transaction
+                    \Log::warning('Customer ledger ID not found for booking: ' . $req->booking_id);
                 }
-            });
 
-            return redirect('admin/view-booking')->with('success', 'Delivery Details Added & DTO File Initiated Successfully.');
+                DB::commit();
+
+                return redirect('admin/view-booking')->with('success', 'Delivery Details Added & DTO File Initiated Successfully.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                \Log::error('Delivery insertion failed: ' . $e->getMessage());
+                \Log::error($e->getTraceAsString());
+
+                return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+            \Log::error('Unexpected error: ' . $e->getMessage());
+            return back()->with('error', 'Unexpected error: ' . $e->getMessage())->withInput();
         }
     }
     public function insertCancelBooking(Request $request)
@@ -1364,59 +1517,59 @@ class StockController extends Controller
         }
     }
     public function viewCancelledBookings(Request $request)
-{
-    if ($request->ajax()) {
-        // Use the exact table name 'cancelled_booking_models'
-        $query = DB::table('cancelled_booking_models')
-            ->select(
-                'cancelled_booking_models.*',
-                'ledger.name as customer_name',
-                'car_stock.reg_number',
-                'car_stock.car_model'
-            )
-            ->leftJoin('ledger', 'ledger.id', '=', 'cancelled_booking_models.customer_id')
-            ->leftJoin('car_stock', 'car_stock.id', '=', 'cancelled_booking_models.car_stock_id');
+    {
+        if ($request->ajax()) {
+            // Use the exact table name 'cancelled_booking_models'
+            $query = DB::table('cancelled_booking_models')
+                ->select(
+                    'cancelled_booking_models.*',
+                    'ledger.name as customer_name',
+                    'car_stock.reg_number',
+                    'car_stock.car_model'
+                )
+                ->leftJoin('ledger', 'ledger.id', '=', 'cancelled_booking_models.customer_id')
+                ->leftJoin('car_stock', 'car_stock.id', '=', 'cancelled_booking_models.car_stock_id');
 
-        // --- DATE FILTER ---
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $query->whereBetween('cancelled_booking_models.created_at', [
-                $request->from_date . ' 00:00:00',
-                $request->to_date . ' 23:59:59'
-            ]);
-        } else {
-            // Default: Last 90 Days
-            $query->where('cancelled_booking_models.created_at', '>=', now()->subDays(90));
+            // --- DATE FILTER ---
+            if ($request->filled('from_date') && $request->filled('to_date')) {
+                $query->whereBetween('cancelled_booking_models.created_at', [
+                    $request->from_date . ' 00:00:00',
+                    $request->to_date . ' 23:59:59'
+                ]);
+            } else {
+                // Default: Last 90 Days
+                $query->where('cancelled_booking_models.created_at', '>=', now()->subDays(90));
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->filter(function ($instance) use ($request) {
+                    if ($request->has('search') && !empty($request->get('search')['value'])) {
+                        $keyword = $request->get('search')['value'];
+                        $instance->where(function ($q) use ($keyword) {
+                            $q->where('cancelled_booking_models.booking_no', 'LIKE', "%$keyword%")
+                                ->orWhere('ledger.name', 'LIKE', "%$keyword%")
+                                ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
+                        });
+                    }
+                })
+                ->editColumn('created_at', function ($row) {
+                    return date('d-M-Y H:i', strtotime($row->created_at));
+                })
+                ->editColumn('refund_amount', function ($row) {
+                    return number_format($row->refund_amount, 2);
+                })
+                ->addColumn('screenshot', function ($row) {
+                    if (!empty($row->payment_screenshot)) {
+                        $url = asset($row->payment_screenshot);
+                        return '<a href="' . $url . '" target="_blank" class="badge bg-info text-dark">View Proof</a>';
+                    }
+                    return '<span class="text-muted small">No File</span>';
+                })
+                ->rawColumns(['screenshot'])
+                ->make(true);
         }
 
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->filter(function ($instance) use ($request) {
-                if ($request->has('search') && !empty($request->get('search')['value'])) {
-                    $keyword = $request->get('search')['value'];
-                    $instance->where(function ($q) use ($keyword) {
-                        $q->where('cancelled_booking_models.booking_no', 'LIKE', "%$keyword%")
-                            ->orWhere('ledger.name', 'LIKE', "%$keyword%")
-                            ->orWhere('car_stock.reg_number', 'LIKE', "%$keyword%");
-                    });
-                }
-            })
-            ->editColumn('created_at', function ($row) {
-                return date('d-M-Y H:i', strtotime($row->created_at));
-            })
-            ->editColumn('refund_amount', function ($row) {
-                return number_format($row->refund_amount, 2);
-            })
-            ->addColumn('screenshot', function ($row) {
-                if (!empty($row->payment_screenshot)) {
-                    $url = asset($row->payment_screenshot);
-                    return '<a href="' . $url . '" target="_blank" class="badge bg-info text-dark">View Proof</a>';
-                }
-                return '<span class="text-muted small">No File</span>';
-            })
-            ->rawColumns(['screenshot'])
-            ->make(true);
+        return view('admin.booking.view-cancelled-booking');
     }
-
-    return view('admin.booking.view-cancelled-booking');
-}
 }
