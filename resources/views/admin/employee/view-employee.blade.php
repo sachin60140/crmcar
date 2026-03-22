@@ -33,7 +33,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    <th scope="col">Branch</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Mobile</th>
                                     <th scope="col">Cloud Number</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">User Type</th>
@@ -45,7 +47,9 @@
                                 @foreach ($emplist as $items)
                                     <tr>
                                         <td>{{ $items->id }}</td>
+                                        <td>{{ $items->branch ?? 'N/A' }}</td>
                                         <td>{{ $items->name }}</td>
+                                        <td>{{ $items->emp_mobile }}</td>
                                         <td>{{ $items->cloud_calling_number }}</td>
                                         <td>{{ $items->email }}</td>
                                         <td>
@@ -103,8 +107,12 @@
             $('#example').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
-                "pageLength": 50,
-                "aaSorting": [[0, 'desc']],
+                pageLength: 50,
+                order: [
+                        [7, 'asc'],  // 1st Priority: Group by Status first
+                        [6, 'asc'],  // 2nd Priority: Then group by User Type
+                        [0, 'desc']  // 3rd Priority: Finally, sort by ID descending within those groups
+                        ]
             });
 
             // SweetAlert Status Toggle

@@ -424,20 +424,54 @@ class AuthController extends Controller
         return view('admin.employee.update-password', $data);
     }
 
-    public function updateuserPassword(Request $request, User $user)
+    // public function updateuserPassword(Request $request, User $user)
+    // {
+    //     $request->validate([
+    //         'cloud_calling_number' => ['nullable', 'numeric', Rule::unique('users')->ignore($user->id)],
+    //         'password' => 'nullable|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+    //     ]);
+
+    //     $user->cloud_calling_number = $request->cloud_calling_number;
+
+    //     if ($request->filled('password')) {
+    //         $user->password = Hash::make($request->password);
+    //     }
+    //     $user->save();
+    //     return back()->with('success', 'Records Updated Succesfully');
+    // }
+    public function updateEmployee(Request $request, User $user)
     {
+        // 1. Validate all incoming fields
         $request->validate([
+            'name'                 => 'required|string|max:255',
+            'emp_mobile'           => 'required|numeric', 
+            'user_type'            => 'required|in:1,2', // Ensures they only submit 1 (Admin) or 2 (Salesman)
+            'branch'               => 'required|string|max:255',
             'cloud_calling_number' => ['nullable', 'numeric', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            
+            // Added 'confirmed' to automatically match the 'password_confirmation' input
+            'password'             => 'nullable|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+        ], [
+            // Custom message for the password regex so the user knows exactly what they missed
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
 
+        // 2. Update the standard fields
+        $user->name = $request->name;
+        $user->emp_mobile = $request->emp_mobile;
+        $user->user_type = $request->user_type;
+        $user->branch = $request->branch;
         $user->cloud_calling_number = $request->cloud_calling_number;
 
+        // 3. Update password only if it was filled out
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
+        
+        // 4. Save and redirect
         $user->save();
-        return back()->with('success', 'Records Updated Succesfully');
+
+        return back()->with('success', 'Employee updated successfully!');
     }
 
     public function toggleStatus($id)

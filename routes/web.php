@@ -107,7 +107,7 @@ Route::group(['middleware' => ['admin', 'single.session']], function () {
     Route::post('admin/add-employee', [AuthController::class, 'inserempdata'])->name('inserempdata');
     Route::get('admin/view-employee', [AuthController::class, 'viewempdata'])->name('viewempdata');
     Route::get('admin/edit-employee/{id?}', [AuthController::class, 'editempdata'])->name('editempdata');
-    Route::put('admin/edit-employee/{user}', [AuthController::class, 'updateuserPassword'])->name('updateuserPassword');
+    Route::put('admin/edit-employee/{user}', [AuthController::class, 'updateEmployee'])->name('updateEmployee');
     Route::post('/admin/employee/toggle-status/{id}', [AuthController::class, 'toggleStatus'])->name('toggleStatus');
 
     Route::get('admin/add-finance', [FinanceController::class, 'addfinancefile'])->name('addfinancefile');
