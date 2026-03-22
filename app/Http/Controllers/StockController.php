@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use App\Models\StockModel;
 use App\Models\BookingModel;
 use App\Models\CarDelivaryModel;
@@ -171,6 +172,10 @@ class StockController extends Controller
         $data['car_stock'] = DB::table('car_stock')->orderBy('reg_number', 'asc')->where('stock_status', '!=', '3')->get();
 
         $data['ledger'] = DB::table('ledger')->orderBy('id', 'desc')->get();
+        $data['sales_person'] = User::where('user_type', 2)
+                                ->where('status', 1)
+                                ->orderBy('name', 'asc')
+                                ->get();
 
         return view('admin.add-booking', $data);
     }
@@ -291,6 +296,7 @@ class StockController extends Controller
 
     public function storebooking(Request $req)
     {
+       
         // 1. Validate Inputs
         $req->validate([
             'reg_number'     => 'required',
@@ -301,6 +307,7 @@ class StockController extends Controller
             'dp'             => 'required|numeric',
             'finance_amount' => 'required|numeric',
             'remarks'        => 'required',
+            'paymentMode'    => 'required',
         ]);
 
         // =========================================================
@@ -356,8 +363,11 @@ class StockController extends Controller
                 $BookingModel->due_amount         = $req->dp;
                 $BookingModel->finance_amount     = $req->finance_amount;
                 $BookingModel->remarks            = $req->remarks;
-                //$BookingModel->payment_mode       = $req->paymentMode;
                 $BookingModel->created_by         = Auth::user()->name;
+                $BookingModel->branch             = Auth::user()->branch;
+                $BookingModel->payment_mode       = $req->paymentMode;
+                $BookingModel->txn_id             = $req->txn_id;
+
                 $BookingModel->save();
 
                 // Save Ledger (Debit)
@@ -1134,6 +1144,7 @@ class StockController extends Controller
         $validatedData = $req->validate([
             'booking_id'      => 'required|numeric',
             'booking_date'    => 'required|date',
+            'branch'          => 'required',
             'booking_person'  => 'required',
             'name'            => 'required',
             'father_name'     => 'required',

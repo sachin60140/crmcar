@@ -11,7 +11,7 @@ class CarDelivaryModel extends Model
     use HasFactory;
 
     protected $fillable = [
-        'booking_id','customer_id','booking_date', 'booking_person', 'name', 'father_name',
+        'booking_id','customer_id','booking_date','branch', 'booking_person', 'name', 'father_name',
         'mobile', 'aadhar', 'pan_card', 'city', 'address', 'reg_number',
         'owner_sl_no', 'model_name', 'model_year', 'car_color', 'eng_number',
         'chassis_number', 'sell_amount', 'booking_amount', 'finance_amount',

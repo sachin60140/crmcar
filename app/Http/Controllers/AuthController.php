@@ -320,13 +320,54 @@ class AuthController extends Controller
         return view('admin.employee.add-employee');
     }
 
+    // public function inserempdata(Request $req)
+    // {
+    //     $messages = [
+    //         'emp_name.required' => 'The employee name is required.',
+    //         'emp_name.unique' => 'The employee name already exists.',
+    //         'emp_mobile.required' => 'The mobile number is required.',
+    //         'emp_mobile.numeric' => 'The mobile number must be a number.',
+    //         'email.required' => 'The email address is required.',
+    //         'email.email' => 'The email address must be valid.',
+    //         'email.unique' => 'The email address already exists.',
+    //         'cloud_calling_number.numeric' => 'The cloud call number must be a number.',
+    //         'cloud_calling_number.unique' => 'The cloud call number already exists.',
+    //         'password.required' => 'The password is required.',
+    //         'password.min' => 'The password must be at least 8 characters.',
+    //         'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+    //     ];
+    //     $req->validate([
+    //         'name' => 'required|unique:users',
+    //         'emp_mobile' => 'required|numeric|digits:10',
+    //         'email' => 'required|email|unique:users|max:255',
+    //         'cloud_calling_number' => 'nullable|numeric|unique:users|digits:10',
+    //         'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+    //     ], $messages);
+
+
+    //     $pass = Hash::make($req->input('password'));
+
+    //     $User = new User;
+
+    //     $User->name = $req->name;
+    //     $User->email = $req->email;
+    //     $User->cloud_calling_number = $req->cloud_calling_number;
+
+    //     $User->password = $pass;
+    //     $User->save();
+
+    //     $lastid = $User->id;
+
+    //     return back()->with('success', ' User Added Successfully: ');
+    // }
     public function inserempdata(Request $req)
     {
         $messages = [
-            'emp_name.required' => 'The employee name is required.',
-            'emp_name.unique' => 'The employee name already exists.',
+            'name.required' => 'The employee name is required.',
+            'name.unique' => 'The employee name already exists.',
             'emp_mobile.required' => 'The mobile number is required.',
             'emp_mobile.numeric' => 'The mobile number must be a number.',
+            'emp_mobile.digits' => 'The mobile number must be exactly 10 digits.',
             'email.required' => 'The email address is required.',
             'email.email' => 'The email address must be valid.',
             'email.unique' => 'The email address already exists.',
@@ -334,31 +375,37 @@ class AuthController extends Controller
             'cloud_calling_number.unique' => 'The cloud call number already exists.',
             'password.required' => 'The password is required.',
             'password.min' => 'The password must be at least 8 characters.',
-            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'password.regex' => 'The password must contain uppercase, lowercase, numbers, and special characters.',
+            'user_type.required' => 'Please select a user role.',
+            'user_type.in' => 'Invalid user role selected.',
+            'branch.required' => 'The branch name is required.',
         ];
+
         $req->validate([
-            'name' => 'required|unique:users',
+            'name' => 'required|unique:users,name',
             'emp_mobile' => 'required|numeric|digits:10',
-            'email' => 'required|email|unique:users|max:255',
-            'cloud_calling_number' => 'nullable|numeric|unique:users|digits:10',
+            'email' => 'required|email|unique:users,email|max:255',
+            'cloud_calling_number' => 'nullable|numeric|unique:users,cloud_calling_number|digits:10',
             'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            'user_type' => 'required|in:1,2', // 1: Admin, 2: Salesman
+            'branch' => 'required|string|max:255',
         ], $messages);
 
+        // Create User Instance
+        $user = new User;
+        $user->name = $req->name;
+        $user->email = $req->email;
+        $user->emp_mobile = $req->emp_mobile; // Added this as it was missing in your save logic
+        $user->cloud_calling_number = $req->cloud_calling_number;
+        $user->password = Hash::make($req->password);
 
-        $pass = Hash::make($req->input('password'));
+        // New Fields
+        $user->user_type = $req->user_type;
+        $user->branch = $req->branch;
 
-        $User = new User;
+        $user->save();
 
-        $User->name = $req->name;
-        $User->email = $req->email;
-        $User->cloud_calling_number = $req->cloud_calling_number;
-
-        $User->password = $pass;
-        $User->save();
-
-        $lastid = $User->id;
-
-        return back()->with('success', ' User Added Successfully: ');
+        return back()->with('success', "Employee '{$user->name}' added successfully to branch '{$user->branch}'.");
     }
 
     public function viewempdata()
@@ -393,6 +440,15 @@ class AuthController extends Controller
         return back()->with('success', 'Records Updated Succesfully');
     }
 
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id); // or your specific Model
+        $user->status = ($user->status == 1) ? 0 : 1;
+        $user->save();
+        return back()->with('success', 'Employee status has been updated.');
+    }
+
+
     public function smsbalance()
     {
         // $apiURL = 'https://pgapi.sparc.smartping.io/fe/api/v1/getBalance/';
@@ -411,16 +467,16 @@ class AuthController extends Controller
 
         // //return $balance = $data1['balance']['sms_wallet'];
 
-// प्रिय ${var1}, 
-// Car4Sales में आपका हार्दिक स्वागत है! हम पुरानी कार को खरीदते और बेचते हैं, 
-// आपकी पुरानी कार का सर्वोत्तम मूल्य दिलाने एवं किफायती कीमत पर पुरानी कार देने का वादा करते है। 
-// अपनी कार बेचने एवं पुरानी कार खरीदने के लिए हमसे इस नंबर पर संपर्क करें: ${var2}. 
-// Car4Sales को चुनने के लिए आपका धन्यवाद! 
-// सादर, 
-// Car4Sales, 
-// मुजफ्फरपुर, मोतिहारी, दरभंगा फोन: 
-// ${var3}
-        
+        // प्रिय ${var1}, 
+        // Car4Sales में आपका हार्दिक स्वागत है! हम पुरानी कार को खरीदते और बेचते हैं, 
+        // आपकी पुरानी कार का सर्वोत्तम मूल्य दिलाने एवं किफायती कीमत पर पुरानी कार देने का वादा करते है। 
+        // अपनी कार बेचने एवं पुरानी कार खरीदने के लिए हमसे इस नंबर पर संपर्क करें: ${var2}. 
+        // Car4Sales को चुनने के लिए आपका धन्यवाद! 
+        // सादर, 
+        // Car4Sales, 
+        // मुजफ्फरपुर, मोतिहारी, दरभंगा फोन: 
+        // ${var3}
+
         // $message = "Dear SACHIN,\nOwnership of car BR28B1234 was transferred on 12/dec/2025. Please check mParivahan for your RC. Urgently transfer your insurance to your name.\nThanks,\nCar4Sales, Muzzfarpur";
         //$message = urlencode("प्रिय मनोज जी, \nगाड़ी संख्या BR-06-AD-1234 का स्वामित्व 12 दिसंबर 2025 को आपके नाम पर स्थानांतरित कर दिया गया है। कृपया अपना आर.सी. (रजिस्ट्रेशन प्रमाणपत्र) देखने के लिए एम-परिवहन ऐप या वेबसाइट जांचें। साथ ही, अपना वाहन बीमा भी जल्द से जल्द अपने नाम पर स्थानांतरित करवा लें। \nध्यान दें: आर.सी. प्राप्त करना एवं बीमा स्थानांतरित करवाने की ज़िम्मेदारी अब आपकी है, Car4Sales की नहीं। \nधन्यवाद, \nCar4Sales, \nमुज़फ़्फ़रपुर");
         //$message = "प्रिय मनोज जी, \nगाड़ी संख्या BR-06-AD-1234 का स्वामित्व 12 दिसंबर 2025 को आपके नाम पर स्थानांतरित कर दिया गया है। कृपया अपना आर.सी. (रजिस्ट्रेशन प्रमाणपत्र) देखने के लिए एम-परिवहन ऐप या वेबसाइट जांचें। साथ ही, अपना वाहन बीमा भी जल्द से जल्द अपने नाम पर स्थानांतरित करवा लें। \nध्यान दें: आर.सी. प्राप्त करना एवं बीमा स्थानांतरित करवाने की ज़िम्मेदारी अब आपकी है, Car4Sales की नहीं। \nधन्यवाद, \nCar4Sales, \nमुज़फ़्फ़रपुर";

@@ -4,185 +4,671 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&subset=devanagari" rel="stylesheet">
-    <title>Booking</title>
+    <title>Anishek Cars | Booking Invoice</title>
     <style>
+        /* Reset and Base Styles - Optimized for DomPDF */
         * {
-            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif;
+            background: white;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000000;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .invoice {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        /* Page Break */
+        .page-break {
+            page-break-before: always;
+            margin-top: 20px;
+        }
+
+        /* Header Section - Using Table */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .company-cell {
+            width: 60%;
+        }
+
+        .invoice-cell {
+            width: 40%;
+            text-align: right;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .company-details {
+            font-size: 10px;
+            color: #000000;
+            line-height: 1.4;
+        }
+
+        .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .invoice-meta {
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            text-align: right;
+        }
+
+        .invoice-meta p {
+            margin: 2px 0;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 10px;
+            margin: 5px 0 5px 0;
+        }
+
+        /* Info Table - For all details sections */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+
+        .info-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .info-table .label-cell {
+            width: 90px;
+            font-weight: 600;
+            background: #f9f9f9;
+            color: #000000;
+        }
+
+        .info-table .value-cell {
+            color: #000000;
+        }
+
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Full Width Row */
+        .full-width-row td {
+            padding: 8px 10px;
+        }
+
+        .full-width-row .label-cell {
+            width: 90px;
+            vertical-align: top;
+        }
+
+        /* Vehicle Table */
+        .vehicle-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .vehicle-table th {
+            background: #f5f5f5;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            font-size: 11px;
+        }
+
+        .vehicle-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 11px;
+        }
+
+        .vehicle-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .reg-badge {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            font-family: monospace;
             font-size: 10px;
         }
 
-        table {
-            border: 1px solid #000;
+        /* Payment Section - Two Column Layout */
+        .payment-wrapper {
             width: 100%;
+            margin: 20px 0;
         }
 
-        td {
-            border: 1px solid #000;
-            padding: 10px;
-            width: 33.33%;
-        }
-
-        .div1 {
-            border: 1px solid #000;
-            padding: 10px;
-        }
-
-        .myImg {
-            text-align: center;
-        }
-
-        .tddata {
-            border: 1px solid #000;
-            padding: 10px;
-            width: 25%;
-        }
-        .sign1 {
+        .payment-left {
+            width: 60%;
             float: left;
         }
-        .sign2 {
+
+        .payment-right {
+            width: 35%;
             float: right;
+            text-align: right;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        /* Amount Table */
+        .amount-table {
+            width: 100%;
+            max-width: 380px;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        .amount-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .amount-table td:first-child {
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .amount-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .amount-table .total-row td {
+            border-top: 2px solid #000;
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 12px;
+            color: #000;
+        }
+
+        .payment-note {
+            font-size: 9px;
+            color: #000000;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .status-badge {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 8px 16px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 11px;
+            color: #000000;
+            border-radius: 4px;
+        }
+
+        /* Payment Details Table */
+        .payment-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+        }
+
+        .payment-details-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-details-table td:first-child {
+            width: 200px;
+            font-weight: 600;
+            background: #f9f9f9;
+            color: #555;
+        }
+
+        .payment-details-table td:last-child {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .payment-details-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Signature Section */
+        .signature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0 20px;
+
+            padding-top: 20px;
+        }
+
+        .signature-table td {
+            width: 50%;
+            text-align: center;
+            padding-top: 20px;
+            vertical-align: bottom;
+        }
+
+        .sign-line {
+            border-bottom: 1px solid #888;
+            width: 80%;
+            margin: 8px auto 5px;
+        }
+
+        .sign-date {
+            font-size: 9px;
+            color: #000000;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 9px;
+            color: #050000;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Page Number */
+        .page-number {
+            text-align: center;
+            font-size: 9px;
+            color: #030000;
+            margin-top: 20px;
+        }
+
+        /* Page 2 Styles */
+        .terms-list {
+            margin: 15px 0 25px;
+            padding-left: 20px;
+        }
+
+        .terms-list li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+            font-size: 11px;
+        }
+
+        .docs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .docs-table td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            width: 50%;
+            font-size: 11px;
+        }
+
+        .cert-badge {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 11px;
+        }
+
+        /* Helper */
+        .text-right {
+            text-align: right;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+
+        /* Print Optimization */
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+
+            .status-badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
     </style>
 </head>
+
 <body>
     @foreach ($carbooking as $data)
-        <div class="div1">
-            <div>
-                <table>
-                    <tr>
-                        <td class="myImg">
-                            {{-- <img src="{{url('assets/img/logo.jpg')}}" width="200px" > --}}
+        <div class="invoice">
+            <!-- PAGE 1 -->
+            <!-- Header -->
+            <table class="header-table">
+                <tr>
+                    <td class="company-cell">
+                        <div class="logo">
                             <img src="assets/img/logotrans.png" width="175px">
-                        </td>
-                        <td style="text-align: center;">
-                            <div style="margin: auto; width: 50%; padding: 10px;">
-                                <p><strong>Booking Slip</strong></p>
-                                <p> {!! DNS1D::getBarcodeHTML($data->booking_no, 'C128', 1, 30) !!} </p></br>
-                                <strong>{{ $data->booking_no }}</strong>
+                        </div>
+                        {{-- <div class="company-name">AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div> --}}
+                        <div class="company-details">
+                            AMISHEK CAR4SALES TRADING PRIVATE LIMITED<br>
+                            CIN: U45102BR2025PTC078595 | GST: 10ABDCA6650P1ZL<br>
+                            Chandani Chowk, MBBL Collage, Damodarpur, Muzaffarpur,Bihar 843113
+                        </div>
+                    </td>
+                    <td class="invoice-cell">
+                        <div class="invoice-title">Booking Slip</div>
+                        <div style="width: 100%; text-align: right; margin-top: 10px;">
+                            <div
+                                style="display: inline-block; border: 1.5px solid #000; padding: 10px 12px; border-radius: 6px; text-align: center; background-color: #fff;">
+                                <div>
+                                    {!! DNS1D::getBarcodeHTML($data->booking_no, 'C128', 1.2, 40) !!}
+                                </div>
+                                <div
+                                    style="margin-top: 6px; font-size: 12px; font-weight: bold; letter-spacing: 1px;">
+                                    {{ $data->booking_no }}
+                                </div>
                             </div>
-                        </td>
-                        <td>
-                            <p style="text-align: center;"><strong style="font-size: 30px;">Car 4 Sales </strong></p>
-                            <p style="text-align: justify">Chandani Chowk, Near Mahindra & Mahindra Showroom, Near Over
-                                Bridge, Muzaffarpur, Bihar, 842003</p>
-                            <p><strong>Ph. 777 999 5656</strong></p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div style="margin-top: 10px">
-                <table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Booking Overview -->
+            <div class="section-title">Booking Overview</div>
+            <table class="info-table">
+                <tr>
+                    <td class="label-cell">Booking ID:</td>
+                    <td class="value-cell"><strong>{{ $data->booking_no }}</strong></td>
+                    <td class="label-cell">Booking Date:</td>
+                    <td class="value-cell">{{ date('d-M-Y', strtotime($data->created_at)) }}</td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Branch:</td>
+                    <td class="value-cell">{{ $data->branch }}</td>
+                    <td class="label-cell">Sales Executive:</td>
+                    <td class="value-cell">{{ $data->booking_person }} </td>
+                </tr>
+
+            </table>
+
+            <!-- Customer Details -->
+            <div class="section-title">Customer Details</div>
+            <table class="info-table">
+                <tr>
+                    <td class="label-cell">Customer Name:</td>
+                    <td class="value-cell">{{ strtoupper($data->name) }}</td>
+                    <td class="label-cell">Father's Name:</td>
+                    <td class="value-cell">{{ strtoupper($data->father) }}</td>
+                    <td class="label-cell">Mobile No:</td>
+                    <td class="value-cell">{{ $data->mobile }}</td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Aadhar No:</td>
+                    <td class="value-cell">{{ $data->aadhar }}</td>
+                    <td class="label-cell">PAN No:</td>
+                    <td class="value-cell">{{ strtoupper($data->pan) }}</td>
+                    <td class="label-cell">City:</td>
+                    <td class="value-cell">{{ strtoupper($data->city) }}</td>
+                </tr>
+                <tr>
+                    <td class="label-cell">Address:</td>
+                    <td class="value-cell" colspan="5">{{ $data->address }}</td>
+                </tr>
+            </table>
+
+            <!-- Vehicle Information -->
+            <div class="section-title">Vehicle Information</div>
+            <table class="vehicle-table">
+                <thead>
                     <tr>
-                        <td class="tddata">Booking Date</td>
-                        <td class="tddata"><strong>{{ date('d-M-Y', strtotime($data->created_at)) }}</strong></td>
-                        <td class="tddata">Booking Person</td>
-                        <td class="tddata" colspan="4"><strong>{{ $data->booking_person }}</strong></td>
+                        <th>Model</th>
+                        <th>Year</th>
+                        <th>Registration No</th>
+                        <th>Sell Amount</th>
                     </tr>
+                </thead>
+                <tbody>
                     <tr>
-                        <td class="tddata">Customer Name</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->name) }}</strong></td>
-                        <td class="tddata">Father's Name</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->father) }}</strong></td>
-                        <td class="tddata">Mobile No.</td>
-                        <td class="tddata"><strong>{{ $data->mobile }}</strong></td>
+                        <td><strong>{{ strtoupper($data->carmodel) }}</strong></td>
+                        <td>{{ $data->model_year }}</td>
+                        <td><strong>{{ strtoupper($data->regnumber) }}</strong></td>
+
+                        <td><strong>₹ {{ $data->total_amount }}/-</strong></td>
                     </tr>
-                    <tr>
-                        <td class="tddata">Aadhar No.</td>
-                        <td class="tddata"><strong>{{ $data->aadhar }}</strong></td>
-                        <td class="tddata">Pan No.</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->pan) }}</strong></td>
-                        <td class="tddata">City</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->city) }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Address</td>
-                        <td class="tddata" colspan="5"><strong>{{ $data->address }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Registration No.</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->regnumber) }}</strong></td>
-                        <td class="tddata">Model Name</td>
-                        <td class="tddata"><strong>{{ strtoupper($data->carmodel) }}</strong></td>
-                        <td class="tddata">Model Year</td>
-                        <td class="tddata"><strong>{{ $data->model_year }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Sell Amount</td>
-                        <td class="tddata"><strong>{{ $data->total_amount }}/-</strong></td>
-                        <td class="tddata">Advance</td>
-                        <td class="tddata"><strong>{{ $data->adv_amount }}/-</strong></td>
-                        <td class="tddata">Estimated Finance Amount</td>
-                        <td class="tddata"><strong>{{ $data->finance_amount }}/-</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Estimated Down Payment</td>
-                        <td class="tddata"><strong>{{ $data->due_amount }}/-</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="tddata">Remarks</td>
-                        <td class="tddata" colspan="5"><strong>{{ strtoupper($data->remarks) }}</strong></td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <h3>Terms & Conditions</h3>
-                <hr>
-            </div>
-            <div>
-                <ol type="1">
-                    <li>Booking Amount is Rs.21000/-</li>
-                    <li>The file charge for the loan should be paid separately.</li>
-                    <li>After compleating the loan process you will be able to recive your Car/Jeep</li>
-                    <li>Only Available Insurance of car Will be Provided</li>
-                    <li>If non Avaibility of Insurance, then new insurance will be provided by Car4Sales for Next 1 Year
-                    </li>
-                    <li>Booking Canclelation charge is 21000/-</li>
-                    <li>After Loan Approval Cancellation charge will be 7% of total Loan Amount.</li>
-                    <li>Refunds will be provided in accordance with our refund policy, which may vary depending on the
-                        circumstances.</li>
-                    <li>Any modifications to these terms and conditions must be agreed upon in writing by both parties.
-                    </li>
-                    <li>These terms and conditions shall be governed by and construed in accordance with the laws of
-                        Muzaffarpur(Bihar) jurisdiction</li>
-                    <li>Any disputes arising from these terms and conditions will be subject to the exclusive
-                        jurisdiction
-                        of the courts in Muzaffarpur(Bihar) jurisdiction </li>
-                    <li>By availing of our services, you acknowledge that you have read, understood, and agree to
-                        these terms and conditions.</li>
-                </ol>
-            </div>
-            <div>
-                <h3>Financer Paper List</h3>
-                <hr>
-            </div>
-            <div>
-                <table>
-                    <tr>
-                        <td>Aadhar Card (Apllicant & Co-Applicant)</td>
-                        <td>Pan Card (Apllicant & Co-Applicant)</td>
-                        <td>Bank Statement (6 Month)</td>
-                        <td>Propoerty Tax Reciept</td>
-                        <td>Income tax Reciept</td>
-                        <td>4 Month Salary Slip</td>
-                        <td>Cheque 6 Qty</td>
-                    </tr>
-                </table>
-            </div>
-            <div style="margin: 100px 50px 50px 50px;">
-                <div class="sign1">
-                    <p>Buyer Sign</p>
+                </tbody>
+            </table>
+
+            <!-- Payment Section -->
+            {{-- <div class="payment-wrapper">
+                <div class="payment-left">
+                    <div class="section-title">Payment Breakdown</div>
+                    <table class="amount-table">
+                        <tr>
+                            <td>Vehicle Price (On-Road)</td>
+                            <td><strong>₹ {{ $data->total_amount }}/-</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Less: Booking Amount Paid</td>
+                            <td><strong>₹ {{ $data->adv_amount }}/-</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Less: Expected Finance Amount</td>
+                            <td><strong>₹ {{ $data->finance_amount }}/-</strong></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Total Balance Payment</strong></td>
+                            <td><strong>₹ {{ $data->due_amount }}/-</strong></td>
+                        </tr>
+                    </table>
+                    <div class="payment-note">
+                        *Finance amount indicative, final subject to bank approval
+                    </div>
                 </div>
-                <div class="sign2">
-                    <p>Sign (Car4Sales)</p>
+                <div class="payment-right">
+                    <div class="status-badge">
+                        ✓ {{ $booking_status ?? 'Booking Confirmed · Payment Received' }}
+                    </div>
                 </div>
+            </div> --}}
+            <table class="payment-wrapper">
+                <tr>
+                    <td style="width: 60%; vertical-align: top; padding-right: 20px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Payment Breakdown</div>
+                        <table class="amount-table">
+                            <tr>
+                                <td>Vehicle Price</td>
+                                <td style="text-align: right;">Rs. {{ number_format($data->total_amount, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td>(-) Booking Amount</td>
+                                <td style="text-align: right;">Rs. {{ number_format($data->adv_amount, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td>(-) Expected Finance</td>
+                                <td style="text-align: right;">Rs. {{ number_format($data->finance_amount, 2) }}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Expected Down Payment</td>
+                                <td style="text-align: right;">Rs. {{ number_format($data->due_amount, 2) }}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width: 40%; vertical-align: middle;">
+                        <div class="status-badge">✓ BOOKING CONFIRMED</div>
+                        <div style="font-size: 8px; text-align: left; margin-top: 5px; color: #777;">
+                            *Final finance subject to bank approval
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <p>Remarks:</p>
+                           <p>{{ $data->remarks }}</p> 
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="clearfix"></div>
+
+            <!-- Payment Details -->
+            <div class="section-title">Payment Details</div>
+            <table class="payment-details-table">
+                <tr>
+                    <td>Payment Mode:</td>
+                    <td>{{ $data->payment_mode }}</td>
+                    <td>{{ $data->txn_id ?? 'N/A' }}</td>
+                </tr>
+            </table>
+
+            <!-- Signature Section -->
+            <table class="signature-table">
+                <tr>
+                    <td>
+                        <div>Customer Signature</div>
+                        <div class="sign-line"></div>
+                        <div class="sign-date">{{ strtoupper($data->name) }} 
+                            (Date:{{ date('d-M-Y', strtotime($data->created_at)) }})</div>
+                    </td>
+                    <td>
+                        <div>Authorized Signatory</div>
+                        <div class="sign-line"></div>
+                        <div class="sign-date">For AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Footer -->
+            <div class="footer">
+                {{ $company_email ?? 'support@car4sales.in' }} | {{ $company_phone ?? '+91 777 999 5656' }}
+            </div>
+
+            <div class="page-number">
+                Page 1 of 2
+            </div>
+
+            <!-- PAGE 2 - Terms & Conditions -->
+            <div class="page-break"></div>
+
+            <div class="section-title" style="text-align: center; border-left: none; font-size: 16px; margin-top: 0;">
+                Terms & Conditions
+            </div>
+
+            <ul class="terms-list">
+                <li>Booking Amount is non-refundable after 7 days from the date of invoice.</li>
+                <li>The file charge for the loan should be paid separately to the financing partner.</li>
+                <li>After completing the loan process you will be able to receive your Car/Jeep within stipulated timeline.</li>
+                <li>Only available insurance of car will be provided; if non-availability, new comprehensive insurance will be provided by Amishek Car4sales Trading Private Limited for next 1 year.</li>
+                <li>Booking cancellation charge is ₹21,000 if cancelled before loan approval. After Loan Approval cancellation charge will be 7% of total Loan Amount.</li>
+                <li>Refunds will be processed within 15 business days after deduction of applicable charges.</li>
+                
+                <li>The vehicle will not be delivered until the full payment (including loan disbursement and down payment) is credited to the company’s account.</li>
+                <li>Customers are required to inspect the vehicle thoroughly before delivery; Amishek Car4sales Trading Private Limited shall not be liable for any cosmetic damages reported after the vehicle leaves the premises.</li>
+                
+                
+                <li>All documents provided by the customer for loan processing and registration must be authentic; any legal repercussions due to forged or incorrect documents shall be the sole responsibility of the customer.</li>
+                <li>The company reserves the right to cancel the booking if the customer fails to complete the documentation or payment within the agreed timeframe.</li>
+
+                <li>Any modifications to these terms and conditions must be agreed upon in writing by both parties.</li>
+                <li>These terms shall be governed by the laws of Muzaffarpur (Bihar) jurisdiction and disputes subject to exclusive jurisdiction of Muzaffarpur courts.</li>
+                <li>By availing of our services, you acknowledge that you have read, understood, and agree to these terms and conditions.</li>
+            </ul>
+
+            <div class="section-title">Financer Required Documents</div>
+            <table class="docs-table">
+                <tr>
+                    <td>✓ Aadhar Card (Applicant & Co-applicant)</td>
+                    <td>✓ PAN Card (Applicant & Co-applicant)</td>
+                </tr>
+                <tr>
+                    <td>✓ Bank Statement (Last 6 Months)</td>
+                    <td>✓ Property Tax Receipt / Address Proof</td>
+                </tr>
+                <tr>
+                    <td>✓ Income Tax Returns (Last 2 Years)</td>
+                    <td>✓ Salary Slip (4 Months for Salaried)</td>
+                </tr>
+                <tr>
+                    <td>✓ PDC Cheques (6 Qty as per bank)</td>
+                    <td>✓ Voter ID / Driving License (Optional)</td>
+                </tr>
+            </table>
+
+            <div class="cert-badge">
+                ✓ Pre-owned car certification verified | 150-point check passed
+            </div>
+
+            {{-- <div class="footer" style="margin-top: 20px;">
+                This is a computer generated invoice | Valid without signature after booking confirmation
+            </div> --}}
+
+             <!-- Signature Section -->
+            <table class="signature-table">
+                <tr>
+                    <td>
+                        <div>Customer Signature</div>
+                        <div class="sign-line"></div>
+                        <div class="sign-date">{{ $customer_name ?? 'Kumar Sachin' }} (Date:
+                            {{ $sign_date ?? '21/03/2026' }})</div>
+                    </td>
+                    <td>
+                        <div>Authorized Signatory</div>
+                        <div class="sign-line"></div>
+                        <div class="sign-date">For AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="page-number">
+                Page 2 of 2
             </div>
         </div>
     @endforeach
-
 </body>
 
 </html>

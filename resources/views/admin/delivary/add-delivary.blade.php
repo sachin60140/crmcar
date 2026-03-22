@@ -59,9 +59,13 @@
                         <label class="form-label text-muted small">Booking Date</label>
                         <input type="text" readonly class="form-control bg-light" name="booking_date" value="{{date('d-M-Y', strtotime($carbooking['0']['created_at'])) }}">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label class="form-label text-muted small">Booking Person</label>
                         <input type="text" readonly class="form-control bg-light" name="booking_person" value="{{$carbooking['0']['booking_person']}}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small">Branch</label>
+                        <input type="text" readonly class="form-control bg-light" name="branch" value="{{$carbooking['0']['branch']}}">
                     </div>
 
                     <hr class="my-3 text-muted">

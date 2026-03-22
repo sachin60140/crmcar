@@ -4,496 +4,654 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&subset=devanagari" rel="stylesheet">
-    <title>Car4Sales Booking Slip</title>
+    <title>Car4Sales | Vehicle Delivery Slip & Invoice</title>
     <style>
+        /* RESET & BASE - OPTIMIZED FOR 2-PAGE PRINT */
         * {
-            font-family: 'Noto Sans', sans-serif;
-            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
+            font-family: 'DejaVu Sans', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            background: #e2e8f0;
+            padding: 0;
             margin: 0;
-            padding: 2px;
-            background: #fff;
-            color: #333;
-        }
-
-        .container {
-            margin: 0 auto;
-            padding: 3px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .header img {
-            width: 150px;
-        }
-
-        .header h1 {
-            margin: 5px 0;
-            font-size: 12px;
-            color: #f20000;
-            font-weight: 900;
-        }
-
-        .header p {
-            margin: 2px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 5px;
-        }
-
-        table th,
-        table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #f4f4f4;
-        }
-
-        .section-title {
-            font-size: 12px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-        }
-
-        .signatures {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-        }
-
-        .signatures div {
-            text-align: center;
-        }
-
-        .terms,
-        .financier-list {
-            margin-bottom: 5px;
-        }
-
-        .terms ol {
-            padding-left: 20px;
-            line-height: 1.5;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 70px;
-            font-size: 10px;
             color: #000000;
         }
 
-        /* Gatepass */
-
-        .gatepassbody {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+        /* A4 SIZE CONTAINER - EXACT DIMENSIONS */
+        .invoice-wrapper {
+            max-width: 210mm;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
         }
 
-        .container1 {
+        /* PAGE STYLING - OPTIMIZED FOR 2 PAGES */
+        .page {
+            padding: 10mm 12mm;
+            background: white;
+            height: auto;
+            min-height: 277mm;
+            /* A4 height approx */
+            page-break-after: avoid;
+        }
 
-            margin: 10px auto;
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* HEADER SECTION - WITH LOGO */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo img {
+            width: 175px;
+            height: auto;
+            display: block;
+        }
+
+        .company h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .company p {
+            font-size: 9px;
+            line-height: 1.3;
+            color: #000000;
+        }
+
+        /* MAIN TITLE */
+        .main-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 800;
+            margin: 3px 0 5px;
+            letter-spacing: 1px;
+        }
+
+        .main-title:after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: #000;
+            margin: 6px auto 0;
+        }
+
+        /* SECTION TITLES - COMPACT */
+        .section-title {
+            background: #f4f4f4;
+            border-left: 4px solid #000;
+            padding: 5px 12px;
+            font-weight: 800;
+            font-size: 12px;
+            margin: 8px 0 5px 0;
+            border: 1px solid #ddd;
+            border-left: 4px solid #000;
+        }
+
+        /* INFO TABLES - COMPACT */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3px;
+            font-size: 10px;
+        }
+
+        .info-table td,
+        .info-table th {
+            padding: 5px 4px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .info-table .label {
+            font-weight: 700;
+            width: 120px;
+            background: #fafafa;
+            font-size: 10px;
+        }
+
+        .info-table .value {
+            font-weight: 500;
+            font-size: 10px;
+        }
+
+        /* CHECKLIST TABLE - COMPACT */
+        .checklist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0;
+            font-size: 10px;
+        }
+
+        .checklist-table th {
+            background: #f0f0f0;
+            font-weight: 800;
+            padding: 6px 6px;
+            border: 1px solid #000;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        .checklist-table td {
+            border: 1px solid #000;
+            padding: 5px 6px;
+            vertical-align: top;
+            font-size: 10px;
+        }
+
+        /* SIGNATURE SECTION - FORCED SINGLE ROW */
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-top: 40px;
+            /* Increased to give space to sign */
+            flex-wrap: nowrap;
+            /* Forces items into a single row */
+        }
+
+        .sign-box {
+            flex: 1;
+            text-align: center;
+        }
+
+
+        .sign-note {
+            font-size: 8px;
+            margin-top: 3px;
+            color: #555;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 8px;
+            background: #f9f9f9;
             padding: 5px;
-            border: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
         }
 
-        .header1 {
+        /* AGREEMENT PAGE */
+        .agreement-title {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            margin: 500px 0 5px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .terms-box {
+
+            padding: 3px 5px;
+            background: #fff;
+        }
+
+        .intro-text {
+            font-size: 9.5px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        /* ORDERED AND UNORDERED LIST FOR TERMS */
+        .terms-list {
+            margin-left: 10px;
+            font-size: 8px;
+            line-height: 1.1;
+            text-align: justify;
+        }
+
+        .terms-list li {
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+
+        .terms-list li strong {
+            font-weight: 800;
+            font-size: 8px;
+            display: inline-block;
+            margin-bottom: 2px;
+        }
+
+        .terms-list ul {
+            margin-top: 2px;
+            margin-left: 15px;
+            list-style-type: disc;
+            /* Bullet points */
+        }
+
+        .terms-list ul li {
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        /* PRINT OPTIMIZATION - EXACT 2 PAGES */
+        @media print {
+            @page {
+                size: A4;
+                margin: 10mm 8mm;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .invoice-wrapper {
+                box-shadow: none;
+                max-width: 100%;
+            }
+
+            .page {
+                padding: 0;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .section-title,
+            .checklist-table th {
+                background: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+            .page {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .header-left {
+                flex-direction: column;
+            }
+
+            .signatures {
+                flex-direction: column;
+                gap: 40px;
+            }
+        }
+
+        /* Header Section - Using Table */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 7px;
+        }
+
+        .header-table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .company-cell {
+            width: 60%;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .company-details {
+            font-size: 10px;
+            color: #000000;
+            line-height: 1.4;
+        }
+
+        .invoice-cell {
+            width: 40%;
             text-align: right;
         }
 
-        .header1 img {
-            width: 150px;
-            float: left;
-        }
-
-        .header1 h1 {
-            font-size: 18px;
-            color: red;
-            text-align: left;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header1 .info {
-            font-size: 12px;
-            margin-top: 0;
-            float: right;
-        }
-
-        .header1 .info p {
-            margin: 2px 0;
-        }
-
-        .clear1 {
-            clear: both;
-        }
-
-        .title1 {
-            text-align: center;
+        .invoice-title {
             font-size: 24px;
             font-weight: bold;
-            color: red;
-            margin: 20px 0;
+            color: #000;
+            margin-bottom: 10px;
         }
 
-        .details1 {
-            font-size: 14px;
-        }
-
-        .details1 input[type="text"],
-        .details1 input[type="number"] {
-
-            border: none;
-            border-bottom: 1px solid #000;
-            outline: none;
-        }
-
-        .checkbox-group {
-            margin-top: 20px;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 20px;
-        }
-
-        .sign-section {
-            margin-top: 30px;
-        }
-
-        .sign-section .column {
-            float: left;
-            width: 33.3%;
-            text-align: center;
-        }
-
-        .sign-section .column input[type="text"] {
-            width: 150px;
-            border: none;
-            border-bottom: 1px solid #000;
-        }
-
-        .remarks1 {
-            margin-top: 40px;
-        }
-
-        .remarks1 textarea {
+        /* Signature Section */
+        .signature-table {
             width: 100%;
-            height: 80px;
-            border: 1px solid #000;
+            border-collapse: collapse;
+            margin: 15px 0 20px;
+
+            padding-top: 20px;
         }
 
-        .footer1 {
-            margin-top: 20px;
+        .signature-table td {
+            width: 50%;
+            text-align: center;
+            padding-top: 20px;
+            vertical-align: bottom;
         }
 
-        .footer1 p {
-            font-size: 12px;
+        .sign-line {
+            border-bottom: 1px solid #888;
+            width: 80%;
+            margin: 8px auto 5px;
+            font-weight: 700;
+            font-size: 9px;
         }
 
-        .clear {
-            clear: both;
+        .sign-date {
+            font-size: 9px;
+            color: #000000;
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <div style="margin-top: 5px; margin-bottom: 10px;">
-            <div style="float: left">
-                <p>GSTIN : 10AVYPK5002H3ZP</p>
-            </div>
-
-            <div style="float: right">
-                <p>website : www.car4sales.in</p>
-            </div>
-        </div>
-
-        <div class="header">
-            <img src="assets/img/logotrans.png" alt="Car4Sales Logo">
-            <p><strong style="font-size: 16px;">Car for Sales Sale Buy & Services</strong></p>
-            <p><strong style="font-size: 10px;">Chandani Chowk, Near Mahindra & Mahindra Showroom, Near Over Bridge,
-                    Muzaffarpur, Bihar, 842003</strong></p>
-            <p><strong style="font-size: 10px;">Ph : 777 999 5656</strong></p>
-            <p><strong><u>Delivary Slip/Aggrement</u></strong> </p>
-        </div>
-
-        <hr style="margin-top: 10px">
-
-        <div style="margin-top: 10px">
-            <table>
+    <div class="invoice-wrapper">
+        <div class="page">
+            
+            <table class="header-table">
                 <tr>
-                    <th style="text-align: center; font-size: 10px">Seller Information</th>
+                    <td class="company-cell">
+                        <div class="logo">
+                            <img src="assets/img/logotrans.png" width="175px">
+                        </div>
+                        {{-- <div class="company-name">AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div> --}}
+                        <div class="company-details">
+                            AMISHEK CAR4SALES TRADING PRIVATE LIMITED<br>
+                            CIN: U45102BR2025PTC078595 | GST: 10ABDCA6650P1ZL<br>
+                            Chandani Chowk, MBBL Collage, Damodarpur, Muzaffarpur,Bihar 843113 <br>
+                            Tel: +91 777 999 5656
+                        </div>
+                    </td>
+                    <td class="invoice-cell">
+                        <div class="invoice-title">Delivery Slip</div>
+                        <div style="width: 100%; text-align: right; margin-top: 10px;">
+                            <div
+                                style="display: inline-block; border: 1.5px solid #000; padding: 10px 12px; border-radius: 6px; text-align: center; background-color: #fff;">
+                                <div>
+                                    {!! DNS1D::getBarcodeHTML('C4S' . str_pad($getRecords[0]['id'], 6, '0', STR_PAD_LEFT), 'C128', 1.2, 40) !!}
+                                </div>
+                                <div style="margin-top: 6px; font-size: 12px; font-weight: bold; letter-spacing: 1px;">
+                                    C4S{{ str_pad($getRecords[0]['id'], 6, '0', STR_PAD_LEFT) }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </table>
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <td>{{ date('d/M/Y', strtotime($getRecords[0]['created_at'] ))}}</td>
-                    <th>Seller Name</th>
-                    <td>Amit Kumar</td>
-                    <th>Father's Name</th>
-                    <td>Ramekbal Prasad</td>
-                </tr>
 
+            <div class="main-title">VEHICLE DELIVERY SLIP</div>
+
+            <div class="section-title"> DELIVERY BRANCH</div>
+            <table class="info-table">
                 <tr>
-                    <th>Address</th>
-                    <td colspan="5">Mahamaya Mandir, Damodarpur, Post:Damodarpur, Ps:Kanti, Muzaffarpur, Bihar. 843113</td>
+                    <td class="label">Branch Name</td>
+                    <td class="value"><strong>{{ $getRecords[0]['branch'] }}</strong></td>
+                    <td class="label">Sales Person</td>
+                    <td class="value"><strong>{{ $getRecords[0]['booking_person'] }}</strong></td>
                 </tr>
+            </table>
+
+            <div class="section-title"> CUSTOMER INFORMATION</div>
+            <table class="info-table">
                 <tr>
-                    <th>Booking Number</th>
-                    <td>{{ $getRecords[0]['booking_id'] }}</td>
-                    <th>Booking Person</th>
-                    <td>{{ $getRecords[0]['booking_person'] }}</td>
-                    <th>Registration</th>
-                    <td>{{ $getRecords[0]['reg_number'] }}</td>
-                </tr>
-                <tr>
-                    <th>Car Model</th>
-                    <td>{{ $getRecords[0]['model_name'] }}</td>
-                    <th>Model Year</th>
-                    <td>{{ $getRecords[0]['model_year'] }}</td>
-                    <th>Colour</th>
-                    <td>{{ $getRecords[0]['car_color'] }}</td>
+                    <td class="label">Customer Name</td>
+                    <td class="value"><strong>{{ $getRecords[0]['name'] }}</strong></td>
+                    <td class="label">Father's Name</td>
+                    <td class="value">{{ $getRecords[0]['father_name'] }}</td>
 
                 </tr>
                 <tr>
-                    <th>Owner Sl No.</th>
-                    <td>{{ $getRecords[0]['owner_sl_no'] }}</td>
-                    <th>Engine No </th>
-                    <td>{{ $getRecords[0]['eng_number'] }}</td>
-                    <th>Chasis No.</th>
-                    <td>{{ $getRecords[0]['chassis_number'] }}</td>
-                </tr>
-                <tr>
-                    <th>Sell Amount</th>
-                    <td>{{ $getRecords[0]['sell_amount'] }}/-</td>
-                    <th>Booking Amount</th>
-                    <td>{{ $getRecords[0]['booking_amount'] }}/-</td>
-                    <th>Finance Amount</th>
-                    <td>{{ $getRecords[0]['finance_amount'] }}/-</td>
-                </tr>
-                <tr>
-                    <th>Down Payment</th>
-                    <td>{{ $getRecords[0]['dp'] }}/-</td>
-                    <th>Remarks</th>
-                    <td  colspan="3">{{ $getRecords[0]['remarks'] }}</td>
-                </tr>
-                <tr>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th style="text-align: center; font-size: 10px">Buyer Information</th>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <table>
-                <tr>
-                    <th>Buyer Name</th>
-                    <td>{{ $getRecords[0]['name'] }}</td>
-                    <th>Father's Name</th>
-                    <td>{{ $getRecords[0]['father_name'] }}</td>
-                    <th>Mobile No.</th>
+                    <td class="label">Mobile Number</td>
                     <td>{{ $getRecords[0]['mobile'] }}</td>
+                    <td class="label">Aadhaar No</td>
+                    <td>{{ $getRecords[0]['aadhar'] }}</td>
+
                 </tr>
                 <tr>
-                    <th>Address</th>
+                    <td class="label">PAN No</td>
+                    <td>{{ $getRecords[0]['pan_card'] }}</td>
+                    <td class="label">Delivery Date & Time</td>
+                    <td><strong>{{ date('d/m/Y h:i A', strtotime($getRecords[0]['created_at'])) }}</strong></td>
+                </tr>
+
+                <tr>
+                    <td class="label">Residential Address</td>
                     <td colspan="5">{{ $getRecords[0]['address'] }}</td>
                 </tr>
+            </table>
+
+            <div class="section-title"> VEHICLE SPECIFICATIONS</div>
+            <table class="info-table">
                 <tr>
-                    <th>Aadhar No.</th>
-                    <td>{{ $getRecords[0]['aadhar'] }}</td>
-                    <th>Pan Card</th>
-                    <td>{{ $getRecords[0]['pan_card'] }}</td>
-                    <th>Finance By</th>
-                    <td>{{ $getRecords[0]['financer'] }}</td>
+                    <td class="label">Registration No</td>
+                    <td><strong>{{ $getRecords[0]['reg_number'] }}</strong></td>
+                    <td class="label">Car Model</td>
+                    <td>{{ $getRecords[0]['model_name'] }}</td>
+                    <td class="label">Owner Serial No.</td>
+                    <td>{{ $getRecords[0]['owner_sl_no'] }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Chassis No</td>
+                    <td>{{ $getRecords[0]['chassis_number'] }}</td>
+                    <td class="label">Engine No</td>
+                    <td>{{ $getRecords[0]['eng_number'] }}</td>
+                    <td class="label">Color</td>
+                    <td>{{ $getRecords[0]['car_color'] }}</td>
                 </tr>
             </table>
-        </div>
 
-        <!-- Terms and Conditions -->
-        <div class="terms">
-            <h3 class="section-title">Terms & Conditions:</h3>
-            <ol>
-                <li>The responsibility of the RC (Registration Certificate) lies with the DTO office, not the showroom.
-                </li>
-                <li>Once the RC (Registration Certificate) is updated online, ensure that the insurance is transferred
-                    to your name. Otherwise, the showroom will not be responsible if a claim is denied.</li>
-                <li>When purchasing the vehicle, make sure to check the toolbox and stepney, as the showroom will not be
-                    responsible for them later.</li>
-                <li>After taking delivery of the vehicle, CarforSales will not be responsible for any kind of damages
-                    related to the vehicle</li>
-                <li>In case of accidental damage, we assure that the apron, pillars, and chassis have not been repaired.
-                </li>
-                <li>Any debt or legal claim arising after delivery will be the responsibility of the buyer.</li>
-                <li>There is no mention of vehicle return in this agreement. However, if any documents related to the
-                    vehicle are found to be incorrect in any way, the vehicle must be returned to Car4Sales.</li>
-                <li>The buyer is purchasing the car after being satisfied with the documents and after test-driving the
-                    vehicle.</li>
-                <li>The jurisdiction for any disputes or legal matters related to this agreement falls under
-                    Muzaffarpur.</li>
-                <li>By availing of our services, you acknowledge that you have read, understood, and agree to these
-                    terms and conditions.</li>
-            </ol>
-        </div>
+            <div class="section-title">PRICE & PAYMENT SUMMARY</div>
+            <table class="info-table">
+                <tr>
+                    <td class="label">Vehicle Price</td>
+                    <td>₹ {{ $getRecords[0]['sell_amount'] }}</td>
+                    <td class="label">Booking Amount</td>
+                    <td>₹ {{ $getRecords[0]['booking_amount'] }}</td>
+                    <td class="label">Loan Amount</td>
+                    <td>₹ {{ $getRecords[0]['finance_amount'] }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Down Payment</td>
+                    <td>₹ {{ $getRecords[0]['dp'] }}</td>
+                    <td class="label">Payment Mode</td>
+                    <td>{{ $getRecords[0]['paymentMode'] }}</td>
+                    <td class="label">Financer Name</td>
+                    <td>{{ $getRecords[0]['financer'] }}</td>
+                </tr>
+                <tr>
+                    <td class="label">Remarks</td>
+                    <td colspan="5">{{ $getRecords[0]['remarks'] }}</td>
+                </tr>
+            </table>
 
-        <!-- Signatures -->
-        <div class="signatures">
-            <div style="float: left">
-                <p>____________________</p>
-                <p>Buyer Sign</p>
+            <div class="section-title"> DELIVERY CHECKLIST</div>
+            <table class="checklist-table">
+                <thead>
+                    <tr>
+                        <th style="width:45%">ITEM DESCRIPTION</th>
+                        <th style="width:20%">STATUS</th>
+                        <th style="width:35%">REMARKS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RC Copy</strong></td>
+                        <td>✓ Given</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insurance Policy</strong></td>
+                        <td>✓ Provided</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pollution</strong></td>
+                        <td>✓ Provided</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Car Keys</strong></td>
+                        <td>✓ Handed</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool Kit & Jack</strong></td>
+                        <td>✓ Complete</td>
+                        <td>Spare wheel present</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {{-- <div class="signatures">
+            <div class="sign-box">
+                <div class="sign-line">CUSTOMER / BUYER SIGNATURE</div>
+                <div class="sign-note">(Delivery acceptance)</div>
             </div>
-            <div style="float: right">
-                <p>____________________</p>
-                <p>Authorized Sign (Car4Sales)</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Thank you for choosing Car4Sales.</p>
-            <p> For RC transfer-related issues, contact our helpline at 7070711795</p>
-        </div>
-
-
-    </div>
-    <div class="page-break" >
-        {{-- <div class="gatepassbody">
-            <div class="container1">
-                <div class="header1">
-                    <img src="assets/img/logotrans.png" alt="Motor Kenya Lounge">
-                    <div class="info">
-                        <p>Chandani Chowk, Near Mahindra & Mahindra Showroom, </p>
-                        <p>Near Over Bridge, Muzaffarpur, Bihar, 842003</p>
-                        <p>Tel: 777 999 5656</p>
-                    </div>
-                </div>
-                <div class="clear1"></div>
-        
-                <div class="title1">GATE PASS / DELIVERY SLIP</div>
-        
-                <div>
-
-                </div>
-                <div class="details1">
-                    <p>Date: <input type="text" name="date"></p>
-                    <p>Client: <input type="text" name="client"></p>
-                    <p>Make: <input type="text" name="make"> Type: <input type="text" name="type"></p>
-                    <p>Reg. No: <input type="text" name="regNo"> Colour: <input type="text" name="color"> Mileage: <input type="number" name="mileage"></p>
-        
-                    <div class="checkbox-group">
-                        <p>Jack Handle <input type="checkbox"> Jack <input type="checkbox"> SD Card <input type="checkbox"> Radio <input type="checkbox"> CD <input type="checkbox"></p>
-                        <p>Mats <input type="checkbox"> H/Rest <input type="checkbox"> C/Lighter <input type="checkbox"> Spare Wheel <input type="checkbox"> Wheel Spanner <input type="checkbox"></p>
-                    </div>
-                </div>
-        
-                <div class="sign-section">
-                    <div class="column">
-                        <p>Dispatched by: <input type="text" name="dispatchedBy"></p>
-                    </div>
-                    <div class="column">
-                        <p>Authorized by: <input type="text" name="authorizedBy"></p>
-                    </div>
-                    <div class="column">
-                        <p>Received by: <input type="text" name="receivedBy"></p>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-        
-                <div class="remarks1">
-                    <p>Remarks:</p>
-                    <textarea name="remarks"></textarea>
-                </div>
-        
-                <div class="footer1">
-                    <p>ID: <input type="text" name="id"></p>
-                </div>
+            <div class="sign-box">
+                <div class="sign-line">AUTHORIZED DEALER SIGNATORY</div>
+                <div class="sign-note">Car4Sales Pvt Ltd</div>
             </div>
         </div> --}}
-        <div>
-            <div style="margin-top: 550px; padding-left: 10px">
-                <p>
-                    I, <strong>Amit Kumar,</strong> S/o Shri Ramekbal Prasad, residing at Mahamaya Mandir, Damodarpur, Post:Damodarpur, Ps:Kanti, Muzaffarpur, Bihar. 843113. hereby declare that I am selling my vehicle with the following details:
-                </p>
-                <p>
-                    <strong>Vehicle Number:</strong>{{ $getRecords[0]['reg_number'] }}, <strong>Chasis
-                        Number:</strong>{{ $getRecords[0]['chassis_number'] }}, <strong>Engine
-                        Number:</strong>{{ $getRecords[0]['eng_number'] }}, <strong>Model:</strong>{{ $getRecords[0]['model_name'] }}, <strong>Model Year:</strong>{{ $getRecords[0]['model_year'] }},
-                        <strong>Colour:</strong>{{ $getRecords[0]['car_color'] }}
-                </p>
-                <p>
-                    to<strong> {{ $getRecords[0]['name'] }}</strong>, S/o Shri <strong>{{ $getRecords[0]['father_name'] }}</strong>, Address: <strong>{{ $getRecords[0]['address']}}</strong> , Aadhar Number:
-                    <strong>{{ $getRecords[0]['aadhar'] }}</strong>, PAN: <strong>{{ $getRecords[0]['pan_card'] }}</strong>, on
-                    <strong>{{ date('d/M/Y H:i:s', strtotime($getRecords[0]['created_at'] ))}}</strong>, for a total sum of
-                    Rs.<strong>{{ $getRecords[0]['sell_amount'] }}/-</strong>.
-                </p>
+            <table class="signature-table">
+                <tr>
+                    <td>
+                        <div class="sign-line">CUSTOMER / BUYER SIGNATURE</div>
+                        <div class="sign-date">(Delivery acceptance)</div>
+                    </td>
+                    <td>
+                        <div class="sign-line">Authorized Signatory</div>
+                        <div class="sign-date">For AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="footer">
+                Delivery Branch: {{ $getRecords[0]['branch'] }} | Slip generated:
+                <strong>{{ date('d/m/Y h:i A', strtotime($getRecords[0]['created_at'])) }}</strong> | E. & O.E
             </div>
-            <div class="terms">
-                <h3 class="section-title">Terms & Conditions:</h3>
-                <ol>
-                    <li>
-                        All responsibilities related to the vehicle, including road traffic violations, legal obligations,
-                        and any liabilities occurring before <strong>{{ date('d/M/Y H:i:s', strtotime($getRecords[0]['created_at'] ))}}</strong>, remain with <strong>Amit Kumar</strong>.
-                    </li>
-                    <li>
-                        From <strong>{{ date('d/M/Y H:i:s', strtotime($getRecords[0]['created_at'] ))}}</strong>, all future responsibilities, including road traffic
-                        movement, legal obligations, and any liabilities, will be solely borne by Buyer (<strong>{{ $getRecords[0]['name'] }}</strong>)
-                        .
-                    </li>
-                    
-                    <li>
-                        Mr. <strong>{{ $getRecords[0]['name'] }}</strong> agrees to purchase the vehicle in its current condition, as inspected
-                        and approved by him. The Seller (<strong>Amit Kumar</strong>), makes no warranties or guarantees, expressed or implied, regarding
-                        the condition of the vehicle, except for any express warranties included in this Agreement. The
-                        Buyer (<strong>{{ $getRecords[0]['name'] }}</strong>) acknowledges that the vehicle is sold "as-is" without any warranties from the Seller. This sale is final, and there is no provision for the return of the vehicle.
-                    </li>
-                    <li>The responsibility of the RC (Registration Certificate) lies with the DTO office, not the showroom.
-                    </li>
-                    <li>Once the RC (Registration Certificate) is updated online, ensure that the insurance is transferred
-                        to your name. Otherwise, the showroom will not be responsible if a claim is denied.</li>
-    
-                </ol>
-            </div>
-            <!-- Signatures -->
-            <div class="signatures">
-                <div style="float: left">
-                    <p>____________________</p>
-                    <p>Buyer Sign</p>
+        </div>
+
+        <div class="page-break"></div>
+
+        <div class="page" >
+            <div>
+
+                <div class="agreement-title">VEHICLE SALE AGREEMENT & TERMS OF TRANSFER</div>
+
+                <div class="terms-box">
+                    <div class="intro-text">
+                        This <strong>Sale cum Delivery Agreement</strong> is executed on this
+                        <strong>{{ date('d/m/Y H:i A', strtotime($getRecords[0]['created_at'])) }}</strong>
+                        between <strong>AMISHEK CAR4SALES TRADING PRIVATE LIMITED (Seller)</strong> and
+                        <strong>{{ $getRecords[0]['name'] }}</strong> S/o Shri <strong>{{ $getRecords[0]['father_name'] }}</strong>, Address: <strong>{{ $getRecords[0]['address']}}</strong> , Aadhar Number:
+                    <strong>{{ $getRecords[0]['aadhar'] }}</strong>, PAN: <strong>{{ $getRecords[0]['pan_card'] }}</strong>, (Purchaser) 
+                        for the vehicle described as <strong>{{ $getRecords[0]['model_name'] }}, </strong> bearing
+                        Registration No:
+                        <strong>{{ $getRecords[0]['reg_number'] }}</strong>. Delivery shall be effective from
+                        <strong>{{ date('d/m/Y H:i A', strtotime($getRecords[0]['created_at'])) }}</strong> at
+                        <strong>{{ $getRecords[0]['branch'] }}</strong>.
+                    </div>
+
+                    <ul class="terms-list">
+                        <li>
+                            The original Registration Certificate (RC) will be transferred to purchaser's name by the
+                            respective RTO/DTO. The dealer acts only as facilitator; any delay or liability from
+                            transport
+                            authority is not attributable to the seller.
+                        </li>
+                        <li>
+                            Insurance is transferred in the name of purchaser after RC transfer. Until then, buyer is
+                            advised to maintain comprehensive coverage. Any accident or challan post delivery time is
+                            buyer's sole responsibility.
+                        </li>
+                        <li>
+                            The vehicle is sold on AS-IS WHERE-IS basis with complete pre-delivery
+                            inspection (PDI) performed. Buyer has inspected the vehicle and finds it satisfactory. No
+                            claim
+                            regarding mechanical, electrical, or cosmetic aspects shall be entertained after handing
+                            over
+                            the keys and signed delivery slip.
+                        </li>
+                        <li>
+                            All traffic challans, e-challans or pending fines arising after the delivery timestamp shall
+                            be
+                            cleared by buyer. Payment made towards the vehicle is non-refundable unless specified in
+                            separate agreement. Any legal dispute shall be subject to Muzaffarpur,
+                                Bihar
+                            jurisdiction only.
+                        </li>
+                        <li>
+                            The delivery checklist is an integral part of this agreement. By signing below, the buyer
+                            acknowledges receipt of the vehicle along with all accessories, keys, and documents as per
+                            the checklist. Any discrepancy must be reported within 24 hours of delivery; otherwise, the
+                            delivery is deemed complete and accepted by the buyer.
+                            <ul>
+                                <li>✔ I/We acknowledge receipt of vehicle along with all accessories, keys, and
+                                    documents
+                                    mentioned in the delivery checklist.</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-                <div style="float: right">
-                    <p>____________________</p>
-                    <p>Seller Sign</p>
+
+
+                <table class="signature-table">
+                    <tr>
+                        <td>
+                            <div class="sign-line">CUSTOMER / BUYER SIGNATURE</div>
+                            <div class="sign-date">(Delivery acceptance)</div>
+                        </td>
+                        <td>
+                            <div class="sign-line">Authorized Signatory</div>
+                            <div class="sign-date">For AMISHEK CAR4SALES TRADING PRIVATE LIMITED</div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="footer" style="margin-top: 15px;">
+                    This is a computer generated invoice cum agreement — valid without physical signature subject to
+                    delivery acknowledgment.
                 </div>
             </div>
         </div>
-        
-
     </div>
-
 </body>
 
 </html>

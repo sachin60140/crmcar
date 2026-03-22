@@ -154,8 +154,6 @@ class CloudCallingController extends Controller
         $validator = Validator::make($req->all(), [
             'leadid' => 'required',
             'name' => 'required|string|max:255',
-
-
         ]);
 
         if ($validator->fails()) {

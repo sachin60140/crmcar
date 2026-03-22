@@ -5,170 +5,157 @@
 @section('style')
     {{-- Select2 CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- SweetAlert2 CSS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
     
     <style>
-        /* Hide HTML5 Up/Down arrows for number inputs */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield; /* Firefox */
-        }
+        /* Hide HTML5 arrows for number inputs */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
         
-        /* Optional: Fix Select2 height to match Bootstrap inputs */
-        .select2-container .select2-selection--single {
-            height: 38px;
-            padding: 5px;
-        }
+        /* Select2 Bootstrap 5 Fixes */
+        .select2-container .select2-selection--single { height: 38px !important; padding: 5px !important; border: 1px solid #dee2e6 !important; }
+        .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
+        
+        /* Smooth transition for TXN field */
+        #txn_div { display: none; }
+        .is-invalid-custom { border: 2px solid #dc3545 !important; color: #dc3545 !important; }
     </style>
 @endsection
 
 @section('content')
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Add New Booking</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item active">Admin</li>
+                <li class="breadcrumb-item">Booking</li>
                 <li class="breadcrumb-item active">Add Booking</li>
             </ol>
         </nav>
     </div>
 
-    <section class="section dashboard">
+    <section class="section">
         <div class="row">
-            <div class="col-md-8 mx-auto"> {{-- Increased width slightly for better spacing --}}
+            <div class="col-md-9 mx-auto">
                 
                 {{-- Alert Messages --}}
-                <div>
-                    @if ($errors->any())
-                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger border-0 alert-dismissible fade show">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-                    @if (Session::has('success'))
-                        <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-
-                    @if (Session::has('error'))
-                        <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
-                            {{ Session::get('error') }}
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Add Booking</h5>
-
-                        <form class="row g-3" action="{{ route('storebooking') }}" method="POST">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form class="row g-3" action="{{ route('storebooking') }}" method="POST" id="bookingForm">
                             @csrf
                             
                             {{-- Vehicle Selection --}}
                             <div class="col-md-12">
-                                <label for="reg_number" class="form-label">Reg Number</label>
-                                <select id="reg_number" class="form-select select2-enable" name="reg_number">
-                                    <option selected value="">Choose Vehicle...</option>
+                                <label class="form-label fw-bold">Select Vehicle</label>
+                                <select class="form-select select2-enable" name="reg_number" required>
+                                    <option value="">Choose Vehicle...</option>
                                     @foreach ($car_stock as $item)
                                         <option value="{{ $item->id }}" @selected(old('reg_number') == $item->id)>
-                                            {{ $item->reg_number }} - {{ $item->car_model }}
+                                            {{ $item->reg_number }} — {{ $item->car_model }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            {{-- Booking Person --}}
+                            {{-- Booking Person (Sales Person) --}}
                             <div class="col-md-6">
-                                <label for="booking_person" class="form-label">Booking Person <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="booking_person" name="booking_person" value="{{ old('booking_person') }}" required>
+                                <label class="form-label fw-bold">Sales Person</label>
+                                <select class="form-select select2-enable" name="booking_person" required>
+                                    <option value="">Select Sales Person...</option>
+                                    @foreach ($sales_person as $item)
+                                        <option value="{{ $item->name }}" @selected(old('booking_person') == $item->name)>
+                                            {{ $item->name }} ({{ $item->branch }})
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             {{-- Customer Selection --}}
                             <div class="col-md-6">
-                                <label for="customer" class="form-label">Customer</label>
-                                <select id="customer" class="form-select select2-enable" name="customer">
-                                    <option selected value="">Choose Customer...</option>
+                                <label class="form-label fw-bold">Customer</label>
+                                <select class="form-select select2-enable" name="customer" required>
+                                    <option value="">Choose Customer...</option>
                                     @foreach ($ledger as $item)
                                         <option value="{{ $item->id }}" @selected(old('customer') == $item->id)>
-                                            {{ $item->id }} - {{ $item->name }} - {{ $item->mobile_number }}
+                                            {{ $item->name }} — {{ $item->mobile_number }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             
-                            <hr class="mt-4">
-                            <h6 class="text-muted">Payment Details</h6>
+                            <div class="col-12"><hr class="my-3"></div>
 
-                            {{-- Amount Fields - Row 1 --}}
+                            {{-- Amount Fields --}}
                             <div class="col-md-6">
-                                <label for="total_amount" class="form-label">Sell Amount <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Sell Amount</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number" step="any" class="form-control" id="total_amount" name="total_amount" value="{{ old('total_amount') }}" required>
+                                    <span class="input-group-text bg-light">₹</span>
+                                    <input type="number" step="any" class="form-control calc-trigger" id="total_amount" name="total_amount" value="{{ old('total_amount') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="adv_amount" class="form-label">Advance Amount <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Advance Paid</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number" step="any" class="form-control" id="adv_amount" name="adv_amount" value="{{ old('adv_amount') }}" required>
-                                </div>
-                            </div>
-
-                            {{-- Amount Fields - Row 2 --}}
-                            <div class="col-md-6">
-                                <label for="finance_amount" class="form-label">Finance Amount <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number" step="any" class="form-control" id="finance_amount" name="finance_amount" value="{{ old('finance_amount') }}" required>
+                                    <span class="input-group-text bg-light">₹</span>
+                                    <input type="number" step="any" class="form-control calc-trigger" id="adv_amount" name="adv_amount" value="{{ old('adv_amount') }}" required>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="dp" class="form-label">Down Payment (Auto) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">Finance Amount</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    {{-- Added readonly to prevent manual editing since it is calculated --}}
-                                    <input type="number" step="any" class="form-control bg-light" id="dp" name="dp" value="{{ old('dp') }}" readonly required>
+                                    <span class="input-group-text bg-light">₹</span>
+                                    <input type="number" step="any" class="form-control calc-trigger" id="finance_amount" name="finance_amount" value="{{ old('finance_amount') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-primary">Pending Down Payment (Auto)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary text-white" id="dp_icon">₹</span>
+                                    <input type="number" step="any" class="form-control bg-light fw-bold" id="dp" name="dp" value="{{ old('dp') }}" readonly>
                                 </div>
                             </div>
                             
-                            {{-- Payment Mode --}}
-                            <div class="col-md-12">
-                                <label for="paymentMode" class="form-label">Payment Mode</label>
-                                <select class="form-select" id="paymentMode" name="paymentMode">
-                                    <option value="">Select Payment Mode...</option>
+                            {{-- Payment Mode & TXN ID --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Payment Mode</label>
+                                <select class="form-select" name="paymentMode" id="paymentMode" required>
+                                    <option value="">Select Mode...</option>
                                     <option value="Cash" @selected(old('paymentMode') == 'Cash')>Cash</option>
                                     <option value="UPI" @selected(old('paymentMode') == 'UPI')>UPI</option>
-                                    <option value="Neft" @selected(old('paymentMode') == 'Neft')>NEFT</option>
+                                    <option value="NEFT" @selected(old('paymentMode') == 'NEFT')>NEFT</option>
+                                    <option value="RTGS" @selected(old('paymentMode') == 'RTGS')>RTGS</option>
                                 </select>
                             </div>
 
-                            {{-- Remarks --}}
+                            <div class="col-md-6" id="txn_div">
+                                <label class="form-label fw-bold">TXN ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="txn_id" name="txn_id" value="{{ old('txn_id') }}" placeholder="Enter Transaction ID">
+                            </div>
+
                             <div class="col-md-12">
-                                <label for="remarks" class="form-label">Booking Remarks</label>
-                                {{-- Fixed textarea value population --}}
-                                <textarea class="form-control" id="remarks" rows="2" name="remarks">{{ old('remarks') }}</textarea>
+                                <label class="form-label fw-bold">Remarks</label>
+                                <textarea class="form-control" name="remarks" rows="2" placeholder="Enter any additional details...">{{ old('remarks') }}</textarea>
                             </div>
 
                             <div class="text-center mt-4">
-                                <button type="submit" class="btn btn-primary w-50">Create Booking</button>
+                                <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm" id="submitBtn">
+                                    Confirm Booking
+                                </button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -177,43 +164,67 @@
 @endsection
 
 @section('script')
-    {{-- jQuery (Only one version) --}}
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    {{-- Select2 JS --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    @section('script')
-    {{-- jQuery --}}
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    {{-- Select2 JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
             // 1. Initialize Select2
-            $('.select2-enable').select2({
-                width: '100%'
-            });
+            $('.select2-enable').select2({ width: '100%' });
 
-            // 2. Auto Calculate Down Payment
-            $('#total_amount, #adv_amount, #finance_amount').on('input', function() {
-                var total = parseFloat($('#total_amount').val()) || 0;
-                var advance = parseFloat($('#adv_amount').val()) || 0;
-                var finance = parseFloat($('#finance_amount').val()) || 0;
+            // 2. TXN ID Logic: Show if not Cash, hide if Cash
+            function toggleTxnField() {
+                let mode = $('#paymentMode').val();
+                if (mode !== "" && mode !== "Cash") {
+                    $('#txn_div').fadeIn();
+                    $('#txn_id').prop('required', true);
+                } else {
+                    $('#txn_div').fadeOut();
+                    $('#txn_id').prop('required', false).val('');
+                }
+            }
+            $('#paymentMode').on('change', toggleTxnField);
+            toggleTxnField(); // Run on page load
 
-                var dp = total - advance - finance;
-                $('#dp').val(dp.toFixed(2));
-            });
-
-            // 3. Disable Submit Button on Form Submit
-            $('form').on('submit', function() {
-                var $btn = $(this).find('button[type="submit"]');
+            // 3. Auto Calculation & Real-time Balance Check
+            $('.calc-trigger').on('input', function() {
+                let total = parseFloat($('#total_amount').val()) || 0;
+                let advance = parseFloat($('#adv_amount').val()) || 0;
+                let finance = parseFloat($('#finance_amount').val()) || 0;
                 
-                // Change text to show processing and disable the button
-                $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                let dp = total - advance - finance;
+                $('#dp').val(dp.toFixed(2));
+
+                // Validation: Prevent Advance + Finance > Total Sell Amount
+                if (dp < 0) {
+                    $('#dp').addClass('is-invalid-custom');
+                    $('#dp_icon').removeClass('bg-primary').addClass('bg-danger');
+                    $('#submitBtn').prop('disabled', true).text('Invalid Amount Balance');
+                } else {
+                    $('#dp').removeClass('is-invalid-custom');
+                    $('#dp_icon').removeClass('bg-danger').addClass('bg-primary');
+                    $('#submitBtn').prop('disabled', false).text('Confirm Booking');
+                }
+            });
+
+            // 4. Form Submission Handling
+            $('#bookingForm').on('submit', function(e) {
+                let $btn = $('#submitBtn');
+                $btn.html('<span class="spinner-border spinner-border-sm"></span> Processing...');
                 $btn.prop('disabled', true);
             });
+
+            // 5. Global Success Toast (for session flash)
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "{{ session('success') }}",
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
         });
     </script>
-@endsection
 @endsection
