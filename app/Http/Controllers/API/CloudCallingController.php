@@ -399,176 +399,124 @@ class CloudCallingController extends Controller
         return view('admin.cloud-calling.qkonnect-call-data');
     }
 
-    // public function acePhoneData(Request $req)
-    // {
-    //     try {
-    //         // Log raw webhook data
-    //         \Log::info('Acephone Webhook Raw:', $req->all());
-
-    //         // Normalize input (handle string → correct types)
-    //         $data = $req->all();
-
-    //         // Fix wrong key (if provider sends with space)
-    //         if (isset($data['customer_no_with_prefix '])) {
-    //             $data['customer_no_with_prefix'] = $data['customer_no_with_prefix '];
-    //             unset($data['customer_no_with_prefix ']);
-    //         }
-
-    //         // Type casting
-    //         $data['billsec'] = (int) ($data['billsec'] ?? 0);
-    //         $data['duration'] = (int) ($data['duration'] ?? 0);
-    //         $data['outbound_sec'] = (int) ($data['outbound_sec'] ?? 0);
-    //         $data['agent_ring_time'] = (int) ($data['agent_ring_time'] ?? 0);
-    //         $data['agent_transfer_ring_time'] = (int) ($data['agent_transfer_ring_time'] ?? 0);
-    //         $data['customer_ring_time'] = (int) ($data['customer_ring_time'] ?? 0);
-
-    //         $data['call_connected'] = filter_var($data['call_connected'] ?? false, FILTER_VALIDATE_BOOLEAN);
-
-    //         // Clean phone numbers
-    //         if (!empty($data['caller_id_number'])) {
-    //             $data['caller_id_number'] = preg_replace('/[^0-9]/', '', $data['caller_id_number']);
-    //         }
-
-    //         if (!empty($data['call_to_number'])) {
-    //             $data['call_to_number'] = preg_replace('/[^0-9]/', '', $data['call_to_number']);
-    //         }
-
-    //         if (!empty($data['customer_no_with_prefix'])) {
-    //             $data['customer_no_with_prefix'] = preg_replace('/[^0-9]/', '', $data['customer_no_with_prefix']);
-    //         }
-
-    //         // Handle broadcast_lead_fields
-    //         if (isset($data['broadcast_lead_fields'])) {
-    //             if (is_array($data['broadcast_lead_fields'])) {
-    //                 $data['broadcast_lead_fields'] = json_encode($data['broadcast_lead_fields']);
-    //             } else {
-    //                 // If string, try decode & re-encode
-    //                 $decoded = json_decode($data['broadcast_lead_fields'], true);
-    //                 if (json_last_error() === JSON_ERROR_NONE) {
-    //                     $data['broadcast_lead_fields'] = json_encode($decoded);
-    //                 }
-    //             }
-    //         }
-
-    //         // Basic validation (manual)
-    //         if (empty($data['call_id'])) {
-    //             throw new \Exception('call_id is required');
-    //         }
-
-    //         // Save or update (avoid duplicates)
-    //         $record = \App\Models\API\AcephoneDataModel::updateOrCreate(
-    //             ['call_id' => $data['call_id']],
-    //             $data
-    //         );
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Data saved',
-    //             'call_id' => $record->call_id
-    //         ], 200);
-
-    //     } catch (\Exception $e) {
-
-    //         \Log::error('Acephone Webhook Error:', [
-    //             'error' => $e->getMessage(),
-    //             'payload' => $req->all()
-    //         ]);
-
-    //         // Always return 200 for webhook
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => $e->getMessage()
-    //         ], 200);
-    //     }
-    // }
+    
     public function acePhoneData(Request $req)
-{
-    try {
-        // Log raw webhook data
-        \Log::info('Acephone Webhook Raw:', $req->all());
+        {
+            try {
+                // ==============================
+                // Log raw webhook
+                // ==============================
+                Log::info('Acephone Webhook Raw:', $req->all());
 
-        $data = $req->all();
+                $data = $req->all();
 
-        // Fix wrong key (extra space issue)
-        if (isset($data['customer_no_with_prefix '])) {
-            $data['customer_no_with_prefix'] = $data['customer_no_with_prefix '];
-            unset($data['customer_no_with_prefix ']);
-        }
-
-        // ==============================
-        // Helper: Normalize to last 10 digits
-        // ==============================
-        $normalizePhone = function ($number) {
-            if (empty($number)) return null;
-
-            $number = preg_replace('/[^0-9]/', '', $number);
-            return strlen($number) >= 10 ? substr($number, -10) : null;
-        };
-
-        // Apply normalization
-        $data['caller_id_number'] = $normalizePhone($data['caller_id_number'] ?? null);
-        $data['call_to_number'] = $normalizePhone($data['call_to_number'] ?? null);
-        $data['customer_no_with_prefix'] = $normalizePhone($data['customer_no_with_prefix'] ?? null);
-
-        // ==============================
-        // Type Casting
-        // ==============================
-        $data['billsec'] = (int) ($data['billsec'] ?? 0);
-        $data['duration'] = (int) ($data['duration'] ?? 0);
-        $data['outbound_sec'] = (int) ($data['outbound_sec'] ?? 0);
-        $data['agent_ring_time'] = (int) ($data['agent_ring_time'] ?? 0);
-        $data['agent_transfer_ring_time'] = (int) ($data['agent_transfer_ring_time'] ?? 0);
-        $data['customer_ring_time'] = (int) ($data['customer_ring_time'] ?? 0);
-
-        $data['call_connected'] = filter_var($data['call_connected'] ?? false, FILTER_VALIDATE_BOOLEAN);
-
-        // ==============================
-        // Handle broadcast_lead_fields
-        // ==============================
-        if (isset($data['broadcast_lead_fields'])) {
-            if (is_array($data['broadcast_lead_fields'])) {
-                $data['broadcast_lead_fields'] = json_encode($data['broadcast_lead_fields']);
-            } else {
-                $decoded = json_decode($data['broadcast_lead_fields'], true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $data['broadcast_lead_fields'] = json_encode($decoded);
+                // ==============================
+                // Fix wrong key (extra space issue)
+                // ==============================
+                if (isset($data['customer_no_with_prefix '])) {
+                    $data['customer_no_with_prefix'] = $data['customer_no_with_prefix '];
+                    unset($data['customer_no_with_prefix ']);
                 }
+
+                // ==============================
+                // Normalize phone numbers (last 10 digits)
+                // ==============================
+                $normalizePhone = function ($number) {
+                    if (empty($number)) return null;
+                    $number = preg_replace('/[^0-9]/', '', $number);
+                    return strlen($number) >= 10 ? substr($number, -10) : null;
+                };
+
+                $data['caller_id_number'] = $normalizePhone($data['caller_id_number'] ?? null);
+                $data['call_to_number'] = $normalizePhone($data['call_to_number'] ?? null);
+                $data['customer_no_with_prefix'] = $normalizePhone($data['customer_no_with_prefix'] ?? null);
+
+                // ==============================
+                // Type Casting
+                // ==============================
+                $data['billsec'] = (int) ($data['billsec'] ?? 0);
+                $data['duration'] = (int) ($data['duration'] ?? 0);
+                $data['outbound_sec'] = (int) ($data['outbound_sec'] ?? 0);
+                $data['agent_ring_time'] = (int) ($data['agent_ring_time'] ?? 0);
+                $data['agent_transfer_ring_time'] = (int) ($data['agent_transfer_ring_time'] ?? 0);
+                $data['customer_ring_time'] = (int) ($data['customer_ring_time'] ?? 0);
+
+                $data['call_connected'] = filter_var($data['call_connected'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+                // ==============================
+                // Fix broadcast_lead_fields (JSON field)
+                // ==============================
+                if (isset($data['broadcast_lead_fields'])) {
+
+                    if (is_string($data['broadcast_lead_fields'])) {
+                        $decoded = json_decode($data['broadcast_lead_fields'], true);
+                        $data['broadcast_lead_fields'] = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+                    }
+
+                    if (!is_array($data['broadcast_lead_fields'])) {
+                        $data['broadcast_lead_fields'] = null;
+                    }
+
+                } else {
+                    $data['broadcast_lead_fields'] = null;
+                }
+
+                // ==============================
+                // Convert ALL other arrays → string
+                // ==============================
+                foreach ($data as $key => $value) {
+
+                    if ($key === 'broadcast_lead_fields') continue;
+
+                    if (is_array($value)) {
+                        $data[$key] = json_encode($value);
+                    }
+                }
+
+                // ==============================
+                // Clean invalid placeholders
+                // ==============================
+                if (isset($data['campaign_name']) && str_contains($data['campaign_name'], '$')) {
+                    $data['campaign_name'] = null;
+                }
+
+                if (isset($data['campaign_id']) && str_contains($data['campaign_id'], '$')) {
+                    $data['campaign_id'] = null;
+                }
+
+                // ==============================
+                // Required validation
+                // ==============================
+                if (empty($data['call_id'])) {
+                    throw new \Exception('call_id is required');
+                }
+
+                // ==============================
+                // Save / Update (avoid duplicates)
+                // ==============================
+                $record = AcephoneDataModel::updateOrCreate(
+                    ['call_id' => $data['call_id']],
+                    $data
+                );
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data saved successfully',
+                    'call_id' => $record->call_id
+                ], 200);
+
+            } catch (\Exception $e) {
+
+                Log::error('Acephone Webhook Error:', [
+                    'error' => $e->getMessage(),
+                    'payload' => $req->all()
+                ]);
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ], 200);
             }
         }
 
-        // ==============================
-        // Basic Validation
-        // ==============================
-        if (empty($data['call_id'])) {
-            throw new \Exception('call_id is required');
-        }
-
-        // ==============================
-        // Save or Update (Prevent duplicate)
-        // ==============================
-        $record = AcephoneDataModel::updateOrCreate(
-            ['call_id' => $data['call_id']],
-            $data
-        );
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data saved successfully',
-            'call_id' => $record->call_id
-        ], 200);
-
-    } catch (\Exception $e) {
-
-        \Log::error('Acephone Webhook Error:', [
-            'error' => $e->getMessage(),
-            'payload' => $req->all()
-        ]);
-
-        // Always return 200 (important for webhook)
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ], 200);
-    }
-}
     }
