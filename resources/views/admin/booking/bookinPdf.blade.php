@@ -653,8 +653,8 @@
                     <td>
                         <div>Customer Signature</div>
                         <div class="sign-line"></div>
-                        <div class="sign-date">{{ $customer_name ?? 'Kumar Sachin' }} (Date:
-                            {{ $sign_date ?? '21/03/2026' }})</div>
+                        <div class="sign-date">{{ $data->name ?? 'Customer' }} (Date:
+                            {{ $data->created_at ?? 'Date' }})</div>
                     </td>
                     <td>
                         <div>Authorized Signatory</div>
