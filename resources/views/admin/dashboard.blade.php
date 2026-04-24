@@ -173,9 +173,18 @@
                         <hr>
                         <div class="d-flex justify-content-between text-center">
                             <div>
+                                <small>Today CC</small>
+                                <h6>{{ $today_acephone_contacts }}</h6>
+                            </div>
+                            <div>
+                                <small>New CC</small>
+                                <h6>{{ $total_acephone_data }}</h6>
+                            </div>
+                            <div>
                                 <small>Today</small>
                                 <h6>{{ $today_qkonnect_contacts }}</h6>
                             </div>
+                            
                             <div>
                                 <small>Qkonnect</small>
                                 <h6>{{ $qkonnect_contacts }}</h6>

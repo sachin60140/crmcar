@@ -195,6 +195,9 @@ class AuthController extends Controller
         $data['qkonnect_contacts'] = DB::table('qkonnect_data')->distinct('caller_number')->count('caller_number');
         $data['today_qkonnect_contacts'] = DB::table('qkonnect_data')->whereDate('created_at', Carbon::today())->count();
 
+        $data['total_acephone_data'] = DB::table('acephone_data')->distinct('call_to_number')->count('call_to_number');
+        $data['today_acephone_contacts'] = DB::table('acephone_data')->whereDate('created_at', Carbon::today())->count();
+
         $data['todaycontacts'] = DB::table('customer_lead')->whereDate('created_at', Carbon::today())->count();
 
         $data['totalvisitor'] = DB::table('visitor')->count();
