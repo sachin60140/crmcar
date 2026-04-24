@@ -72,6 +72,10 @@ class AcephoneDataModel extends Model
         'start_stamp' => 'datetime',
         'answer_stamp' => 'datetime',
         'end_stamp' => 'datetime',
+        
+        'call_flow' => 'array',
+        'answered_agent' => 'array',
+        'billing_circle' => 'array',
     ];
 
     // Default values (optional but useful)
