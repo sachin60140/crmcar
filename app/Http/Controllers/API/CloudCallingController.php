@@ -101,7 +101,7 @@ class CloudCallingController extends Controller
 
         if ($result)
 
-        $sender = 'CAR4SL';
+            $sender = 'CAR4SL';
         $mob = $data['customer_number'];
         $name = 'Customer';
         $auth = '3HqJI';
@@ -399,177 +399,261 @@ class CloudCallingController extends Controller
         return view('admin.cloud-calling.qkonnect-call-data');
     }
 
-    
+
     public function acePhoneData(Request $req)
-        {
-            try {
-                // ==============================
-                // Log raw webhook
-                // ==============================
-                Log::info('Acephone Webhook Raw:', $req->all());
+    {
+        try {
+            // ==============================
+            // Log raw webhook
+            // ==============================
+            Log::info('Acephone Webhook Raw:', $req->all());
 
-                $data = $req->all();
+            $data = $req->all();
 
-                // ==============================
-                // Fix wrong key (extra space issue)
-                // ==============================
-                if (isset($data['customer_no_with_prefix '])) {
-                    $data['customer_no_with_prefix'] = $data['customer_no_with_prefix '];
-                    unset($data['customer_no_with_prefix ']);
+            // ==============================
+            // Fix wrong key (extra space issue)
+            // ==============================
+            if (isset($data['customer_no_with_prefix '])) {
+                $data['customer_no_with_prefix'] = $data['customer_no_with_prefix '];
+                unset($data['customer_no_with_prefix ']);
+            }
+
+            // ==============================
+            // Normalize phone numbers (last 10 digits)
+            // ==============================
+            $normalizePhone = function ($number) {
+                if (empty($number)) return null;
+                $number = preg_replace('/[^0-9]/', '', $number);
+                return strlen($number) >= 10 ? substr($number, -10) : null;
+            };
+
+            $data['caller_id_number'] = $normalizePhone($data['caller_id_number'] ?? null);
+            $data['call_to_number'] = $normalizePhone($data['call_to_number'] ?? null);
+            $data['customer_no_with_prefix'] = $normalizePhone($data['customer_no_with_prefix'] ?? null);
+
+            // ==============================
+            // Type Casting
+            // ==============================
+            $data['billsec'] = (int) ($data['billsec'] ?? 0);
+            $data['duration'] = (int) ($data['duration'] ?? 0);
+            $data['outbound_sec'] = (int) ($data['outbound_sec'] ?? 0);
+            $data['agent_ring_time'] = (int) ($data['agent_ring_time'] ?? 0);
+            $data['agent_transfer_ring_time'] = (int) ($data['agent_transfer_ring_time'] ?? 0);
+            $data['customer_ring_time'] = (int) ($data['customer_ring_time'] ?? 0);
+
+            $data['call_connected'] = filter_var($data['call_connected'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+            // ==============================
+            // Fix broadcast_lead_fields (JSON field)
+            // ==============================
+            if (isset($data['broadcast_lead_fields'])) {
+
+                if (is_string($data['broadcast_lead_fields'])) {
+                    $decoded = json_decode($data['broadcast_lead_fields'], true);
+                    $data['broadcast_lead_fields'] = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
                 }
 
-                // ==============================
-                // Normalize phone numbers (last 10 digits)
-                // ==============================
-                $normalizePhone = function ($number) {
-                    if (empty($number)) return null;
-                    $number = preg_replace('/[^0-9]/', '', $number);
-                    return strlen($number) >= 10 ? substr($number, -10) : null;
-                };
-
-                $data['caller_id_number'] = $normalizePhone($data['caller_id_number'] ?? null);
-                $data['call_to_number'] = $normalizePhone($data['call_to_number'] ?? null);
-                $data['customer_no_with_prefix'] = $normalizePhone($data['customer_no_with_prefix'] ?? null);
-
-                // ==============================
-                // Type Casting
-                // ==============================
-                $data['billsec'] = (int) ($data['billsec'] ?? 0);
-                $data['duration'] = (int) ($data['duration'] ?? 0);
-                $data['outbound_sec'] = (int) ($data['outbound_sec'] ?? 0);
-                $data['agent_ring_time'] = (int) ($data['agent_ring_time'] ?? 0);
-                $data['agent_transfer_ring_time'] = (int) ($data['agent_transfer_ring_time'] ?? 0);
-                $data['customer_ring_time'] = (int) ($data['customer_ring_time'] ?? 0);
-
-                $data['call_connected'] = filter_var($data['call_connected'] ?? false, FILTER_VALIDATE_BOOLEAN);
-
-                // ==============================
-                // Fix broadcast_lead_fields (JSON field)
-                // ==============================
-                if (isset($data['broadcast_lead_fields'])) {
-
-                    if (is_string($data['broadcast_lead_fields'])) {
-                        $decoded = json_decode($data['broadcast_lead_fields'], true);
-                        $data['broadcast_lead_fields'] = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
-                    }
-
-                    if (!is_array($data['broadcast_lead_fields'])) {
-                        $data['broadcast_lead_fields'] = null;
-                    }
-
-                } else {
+                if (!is_array($data['broadcast_lead_fields'])) {
                     $data['broadcast_lead_fields'] = null;
                 }
-
-                // ==============================
-                // Convert ALL other arrays → string
-                // ==============================
-                foreach ($data as $key => $value) {
-
-                    if ($key === 'broadcast_lead_fields') continue;
-
-                    if (is_array($value)) {
-                        $data[$key] = json_encode($value);
-                    }
-                }
-
-                // ==============================
-                // Clean invalid placeholders
-                // ==============================
-                if (isset($data['campaign_name']) && str_contains($data['campaign_name'], '$')) {
-                    $data['campaign_name'] = null;
-                }
-
-                if (isset($data['campaign_id']) && str_contains($data['campaign_id'], '$')) {
-                    $data['campaign_id'] = null;
-                }
-
-                // ==============================
-                // Required validation
-                // ==============================
-                if (empty($data['call_id'])) {
-                    throw new \Exception('call_id is required');
-                }
-
-                // ==============================
-                // Save / Update (avoid duplicates)
-                // ==============================
-                $record = AcephoneDataModel::updateOrCreate(
-                    ['call_id' => $data['call_id']],
-                    $data
-                );
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Data saved successfully',
-                    'call_id' => $record->call_id
-                ], 200);
-
-            } catch (\Exception $e) {
-
-                Log::error('Acephone Webhook Error:', [
-                    'error' => $e->getMessage(),
-                    'payload' => $req->all()
-                ]);
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $e->getMessage()
-                ], 200);
+            } else {
+                $data['broadcast_lead_fields'] = null;
             }
+
+            // ==============================
+            // Convert ALL other arrays → string
+            // ==============================
+            foreach ($data as $key => $value) {
+
+                if ($key === 'broadcast_lead_fields') continue;
+
+                if (is_array($value)) {
+                    $data[$key] = json_encode($value);
+                }
+            }
+
+            // ==============================
+            // Clean invalid placeholders
+            // ==============================
+            if (isset($data['campaign_name']) && str_contains($data['campaign_name'], '$')) {
+                $data['campaign_name'] = null;
+            }
+
+            if (isset($data['campaign_id']) && str_contains($data['campaign_id'], '$')) {
+                $data['campaign_id'] = null;
+            }
+
+            // ==============================
+            // Required validation
+            // ==============================
+            if (empty($data['call_id'])) {
+                throw new \Exception('call_id is required');
+            }
+
+            // ==============================
+            // Save / Update (avoid duplicates)
+            // ==============================
+            $record = AcephoneDataModel::updateOrCreate(
+                ['call_id' => $data['call_id']],
+                $data
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data saved successfully',
+                'call_id' => $record->call_id
+            ], 200);
+        } catch (\Exception $e) {
+
+            Log::error('Acephone Webhook Error:', [
+                'error' => $e->getMessage(),
+                'payload' => $req->all()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 200);
         }
-
-        public function showacephonedata(Request $request)
-        {
-        // Default 45 days
-        $from = $request->from_date 
-            ? Carbon::parse($request->from_date)->startOfDay()
-            : now()->subDays(45)->startOfDay();
-
-        $to = $request->to_date 
-            ? Carbon::parse($request->to_date)->endOfDay()
-            : now()->endOfDay();
-
-        $query = AcephoneDataModel::whereBetween('start_stamp', [$from, $to]);
-
-        // Filters
-        if ($request->filled('call_status')) {
-            $query->where('call_status', $request->call_status);
-        }
-
-        if ($request->filled('agent')) {
-            $query->where('answered_agent_name', $request->agent);
-        }
-
-        if ($request->filled('campaign')) {
-            $query->where('campaign_name', $request->campaign);
-        }
-
-        $calls = $query->orderBy('start_stamp', 'desc')->get();
-
-        // Summary
-        $totalCalls = $calls->count();
-        $answered = $calls->where('call_status', 'answered')->count();
-        $missed = $calls->where('call_status', 'missed')->count();
-
-        $conversionRate = $totalCalls > 0 
-            ? round(($answered / $totalCalls) * 100, 2)
-            : 0;
-
-        // Dropdown Data
-        $agents = AcephoneDataModel::select('answered_agent_name')
-                    ->whereNotNull('answered_agent_name')
-                    ->distinct()->pluck('answered_agent_name');
-
-        $campaigns = AcephoneDataModel::select('campaign_name')
-                    ->whereNotNull('campaign_name')
-                    ->distinct()->pluck('campaign_name');
-
-        return view('admin.cloud-calling.ace-phone-data', compact(
-            'calls','from','to',
-            'totalCalls','answered','missed','conversionRate',
-            'agents','campaigns'
-        ));
     }
 
+    // public function showacephonedata(Request $request)
+    // {
+    //     // Default 45 days
+    //     $from = $request->from_date
+    //         ? Carbon::parse($request->from_date)->startOfDay()
+    //         : now()->subDays(45)->startOfDay();
+
+    //     $to = $request->to_date
+    //         ? Carbon::parse($request->to_date)->endOfDay()
+    //         : now()->endOfDay();
+
+    //     $query = AcephoneDataModel::whereBetween('start_stamp', [$from, $to]);
+
+    //     // Filters
+    //     if ($request->filled('call_status')) {
+    //         $query->where('call_status', $request->call_status);
+    //     }
+
+    //     if ($request->filled('agent')) {
+    //         $query->where('answered_agent_name', $request->agent);
+    //     }
+
+    //     if ($request->filled('campaign')) {
+    //         $query->where('campaign_name', $request->campaign);
+    //     }
+
+    //     $calls = $query->orderBy('start_stamp', 'desc')->get();
+
+    //     // Summary
+    //     $totalCalls = $calls->count();
+    //     $answered = $calls->where('call_status', 'answered')->count();
+    //     $missed = $calls->where('call_status', 'missed')->count();
+
+    //     $conversionRate = $totalCalls > 0
+    //         ? round(($answered / $totalCalls) * 100, 2)
+    //         : 0;
+
+    //     // Dropdown Data
+    //     $agents = AcephoneDataModel::select('answered_agent_name')
+    //         ->whereNotNull('answered_agent_name')
+    //         ->distinct()->pluck('answered_agent_name');
+
+    //     $campaigns = AcephoneDataModel::select('campaign_name')
+    //         ->whereNotNull('campaign_name')
+    //         ->distinct()->pluck('campaign_name');
+
+    //     return view('admin.cloud-calling.ace-phone-data', compact(
+    //         'calls',
+    //         'from',
+    //         'to',
+    //         'totalCalls',
+    //         'answered',
+    //         'missed',
+    //         'conversionRate',
+    //         'agents',
+    //         'campaigns'
+    //     ));
+    // }
+    public function showacephonedata(Request $request)
+{
+    // ==============================
+    // DATE FILTER (Default 45 Days)
+    // ==============================
+    $from = $request->from_date
+        ? Carbon::parse($request->from_date)->startOfDay()
+        : now()->subDays(45)->startOfDay();
+
+    $to = $request->to_date
+        ? Carbon::parse($request->to_date)->endOfDay()
+        : now()->endOfDay();
+
+    $query = AcephoneDataModel::whereBetween('start_stamp', [$from, $to]);
+
+    // ==============================
+    // FILTERS
+    // ==============================
+
+    if ($request->filled('call_status')) {
+        $query->where('call_status', $request->call_status);
     }
+
+    if ($request->filled('agent')) {
+        $query->where('answered_agent_name', $request->agent);
+    }
+
+    if ($request->filled('campaign')) {
+        $query->where('campaign_name', $request->campaign);
+    }
+
+    // ✅ NEW: TYPE FILTER (IMPORTANT)
+    if ($request->filled('direction')) {
+        $query->where('direction', $request->direction);
+    }
+
+    // ==============================
+    // FETCH DATA
+    // ==============================
+    $calls = $query->orderBy('start_stamp', 'desc')->get();
+
+    // ==============================
+    // SUMMARY
+    // ==============================
+    $totalCalls = $calls->count();
+    $answered = $calls->where('call_status', 'answered')->count();
+    $missed = $calls->where('call_status', 'missed')->count();
+
+    $conversionRate = $totalCalls > 0
+        ? round(($answered / $totalCalls) * 100, 2)
+        : 0;
+
+    // ==============================
+    // DROPDOWN DATA (FILTER BASED)
+    // ==============================
+
+    $agents = AcephoneDataModel::whereBetween('start_stamp', [$from, $to])
+        ->whereNotNull('answered_agent_name')
+        ->distinct()
+        ->pluck('answered_agent_name');
+
+    $campaigns = AcephoneDataModel::whereBetween('start_stamp', [$from, $to])
+        ->whereNotNull('campaign_name')
+        ->distinct()
+        ->pluck('campaign_name');
+
+    // ==============================
+    // RETURN VIEW
+    // ==============================
+    return view('admin.cloud-calling.ace-phone-data', compact(
+        'calls',
+        'from',
+        'to',
+        'totalCalls',
+        'answered',
+        'missed',
+        'conversionRate',
+        'agents',
+        'campaigns'
+    ));
+}
+}
