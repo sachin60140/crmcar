@@ -145,7 +145,7 @@
         </li>
 
         <li class="nav-item">
-            @php $contactRoutes = ['addlead1', 'showjustdaildata', 'showcloudacalldata', 'qkonnectcalldata', 'viewleaddata1', 'hotleaddata', 'vistordata', 'leadallotment']; @endphp
+            @php $contactRoutes = ['showacephonedata','addlead1', 'showjustdaildata', 'showcloudacalldata', 'qkonnectcalldata', 'viewleaddata1', 'hotleaddata', 'vistordata', 'leadallotment']; @endphp
             <a class="nav-link {{ request()->routeIs($contactRoutes) ? '' : 'collapsed' }}" data-bs-target="#old-lead" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-journal-text"></i><span>Contact Data</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>

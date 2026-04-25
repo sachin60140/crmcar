@@ -15,6 +15,7 @@
         border-radius: 8px;
         border: 1px solid #dee2e6;
         margin-bottom: 20px;
+        margin-top: 3px;
     }
     .card-box {
         padding:15px;
