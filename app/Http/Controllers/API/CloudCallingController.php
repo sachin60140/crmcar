@@ -519,4 +519,57 @@ class CloudCallingController extends Controller
             }
         }
 
+        public function showacephonedata(Request $request)
+        {
+        // Default 45 days
+        $from = $request->from_date 
+            ? Carbon::parse($request->from_date)->startOfDay()
+            : now()->subDays(45)->startOfDay();
+
+        $to = $request->to_date 
+            ? Carbon::parse($request->to_date)->endOfDay()
+            : now()->endOfDay();
+
+        $query = AcephoneDataModel::whereBetween('start_stamp', [$from, $to]);
+
+        // Filters
+        if ($request->filled('call_status')) {
+            $query->where('call_status', $request->call_status);
+        }
+
+        if ($request->filled('agent')) {
+            $query->where('answered_agent_name', $request->agent);
+        }
+
+        if ($request->filled('campaign')) {
+            $query->where('campaign_name', $request->campaign);
+        }
+
+        $calls = $query->orderBy('start_stamp', 'desc')->get();
+
+        // Summary
+        $totalCalls = $calls->count();
+        $answered = $calls->where('call_status', 'answered')->count();
+        $missed = $calls->where('call_status', 'missed')->count();
+
+        $conversionRate = $totalCalls > 0 
+            ? round(($answered / $totalCalls) * 100, 2)
+            : 0;
+
+        // Dropdown Data
+        $agents = AcephoneDataModel::select('answered_agent_name')
+                    ->whereNotNull('answered_agent_name')
+                    ->distinct()->pluck('answered_agent_name');
+
+        $campaigns = AcephoneDataModel::select('campaign_name')
+                    ->whereNotNull('campaign_name')
+                    ->distinct()->pluck('campaign_name');
+
+        return view('admin.cloud-calling.ace-phone-data', compact(
+            'calls','from','to',
+            'totalCalls','answered','missed','conversionRate',
+            'agents','campaigns'
+        ));
+    }
+
     }

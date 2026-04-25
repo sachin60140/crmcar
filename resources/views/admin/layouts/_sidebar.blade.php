@@ -171,6 +171,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('showacephonedata') }}" class="{{ request()->routeIs('showacephonedata') ? 'active' : '' }}">
+                        <i class="bi bi-circle"></i><span>Cloud Phone Data</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('viewleaddata1') }}" class="{{ request()->routeIs('viewleaddata1') ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>View Contact</span>
                     </a>
