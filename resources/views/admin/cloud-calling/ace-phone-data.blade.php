@@ -211,7 +211,7 @@ $(document).ready(function() {
     // ==============================
     var table = $('#callTable').DataTable({
         responsive: true,
-        pageLength: 25,
+        pageLength: 50,
         dom: 'Bfrtip',
 
         buttons: [
