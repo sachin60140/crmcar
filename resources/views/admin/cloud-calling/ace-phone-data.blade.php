@@ -110,7 +110,7 @@
             <select name="direction" class="form-control">
                 <option value="">All</option>
                 <option value="inbound" {{ request('direction')=='inbound'?'selected':'' }}>In</option>
-                <option value="outbound" {{ request('direction')=='clicktocall'?'selected':'' }}>Out</option>
+                <option value="clicktocall" {{ request('direction')=='clicktocall'?'selected':'' }}>Out</option>
             </select>
         </div>
 
