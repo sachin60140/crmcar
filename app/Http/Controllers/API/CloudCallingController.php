@@ -582,7 +582,7 @@ class CloudCallingController extends Controller
     // ==============================
     $from = $request->from_date
         ? Carbon::parse($request->from_date)->startOfDay()
-        : now()->subDays(7)->startOfDay();
+        : now()->subDays(3)->startOfDay();
 
     $to = $request->to_date
         ? Carbon::parse($request->to_date)->endOfDay()
